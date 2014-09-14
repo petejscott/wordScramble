@@ -27,6 +27,7 @@ body, input { font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gil
 	flex:0 1 auto;
 	}
 	
+/* error feedback */
 #gameContainer.error #maskedWords {
 	animation:error 1s ease-in-out;
 	-webkit-animation:error 1s ease-in-out;
@@ -35,6 +36,26 @@ body, input { font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gil
 	animation:error 1s ease-in-out;
 	-webkit-animation:error 1s ease-in-out;
 	}
+/* warning feedback */
+#gameContainer.warning #maskedWords {
+	animation:warning 1s ease-in-out;
+	-webkit-animation:warning 1s ease-in-out;
+	}
+#gameContainer.warning #turnSubmit {
+	animation:warning 1s ease-in-out;
+	-webkit-animation:warning 1s ease-in-out;
+	}
+/* success feedback */
+#gameContainer.success #maskedWords {
+	animation:success 1s ease-in-out;
+	-webkit-animation:success 1s ease-in-out;
+	}
+#gameContainer.success #turnSubmit {
+	animation:success 1s ease-in-out;
+	-webkit-animation:success 1s ease-in-out;
+	}
+	
+/* layout styles */
 	
 #gameHeader { 
 	flex:0 1 auto;
@@ -45,18 +66,18 @@ body, input { font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gil
 	justify-content:space-between; 
 	padding:0.25em 1em; 
 	background:#333; color:#eee; 
+}
+#gameTitle { 
+	display:block; 		
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 	}
-	#gameTitle { 
-		display:block; 		
-		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-		}
-	#newGame { 
-		display:inline-block; 
-		color:#eee; 
-		text-decoration:none; 
-		border-bottom:1px solid #ddd; 
-		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-		}
+#newGame { 
+	display:inline-block; 
+	color:#eee; 
+	text-decoration:none; 
+	border-bottom:1px solid #ddd; 
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+	}
 		
 #maskedWords {
 	flex:0 0 auto;
@@ -245,7 +266,7 @@ body, input { font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gil
 	cursor:pointer;
 	}
 	
-/* ANIMATIONS */
+/* animations */
 
 @keyframes fadein {
     from { opacity: 0; }
@@ -270,5 +291,39 @@ body, input { font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gil
 		}
 	40%, 60% { 
 		border-color:#c72c1c; 
+		}
+}
+
+@keyframes warning {
+	0%, 100% { 
+		border-color:none; 
+		}
+	40%, 60% { 
+		border-color:#ff9; 
+		}
+}
+@-webkit-keyframes warning {
+	0%, 100% { 
+		border-color:none; 
+		}
+	40%, 60% { 
+		border-color:#ff9; 
+		}
+}
+
+@keyframes success {
+	0%, 100% { 
+		border-color:none; 
+		}
+	40%, 60% { 
+		border-color:#078e40; 
+		}
+}
+@-webkit-keyframes success {
+	0%, 100% { 
+		border-color:none; 
+		}
+	40%, 60% { 
+		border-color:#078e40; 
 		}
 }

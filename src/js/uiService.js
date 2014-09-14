@@ -392,6 +392,27 @@ wordScramble.uiService = function(gameContainer, gameService)
 			false);
 	}
 	
+	// feedback
+	
+	this.provideFeedback = function(feedback)
+	{
+		uiService.getContainer()
+			.addEventListener('animationend', 
+			function(evt)
+			{
+				uiService.getContainer().classList.remove(feedback);
+			}, 
+			false);
+		uiService.getContainer()
+			.addEventListener('webkitAnimationEnd',
+			function(evt)
+			{
+				uiService.getContainer().classList.remove(feedback);
+			},
+			false);
+		uiService.getContainer().classList.add(feedback);
+	}
+	
 	var uiService = this;
 	
 	// bind to game service
@@ -403,25 +424,12 @@ wordScramble.uiService = function(gameContainer, gameService)
 	}
 	gameService.onWordAttemptAccepted = function(wordAttempt)
 	{
+		uiService.provideFeedback('success');
 		uiService.renderWordList();
 	}
 	gameService.onWordAttemptRejected = function(wordAttempt)
 	{
-		uiService.getContainer()
-			.addEventListener('animationend', 
-			function(evt)
-			{
-				uiService.getContainer().classList.remove('error');
-			}, 
-			false);
-		uiService.getContainer()
-			.addEventListener('webkitAnimationEnd',
-			function(evt)
-			{
-				uiService.getContainer().classList.remove('error');
-			},
-			false);
-		uiService.getContainer().classList.add('error');
+		uiService.provideFeedback('error');
 	}
 	gameService.onAllWordsSolved = function()
 	{
