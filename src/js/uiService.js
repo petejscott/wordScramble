@@ -425,7 +425,6 @@ wordScramble.uiService = function(gameContainer, gameService)
 	// bind to game service
 	gameService.onGameReady = function()
 	{
-		console.log("game ready");
 		uiService.cleanup();
 		uiService.setup();
 	}

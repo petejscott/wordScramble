@@ -12,72 +12,6 @@ wordScramble.gameService = function(dService, lService, configuration)
 		
 		return letters;
 	}
-	function getWords(dService, letters)
-	{
-		var words = dService.getDictionary();
-		
-		var withLetterQuery = new wordScramble.wordsWithLettersQuery(words, letters);
-		words = withLetterQuery.handle();
-		
-		var min = configuration.minWordLength, max = letters.length;
-		var lengthQuery = new wordScramble.wordsOfLengthQuery(words, min, max);
-		words = lengthQuery.handle();
-		
-		// transform the word array into word objects
-		var wordObjects = words.map(function(w) { return { "word" : w , "solved" : false , "chars" : w.length }; });
-		
-		// and sort them by length
-		wordObjects.sort(function(a, b) 
-		{
-			return a.chars - b.chars;
-		});
-		
-		return wordObjects;
-	}
-	function createGameData(lService, dService)
-	{
-		var data = {};
-		data.letters = getLetters(lService);
-		data.words = getWords(dService, data.letters);
-		
-		if (data.words.length < configuration.minWords)
-		{
-			data = createGameData(lService, dService);
-		}
-		
-		return data;
-	}
-	function populateGameData(lService, dService)
-	{
-		var data = {};
-		
-		var dataLoadSuccess = false;
-		if (window.localStorage !== null && window.localStorage.getItem(gService.storageKey) !== null)
-		{
-			try
-			{
-				var jdata = window.localStorage.getItem(gService.storageKey);
-				data = JSON.parse(jdata);
-				dataLoadSuccess = true;
-			}
-			catch(e)
-			{
-				console.log(e);
-			}
-		}
-		if (!dataLoadSuccess)
-		{
-			data = createGameData(lService, dService);
-			window.localStorage.setItem(gService.storageKey, JSON.stringify(data));
-		}
-		
-		if (configuration.cheatMode)
-		{
-			console.log(data.words);
-		}
-		
-		return data;
-	}
 	this.getGameData = function()
 	{
 		return _data;
@@ -99,11 +33,91 @@ wordScramble.gameService = function(dService, lService, configuration)
 	}
 	this.startGame = function()
 	{
+		if (configuration.debug) console.log("startGame");
+		
 		var gService = this;
 		gService.wordAttempt = "";
 		dService.onDictionaryReady = function()
 		{
-			_data = populateGameData(lService, dService);
+			if (configuration.debug) console.log("onDictionaryReady");
+			var data = {};
+		
+			var dataLoadSuccess = false;
+			if (window.localStorage !== null && window.localStorage.getItem(gService.storageKey) !== null)
+			{
+				try
+				{
+					var jdata = window.localStorage.getItem(gService.storageKey);
+					data = JSON.parse(jdata);
+					dataLoadSuccess = true;
+					if (configuration.debug) console.log("dataLoadSuccess === true: "+JSON.stringify(data));
+				}
+				catch(e)
+				{
+					console.log(e);
+				}
+			}
+			if (!dataLoadSuccess || 
+				!data.letters || data.letters.length === 0 || 
+				!data.words || data.words.length === 0)
+			{
+				if (configuration.debug) console.log("dataLoadSuccess === false");
+				
+				var letters = getLetters(lService);
+				var worker = new Worker("js/wordCollectionWorker.js");
+				
+				var messageCount = 0;
+				worker.onmessage = function(evt)
+				{
+					if (configuration.debug) console.log("firing off wordCollectionWorker (iteration "+messageCount+")");
+					messageCount++;
+					
+					var words = JSON.parse(evt.data);
+					
+					if (messageCount >= 10)
+					{
+						throw "Too many iterations; giving up";
+					}
+					
+					if (words.length < configuration.minWords)
+					{
+						// new letters
+						letters = getLetters(lService);
+						// work again					
+						worker.postMessage(JSON.stringify(
+							{
+								"words" : dService.getDictionary(),
+								"configuration" : configuration,
+								"letters" : letters
+							}));
+					}
+					else
+					{
+						data.words = words;
+						data.letters = letters;
+						gService.onDataReady(data);
+					}
+				}
+				worker.postMessage(JSON.stringify(
+					{
+						"words" : dService.getDictionary(),
+						"configuration" : configuration,
+						"letters" : letters
+					}));
+			}
+			else
+			{
+				gService.onDataReady(data);
+			}
+			
+		}
+		gService.onDataReady = function(data)
+		{
+			if (configuration.debug) console.log("onDataReady: "+JSON.stringify(data));
+			_data = data;
+			window.localStorage.setItem(gService.storageKey, JSON.stringify(data));
+			
+			if (configuration.debug) console.log("calling onGameReady...");
 			gService.onGameReady(gService);
 		}
 		dService.loadDictionary(configuration.dictionaryUrl);
