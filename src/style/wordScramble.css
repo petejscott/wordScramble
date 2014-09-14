@@ -27,7 +27,11 @@ body, input { font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gil
 	flex:0 1 auto;
 	}
 	
-#gameContainer.error #submitWord { 
+#gameContainer.error #maskedWords {
+	animation:error 1s ease-in-out;
+	-webkit-animation:error 1s ease-in-out;
+	}
+#gameContainer.error #turnSubmit {
 	animation:error 1s ease-in-out;
 	-webkit-animation:error 1s ease-in-out;
 	}
@@ -174,7 +178,6 @@ body, input { font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gil
 	align-items: center;
 	background:#f0f0f0;
 	border-top:1px solid #bbb;
-	border-bottom:1px solid #bbb;
 	}
 	#submitWord { 
 		outline:0; 
@@ -255,25 +258,17 @@ body, input { font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gil
 
 @keyframes error {
 	0%, 100% { 
-		background: #197abb; 
-		border-color:#0165ba; 
-		box-shadow: inset 0 -2px #2a8bcc;
+		border-color:none; 
 		}
 	40%, 60% { 
-		background: #e74c3c; 
 		border-color:#c72c1c; 
-		box-shadow: inset 0 -2px #e74c3c; 
 		}
 }
 @-webkit-keyframes error {
 	0%, 100% { 
-		background: #197abb; 
-		border-color:#0165ba; 
-		box-shadow: inset 0 -2px #2a8bcc;
+		border-color:none; 
 		}
 	40%, 60% { 
-		background: #e74c3c; 
 		border-color:#c72c1c; 
-		box-shadow: inset 0 -2px #e74c3c; 
 		}
 }

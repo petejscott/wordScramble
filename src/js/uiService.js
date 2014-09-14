@@ -411,18 +411,17 @@ wordScramble.uiService = function(gameContainer, gameService)
 			.addEventListener('animationend', 
 			function(evt)
 			{
-				evt.target.classList.remove('error');
+				uiService.getContainer().classList.remove('error');
 			}, 
 			false);
 		uiService.getContainer()
 			.addEventListener('webkitAnimationEnd',
 			function(evt)
 			{
-				evt.target.classList.remove('error');
+				uiService.getContainer().classList.remove('error');
 			},
 			false);
-		uiService.getContainer()
-			.classList.add('error');
+		uiService.getContainer().classList.add('error');
 	}
 	gameService.onAllWordsSolved = function()
 	{
