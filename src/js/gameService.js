@@ -124,10 +124,20 @@ wordScramble.gameService.prototype.submitWord = function(wordAttempt)
 	});
 	if (result && result[0] != null)
 	{
-		this.setWordSolved(result[0]);
-		if (this.onWordAttemptAccepted) 
+		if (result[0].solved === true)
 		{
-			this.onWordAttemptAccepted(wordAttempt);
+			if (this.onWordAttemptAlreadyAccepted)
+			{
+				this.onWordAttemptAlreadyAccepted(wordAttempt);
+			}
+		}
+		else
+		{
+			this.setWordSolved(result[0]);
+			if (this.onWordAttemptAccepted) 
+			{
+				this.onWordAttemptAccepted(wordAttempt);
+			}
 		}
 	}
 	else if (this.onWordAttemptRejected)
@@ -151,5 +161,6 @@ wordScramble.gameService.prototype.submitWord = function(wordAttempt)
 
 wordScramble.gameService.prototype.onGameReady = null;
 wordScramble.gameService.prototype.onWordAttemptAccepted = null;
+wordScramble.gameService.prototype.onWordAttemptAlreadyAccepted = null;
 wordScramble.gameService.prototype.onWordAttemptRejected = null;
 wordScramble.gameService.prototype.onAllWordsSolved = null;

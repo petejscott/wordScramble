@@ -427,6 +427,10 @@ wordScramble.uiService = function(gameContainer, gameService)
 		uiService.provideFeedback('success');
 		uiService.renderWordList();
 	}
+	gameService.onWordAttemptAlreadyAccepted = function(wordAttempt)
+	{
+		uiService.provideFeedback('warning');
+	}
 	gameService.onWordAttemptRejected = function(wordAttempt)
 	{
 		uiService.provideFeedback('error');
