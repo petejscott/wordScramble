@@ -407,22 +407,22 @@ wordScramble.uiService = function(gameContainer, gameService)
 	}
 	gameService.onWordAttemptRejected = function(wordAttempt)
 	{
-		uiService.getContainer().querySelector('#submitWord')
+		uiService.getContainer()
 			.addEventListener('animationend', 
 			function(evt)
 			{
-				evt.target.classList.remove('badSubmit');
+				evt.target.classList.remove('error');
 			}, 
 			false);
-		uiService.getContainer().querySelector('#submitWord')
+		uiService.getContainer()
 			.addEventListener('webkitAnimationEnd',
 			function(evt)
 			{
-				evt.target.classList.remove('badSubmit');
+				evt.target.classList.remove('error');
 			},
 			false);
-		uiService.getContainer().querySelector('#submitWord')
-			.classList.add('badSubmit');
+		uiService.getContainer()
+			.classList.add('error');
 	}
 	gameService.onAllWordsSolved = function()
 	{

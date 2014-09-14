@@ -4,5 +4,5 @@ wordScramble.configuration = {
 	minWords : 5,
 	maxWords: 8,
 	minWordLength : 3,
-	dictionaryUrl : 'https://cosine.teknine.com/wordScramble/src/dict/custom-en-us.txt'
+	dictionaryUrl : 'http://localhost/projects/wordScramble/src/dict/custom-en-us.txt'
 };
