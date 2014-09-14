@@ -185,7 +185,7 @@ wordScramble.uiService = function(gameContainer, gameService)
 	
 	this.startNewGame = function()
 	{
-		uiService.renderPreviousWords();		
+		uiService.renderPreviousWords();
 		gameService.removeCache();
 		gameService.startGame();
 	}
@@ -224,8 +224,15 @@ wordScramble.uiService = function(gameContainer, gameService)
 	}
 	this.submitWordAttempt = function()
 	{
+		uiService.getContainer().querySelector("#submitWord")
+			.classList.add("busy");
+		
 		gameService.submitWord(gameService.wordAttempt);
+		
 		uiService.clearWordAttempt();
+		
+ 		uiService.getContainer().querySelector("#submitWord")
+ 			.classList.remove("busy");
 	}
 	this.clearWordAttempt = function()
 	{
