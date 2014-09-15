@@ -203,9 +203,23 @@ wordScramble.uiService = function(gameContainer, gameService)
 			// not a valid letter
 			return;
 		}
-		if (gameService.wordAttempt.indexOf(letter) !== -1)
+		
+		var wordAttemptContainer = uiService.getContainer().querySelector("#wordAttempt");
+		
+		var letterInWordAttemptIndex = gameService.wordAttempt.indexOf(letter);
+		if (letterInWordAttemptIndex !== -1)
 		{
 			// letter already submitted (note: remove this if allowing duplicate letters)
+			// if it was the last letter submitted, go ahead and roll it back
+			if (letterInWordAttemptIndex == (gameService.wordAttempt.length - 1))
+			{
+				var letterButton = uiService.getContainer()
+					.querySelector('.letterButton[data-letter="'+letter+'"]');
+				letterButton.classList.remove("selected");
+				gameService.wordAttempt = gameService.wordAttempt
+					.substring(0, gameService.wordAttempt.length - 1);
+				wordAttemptContainer.textContent = gameService.wordAttempt;
+			}
 			return;
 		}
 		
@@ -222,7 +236,6 @@ wordScramble.uiService = function(gameContainer, gameService)
 			letterButton.classList.add("selected");
 		}
 		
-		var wordAttemptContainer = uiService.getContainer().querySelector("#wordAttempt");
 		wordAttemptContainer.textContent = gameService.wordAttempt;
 	}
 	this.submitWordAttempt = function()
