@@ -1,7 +1,7 @@
 'use strict';
 
 var wordScramble = wordScramble || {};
-wordScramble.uiService = function(gameContainer, gameService) 
+wordScramble.uiService = function(gameContainer, gameService)
 {
 	if (!gameContainer)
 	{
@@ -11,24 +11,23 @@ wordScramble.uiService = function(gameContainer, gameService)
 	{
 		throw "Missing or Invalid gameService";
 	}
-	
+
 	this.getContainer = function()
 	{
 		return gameContainer;
 	}
-	
+
 	this.getGameService = function()
 	{
 		return gameService;
 	}
-	
 	// Render
-	
+
 	this.renderLetterList = function()
-	{		
+	{
 		var letterContainer = uiService.getContainer().querySelector('#letterContainer');
 		var letterList = uiService.getContainer().querySelector('#letterList');
-		
+
 		while (letterContainer.firstChild)
 		{
 			letterContainer.removeChild(letterContainer.firstChild);
@@ -38,13 +37,13 @@ wordScramble.uiService = function(gameContainer, gameService)
 		{
 			letterList.removeChild(letterList.firstChild);
 		}
-		
+
 		var data = this.getGameService().getGameData();
-		
-		for (var i=0, len=data.letters.length; i<len; i++)
+
+		for (var i = 0, len = data.letters.length; i < len; i++)
 		{
 			var letter = data.letters[i];
-			
+
 			var letterNode = document.createTextNode(letter);
 			var letterButton = document.createElement("input");
 			letterButton.classList.add('letterButton');
@@ -52,64 +51,65 @@ wordScramble.uiService = function(gameContainer, gameService)
 			letterButton.setAttribute("type", "button");
 			letterButton.setAttribute("tabindex", "-1");
 			letterButton.setAttribute("value", letter);
-			
+
 			if (gameService.wordAttempt.indexOf(letter) !== -1)
 			{
 				letterButton.classList.add("selected");
 			}
-			
-			letterButton.addEventListener('click', 
-				function(evt) { uiService.selectedLetterEventHandler(evt, uiService); }, 
-				false);
+
+			letterButton.addEventListener('click', function(evt)
+			{
+				uiService.selectedLetterEventHandler(evt, uiService);
+			}, false);
 			letterList.appendChild(letterButton);
 		}
-		
+
 		var shuffler = document.createElement("a");
 		shuffler.appendChild(document.createTextNode("shuffle"));
-		shuffler.setAttribute("href","#shuffle");
-		shuffler.setAttribute("id","shuffler");
+		shuffler.setAttribute("href", "#shuffle");
+		shuffler.setAttribute("id", "shuffler");
 		shuffler.addEventListener('click', uiService.shuffleHandler, false);
-			
+
 		letterContainer.appendChild(shuffler);
 	}
-	
+
 	this.renderWordList = function()
 	{
 		var maskedWords = uiService.getContainer().querySelector('#maskedWords');
-		
+
 		while (maskedWords.firstChild)
 		{
 			maskedWords.removeChild(maskedWords.firstChild);
 		}
-		
+
 		var data = this.getGameService().getGameData();
-		
+
 		// masked words
-		var getMask = function(count) 
+		var getMask = function(count)
 		{
 			var maskChar = "_";
 			var mask = "";
-			for(var i=0; i<count; i++)
+			for (var i = 0; i < count; i++)
 			{
 				mask += maskChar += " ";
 			}
 			return mask;
 		}
-		
-		for (var i=0, len=data.words.length; i<len; i++)
+		for (var i = 0, len = data.words.length; i < len; i++)
 		{
 			var wordNode = null;
-			var wordContainer = document.createElement("span");;
-		
+			var wordContainer = document.createElement("span");
+			;
+
 			var wordObject = data.words[i];
 			if (wordObject.solved)
 			{
 				wordNode = document.createTextNode(wordObject.word);
 				wordContainer.classList.add("solved");
 			}
-			else 
+			else
 			{
-				var maskedWord = getMask(wordObject.chars);		
+				var maskedWord = getMask(wordObject.chars);
 				wordNode = document.createTextNode(maskedWord);
 			}
 			wordContainer.classList.add("word");
@@ -117,51 +117,52 @@ wordScramble.uiService = function(gameContainer, gameService)
 			maskedWords.appendChild(wordContainer);
 		}
 	}
-	
+
 	this.renderPreviousWords = function()
 	{
 		var previousWordsWrapper = document.querySelector("#previousWordsWrapper");
-		
+
 		var previousWordsTitle = document.createElement("div");
-		previousWordsTitle.setAttribute("id","previousWordsTitle");
-		
+		previousWordsTitle.setAttribute("id", "previousWordsTitle");
+
 		var previousWordsContainer = document.createElement("div");
-		previousWordsContainer.setAttribute("id","previousWords");
-		
+		previousWordsContainer.setAttribute("id", "previousWords");
+
 		var previousWords = gameService.getGameData().words;
-		
+
 		var solvedCount = 0;
-		for(var i=0, len=previousWords.length; i<len; i++)
+		for (var i = 0, len = previousWords.length; i < len; i++)
 		{
-			var wordContainer = document.createElement("span");;
+			var wordContainer = document.createElement("span");
+			;
 			var wordObject = previousWords[i];
-			
+
 			var wordNode = document.createTextNode(wordObject.word);
 			if (wordObject.solved)
 			{
 				wordContainer.classList.add("solved");
 				solvedCount++;
 			}
-			else 
+			else
 			{
 				wordContainer.classList.add("missed");
 			}
 			wordContainer.classList.add("word");
-			
+
 			var defineElement = document.createElement("a");
 			var defineUrl = "https://www.google.com/search?q=define+" + wordObject.word;
 			defineElement.setAttribute("href", defineUrl);
 			defineElement.setAttribute("target", "_blank");
-			
+
 			defineElement.appendChild(wordNode);
 			wordContainer.appendChild(defineElement);
 			previousWordsContainer.appendChild(wordContainer);
 		}
-		
+
 		var titleText = "";
 		if (solvedCount == previousWords.length)
 		{
-			previousWordsContainer.classList.add("victory");			
+			previousWordsContainer.classList.add("victory");
 			titleText = "Nicely done!";
 		}
 		else
@@ -172,23 +173,19 @@ wordScramble.uiService = function(gameContainer, gameService)
 		previousWordsWrapper.appendChild(previousWordsTitle);
 		previousWordsWrapper.appendChild(previousWordsContainer);
 		previousWordsWrapper.classList.add("visible");
-		
+
 		var previousWordsCloser = document.createElement("div");
 		previousWordsCloser.setAttribute("id", "previousWordsCloser");
 		previousWordsCloser.appendChild(document.createTextNode("close this list"));
-		previousWordsCloser
-			.addEventListener('click', 
-			uiService.closePreviousWordWrapperHandler, 
-			true);
-		
+		previousWordsCloser.addEventListener('click', uiService.closePreviousWordWrapperHandler, true);
+
 		previousWordsWrapper.appendChild(previousWordsCloser);
 	}
-	
+
 	this.startNewGame = function()
 	{
 		uiService.setBusy();
-		uiService.getContainer().querySelector("#maskedWords")
-			.textContent = "working...";
+		uiService.getContainer().querySelector("#maskedWords").textContent = "working...";
 		uiService.renderPreviousWords();
 		gameService.removeCache();
 		gameService.startGame();
@@ -204,9 +201,9 @@ wordScramble.uiService = function(gameContainer, gameService)
 			// not a valid letter
 			return;
 		}
-		
+
 		var wordAttemptContainer = uiService.getContainer().querySelector("#wordAttempt");
-		
+
 		var letterInWordAttemptIndex = gameService.wordAttempt.indexOf(letter);
 		if (letterInWordAttemptIndex !== -1)
 		{
@@ -214,23 +211,18 @@ wordScramble.uiService = function(gameContainer, gameService)
 			// if it was the last letter submitted, go ahead and roll it back
 			if (letterInWordAttemptIndex == (gameService.wordAttempt.length - 1))
 			{
-				var letterButton = uiService.getContainer()
-					.querySelector('.letterButton[data-letter="'+letter+'"]');
+				var letterButton = uiService.getContainer().querySelector('.letterButton[data-letter="' + letter + '"]');
 				letterButton.classList.remove("selected");
-				gameService.wordAttempt = gameService.wordAttempt
-					.substring(0, gameService.wordAttempt.length - 1);
-					
+				gameService.wordAttempt = gameService.wordAttempt.substring(0, gameService.wordAttempt.length - 1);
+
 				wordAttemptContainer.textContent = gameService.wordAttempt;
-				
+
 				// find the new last letter, find the corresponding button, and focus it.
-				var newLastLetter = gameService.wordAttempt
-					.charAt(gameService.wordAttempt.length - 1);
-				
+				var newLastLetter = gameService.wordAttempt.charAt(gameService.wordAttempt.length - 1);
+
 				if (newLastLetter)
 				{
-					uiService.getContainer()
-						.querySelector('.letterButton[data-letter="'+newLastLetter+'"]')
-						.focus();
+					uiService.getContainer().querySelector('.letterButton[data-letter="' + newLastLetter + '"]').focus();
 				}
 				else
 				{
@@ -239,40 +231,40 @@ wordScramble.uiService = function(gameContainer, gameService)
 			}
 			return;
 		}
-		
+
 		gameService.wordAttempt += letter;
-		
+
 		if (gameService.wordAttempt.length === 1)
 		{
 			uiService.getContainer().querySelector("#clearWordAttempt").classList.add("visible");
 		}
-		
-		var letterButton = uiService.getContainer().querySelector('.letterButton[data-letter="'+letter+'"]');
+
+		var letterButton = uiService.getContainer().querySelector('.letterButton[data-letter="' + letter + '"]');
 		if (letterButton)
 		{
 			letterButton.classList.add("selected");
 		}
-		
+
 		wordAttemptContainer.textContent = gameService.wordAttempt;
 	}
 	this.submitWordAttempt = function()
 	{
 		gameService.submitWord(gameService.wordAttempt);
-		
+
 		uiService.clearWordAttempt();
 	}
 	this.clearWordAttempt = function()
 	{
 		gameService.wordAttempt = "";
-		
+
 		uiService.getContainer().querySelector("#clearWordAttempt").classList.remove("visible");
-		
+
 		var letterButtons = uiService.getContainer().querySelectorAll('.letterButton');
-		for(var i=0, len=letterButtons.length; i<len; i++)
+		for (var i = 0, len = letterButtons.length; i < len; i++)
 		{
 			letterButtons[i].classList.remove("selected");
 		}
-		
+
 		var wordAttemptContainer = uiService.getContainer().querySelector("#wordAttempt");
 		wordAttemptContainer.textContent = gameService.wordAttempt;
 	}
@@ -283,16 +275,15 @@ wordScramble.uiService = function(gameContainer, gameService)
 	}
 	this.closePreviousWordWrapper = function()
 	{
-		var previousWordsWrapper = document.querySelector("#previousWordsWrapper");		
+		var previousWordsWrapper = document.querySelector("#previousWordsWrapper");
 		while (previousWordsWrapper.firstChild)
 		{
 			previousWordsWrapper.removeChild(previousWordsWrapper.firstChild);
 		}
 		previousWordsWrapper.classList.remove("visible");
 	}
-	
 	// Event Handlers
-	
+
 	this.newGameEventHandler = function(evt)
 	{
 		uiService.startNewGame();
@@ -300,33 +291,33 @@ wordScramble.uiService = function(gameContainer, gameService)
 	}
 	this.keypressEventHandler = function(evt)
 	{
-		// if previous words are rendered, convert ANY keypress 
+		// if previous words are rendered, convert ANY keypress
 		// into a clearing of the previous word list
 		if (document.querySelector('#previousWords') != null)
 		{
 			uiService.closePreviousWordWrapper();
 			return;
 		}
-		
-		if (evt.keyCode >= 65 && evt.keyCode <= 90) // a-zA-Z
+
+		if (evt.keyCode >= 65 && evt.keyCode <= 90)// a-zA-Z
 		{
 			var letter = String.fromCharCode(evt.keyCode).toLowerCase();
 			uiService.submitLetter(letter);
 		}
-		else if (evt.keyCode === 13) // enter
+		else if (evt.keyCode === 13)// enter
 		{
 			uiService.submitWordAttempt();
 		}
-		else if (evt.keyCode === 8) // backspace
+		else if (evt.keyCode === 8)// backspace
 		{
 			uiService.clearWordAttempt();
 			evt.preventDefault();
 		}
-		else if (evt.keyCode === 9) // tab
+		else if (evt.keyCode === 9)// tab
 		{
 			uiService.shuffleLetters();
 		}
-		else if (evt.keyCode === 32) // space
+		else if (evt.keyCode === 32)// space
 		{
 			uiService.startNewGame();
 		}
@@ -355,45 +346,32 @@ wordScramble.uiService = function(gameContainer, gameService)
 	{
 		uiService.closePreviousWordWrapper();
 	}
-	
 	// Cleanup
-	
+
 	this.cleanup = function()
 	{
 		if (this.keypressEventHandler)
 		{
-			this.getContainer().removeEventListener('keyup',
-				this.keypressEventHandler,
-				false);
+			this.getContainer().removeEventListener('keyup', this.keypressEventHandler, false);
 		}
-		
+
 		if (this.newGameEventHandler)
 		{
-			this.getContainer().querySelector('#newGame')
-				.removeEventListener('click',
-				this.newGameEventHandler,
-				false);
+			this.getContainer().querySelector('#newGame').removeEventListener('click', this.newGameEventHandler, false);
 		}
-		
+
 		if (this.submitWordEventHandler)
 		{
-			this.getContainer().querySelector('#submitWord')
-				.removeEventListener('click',
-				this.submitWordEventHandler,
-				false);
+			this.getContainer().querySelector('#submitWord').removeEventListener('click', this.submitWordEventHandler, false);
 		}
-		
+
 		if (this.clearWordAttemptHandler)
 		{
-			this.getContainer().querySelector('#clearWordAttempt')
-				.removeEventListener('click', 
-				this.clearWordAttemptHandler, 
-				false);
+			this.getContainer().querySelector('#clearWordAttempt').removeEventListener('click', this.clearWordAttemptHandler, false);
 		}
 	}
-	
 	// Setup
-	
+
 	this.setup = function()
 	{
 		var data = this.getGameService().getGameData();
@@ -401,62 +379,49 @@ wordScramble.uiService = function(gameContainer, gameService)
 		//console.log(data.words);
 
 		var uiService = this;
-		
-		// new game 
-		uiService.getContainer().querySelector('#newGame')
-			.addEventListener('click', uiService.newGameEventHandler, false);
-		
+
+		// new game
+		uiService.getContainer().querySelector('#newGame').addEventListener('click', uiService.newGameEventHandler, false);
+
 		// letter list
 		this.renderLetterList();
 
 		// masked words
 		this.renderWordList();
-		
+
 		// submit word
-		uiService.getContainer().querySelector('#submitWord')
-			.addEventListener('click', uiService.submitWordEventHandler, false);
-				
+		uiService.getContainer().querySelector('#submitWord').addEventListener('click', uiService.submitWordEventHandler, false);
+
 		// clear word
-		uiService.getContainer().querySelector('#clearWordAttempt')
-			.addEventListener('click', uiService.clearWordAttemptHandler, false);
-	
+		uiService.getContainer().querySelector('#clearWordAttempt').addEventListener('click', uiService.clearWordAttemptHandler, false);
+
 		// bind a keyboard handler too
-		document.addEventListener('keyup',
-			uiService.keypressEventHandler,
-			false);
+		document.addEventListener('keyup', uiService.keypressEventHandler, false);
 	}
-	
 	// feedback
-	
+
 	this.setBusy = function()
 	{
 		uiService.getContainer().classList.add("busy");
 	}
 	this.unsetBusy = function()
 	{
- 		uiService.getContainer().classList.remove("busy");
+		uiService.getContainer().classList.remove("busy");
 	}
 	this.provideFeedback = function(feedback)
 	{
-		uiService.getContainer()
-			.addEventListener('animationend', 
-			function(evt)
-			{
-				uiService.getContainer().classList.remove(feedback);
-			}, 
-			false);
-		uiService.getContainer()
-			.addEventListener('webkitAnimationEnd',
-			function(evt)
-			{
-				uiService.getContainer().classList.remove(feedback);
-			},
-			false);
+		uiService.getContainer().addEventListener('animationend', function(evt)
+		{
+			uiService.getContainer().classList.remove(feedback);
+		}, false);
+		uiService.getContainer().addEventListener('webkitAnimationEnd', function(evt)
+		{
+			uiService.getContainer().classList.remove(feedback);
+		}, false);
 		uiService.getContainer().classList.add(feedback);
 	}
-	
 	var uiService = this;
-	
+
 	// bind to game service
 	gameService.onGameReady = function()
 	{
