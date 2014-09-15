@@ -115,6 +115,7 @@ body, input { font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gil
 		outline-color:#078E40; 
 		text-transform:uppercase;
 		outline-width:0;
+		padding:0 0.25em;
 		}
 	.word.missed,
 	.word.missed a {
@@ -122,6 +123,7 @@ body, input { font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gil
 		outline-color:#D31145;
 		text-transform:uppercase;
 		outline-width:0;
+		padding:0 0.25em;
 		}
 
 #turnActions { 
