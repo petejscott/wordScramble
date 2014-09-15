@@ -313,7 +313,7 @@ body, input { font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gil
 		border-color:transparent; 
 		}
 	40%, 60% { 
-		border-color:#e67e22; 
+		border-color:#c6de22; 
 		}
 }
 @-webkit-keyframes warning {
@@ -321,7 +321,7 @@ body, input { font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gil
 		border-color:transparent; 
 		}
 	40%, 60% { 
-		border-color:#e67e22; 
+		border-color:#c6dd22; 
 		}
 }
 
