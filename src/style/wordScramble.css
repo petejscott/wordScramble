@@ -31,8 +31,7 @@ body, input { font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gil
 #gameContainer.busy #maskedWords {
 	flex:4 0 auto;
 	background:#ff9;
-	justify-content: center;
-	align-items: center;
+	text-align:center;
 	}
 #gameContainer.busy #letterContainer,
 #gameContainer.busy #turnActions,
@@ -99,8 +98,6 @@ body, input { font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gil
 	padding:0.5em; 
 	border-bottom:1px solid #999;
 	background:#f6f6f6; 
-	align-items:flex-start;
-	display: flex;
 	transition:all 1s;
 	}
 	.word { 
@@ -251,7 +248,7 @@ body, input { font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gil
 	z-index:100;
 	}
 #previousWordsWrapper.visible {
-	display:none;
+	display:flex;
 	animation: fadein 0.5s;
 	-webkit-animation: fadein 0.5s;
 	}
