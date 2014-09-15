@@ -71,13 +71,13 @@ wordScramble.gameService = function(dService, configuration)
 					console.log("dataLoadSuccess === false");
 
 				var letters = getLetters();
-				var worker = new Worker("js/wordCollectionWorker.js");
+				var worker = new Worker("js/wordFinder_worker.js");
 
 				var messageCount = 0;
 				worker.onmessage = function(evt)
 				{
 					if (configuration.debug)
-						console.log("firing off wordCollectionWorker (iteration " + messageCount + ")");
+						console.log("firing off wordFinder_worker (iteration " + messageCount + ")");
 					messageCount++;
 
 					var words = JSON.parse(evt.data);
