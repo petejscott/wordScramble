@@ -50,6 +50,7 @@ wordScramble.uiService = function(gameContainer, gameService)
 			letterButton.classList.add('letterButton');
 			letterButton.setAttribute("data-letter", letter);
 			letterButton.setAttribute("type", "button");
+			letterButton.setAttribute("tabindex", "-1");
 			letterButton.setAttribute("value", letter);
 			
 			if (gameService.wordAttempt.indexOf(letter) !== -1)
@@ -218,7 +219,23 @@ wordScramble.uiService = function(gameContainer, gameService)
 				letterButton.classList.remove("selected");
 				gameService.wordAttempt = gameService.wordAttempt
 					.substring(0, gameService.wordAttempt.length - 1);
+					
 				wordAttemptContainer.textContent = gameService.wordAttempt;
+				
+				// find the new last letter, find the corresponding button, and focus it.
+				var newLastLetter = gameService.wordAttempt
+					.charAt(gameService.wordAttempt.length - 1);
+				
+				if (newLastLetter)
+				{
+					uiService.getContainer()
+						.querySelector('.letterButton[data-letter="'+newLastLetter+'"]')
+						.focus();
+				}
+				else
+				{
+					letterButton.blur();
+				}
 			}
 			return;
 		}
@@ -318,7 +335,7 @@ wordScramble.uiService = function(gameContainer, gameService)
 	{
 		var letter = evt.target.getAttribute("data-letter");
 		uiService.submitLetter(letter);
-		evt.target.blur();
+		evt.preventDefault();
 	}
 	this.submitWordEventHandler = function(evt)
 	{

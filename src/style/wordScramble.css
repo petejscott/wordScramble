@@ -193,8 +193,9 @@ body, input { font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gil
 			outline:0; 
 			}
 		.letterButton:first-child { margin-left:0; }
-		.letterButton:hover, .letterButton:active { background:#3498db; color:#f0f0f0;  }
 		.letterButton.selected { opacity:0.5; background:#ddd; color:#777; }
+		.letterButton:focus { background:#3498db; color:#f0f0f0;  }
+		
 	#shuffler {
 		display:block;
 		padding:0.25em;
