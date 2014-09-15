@@ -400,7 +400,7 @@ wordScramble.uiService = function(gameContainer, gameService)
 	
 	this.setBusy = function()
 	{
- 		uiService.getContainer().classList.add("busy");
+		uiService.getContainer().classList.add("busy");
 	}
 	this.unsetBusy = function()
 	{
