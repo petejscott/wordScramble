@@ -1,16 +1,16 @@
 'use strict';
 
 var wordScramble = wordScramble || {};
-wordScramble.gameService = function(dService, lService, configuration)
+wordScramble.gameService = function(dService, configuration)
 {
 	var _data =
 	{
 	};
 
-	function getLetters(lService)
+	function getLetters()
 	{
 		var count = configuration.letterCount;
-		var letters = lService.getUniqueRandomLetters(count);
+		var letters = wordScramble.letterService.getUniqueRandomLetters(count);
 
 		return letters;
 	}
@@ -26,8 +26,7 @@ wordScramble.gameService = function(dService, lService, configuration)
 	}
 	this.shuffleLetters = function()
 	{
-		var letterService = new wordScramble.letterService();
-		_data.letters = letterService.shuffleLetters(_data.letters);
+		_data.letters = wordScramble.letterService.shuffleLetters(_data.letters);
 	}
 	this.setWordSolved = function(wordObject)
 	{
@@ -71,7 +70,7 @@ wordScramble.gameService = function(dService, lService, configuration)
 				if (configuration.debug)
 					console.log("dataLoadSuccess === false");
 
-				var letters = getLetters(lService);
+				var letters = getLetters();
 				var worker = new Worker("js/wordCollectionWorker.js");
 
 				var messageCount = 0;
@@ -91,7 +90,7 @@ wordScramble.gameService = function(dService, lService, configuration)
 					if (words.length < configuration.minWords)
 					{
 						// new letters
-						letters = getLetters(lService);
+						letters = getLetters();
 						// work again
 						worker.postMessage(JSON.stringify(
 						{

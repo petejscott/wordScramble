@@ -1,20 +1,8 @@
 'use strict';
 
-onmessage = function(evt)
+function buildWordObjects(configuration, wordList, letterList)
 {
-	var data = JSON.parse(evt.data);
-
-	var configuration = data.configuration;
-	var wordList = data.words;
-	var letterList = data.letters;
-
-	if (configuration.debug)
-		console.log("wordCollectionWorker started");
-	if (configuration.debug)
-		console.log("wordCollectionWorker using letters " + JSON.stringify(letterList));
-
 	var filtered = [];
-
 	for (var i = 0, len = wordList.length; i < len; i++)
 	{
 		var thisWord = wordList[i];
@@ -42,8 +30,7 @@ onmessage = function(evt)
 	wordList = filtered;
 
 	// make sure each letter in the letterlist is used
-	filtered = [];
-	// reset
+	filtered = []; 	// reset
 	for (var i = 0, len = letterList.length; i < len; i++)
 	{
 		var wordsThatContainLetter = wordList.filter(function(w)
@@ -55,8 +42,7 @@ onmessage = function(evt)
 	wordList = filtered;
 
 	// clean up the duplicate words in wordList
-	filtered = [];
-	// reset
+	filtered = [];	// reset
 	var filtered = wordList.filter(function(element, index, array)
 	{
 		return array.indexOf(element) >= index;
@@ -64,8 +50,7 @@ onmessage = function(evt)
 	wordList = filtered;
 
 	// word length filtering
-	filtered = [];
-	// reset
+	filtered = [];	// reset
 	var filtered = wordList.filter(function(w)
 	{
 		return w.length >= configuration.minWordLength;
@@ -75,12 +60,7 @@ onmessage = function(evt)
 	// transform the word array into word objects
 	var wordObjects = wordList.map(function(w)
 	{
-		return
-		{
-			"word" : w,
-			"solved" : false,
-			"chars" : w.length
-		};
+		return { "word" : w, "solved" : false, "chars" : w.length };
 	});
 
 	// and sort them by length
@@ -89,7 +69,31 @@ onmessage = function(evt)
 		return a.chars - b.chars;
 	});
 
-	postMessage(JSON.stringify(wordObjects));
+	return wordObjects;
+}
+onmessage = function(evt)
+{
+	var data = JSON.parse(evt.data);
+
+	var configuration = data.configuration;
+	var wordList = data.words;
+	var letterList = data.letters;
+
 	if (configuration.debug)
+	{
+		console.log("wordCollectionWorker started");
+	}
+	if (configuration.debug)
+	{
+		console.log("wordCollectionWorker using letters " + JSON.stringify(letterList));
+	}
+
+	var wordObjects = buildWordObjects(configuration, wordList, letterList);
+
+	postMessage(JSON.stringify(wordObjects));
+
+	if (configuration.debug)
+	{
 		console.log("wordCollectionWorker finished");
+	}
 };
