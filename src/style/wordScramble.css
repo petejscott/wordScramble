@@ -1,4 +1,4 @@
-@media screen and (min-width: 1024px) {
+@media screen and (min-width:1024px) {
 	body { font-size:1.25em; }
 }
 
@@ -25,6 +25,22 @@ body, input { font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gil
 
 .container { 
 	flex:0 1 auto;
+	}
+
+/* busy feedback */
+#gameContainer.busy #maskedWords {
+	flex:4 0 auto;
+	background:#ff9;
+	align-self:stretch;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	}
+#gameContainer.busy #letterContainer,
+#gameContainer.busy #turnActions,
+#gameContainer.busy #wordAttempt,
+#gameContainer.busy #turnSubmit {
+	display:none;
 	}
 	
 /* error feedback */
@@ -219,10 +235,6 @@ body, input { font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gil
 		}
 	#submitWord:hover,
 	#submitWord:active { background:#197abb; border-color:#0165ba; color:#fff; }
-	#submitWord.busy {
-		background-color:#ccc;
-		border-color:#aaa;
-	}
 
 #previousWordsWrapper { 
 	display:none;

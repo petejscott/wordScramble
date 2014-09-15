@@ -185,6 +185,9 @@ wordScramble.uiService = function(gameContainer, gameService)
 	
 	this.startNewGame = function()
 	{
+		uiService.setBusy();
+		uiService.getContainer().querySelector("#maskedWords")
+			.textContent = "working...";
 		uiService.renderPreviousWords();
 		gameService.removeCache();
 		gameService.startGame();
@@ -224,15 +227,9 @@ wordScramble.uiService = function(gameContainer, gameService)
 	}
 	this.submitWordAttempt = function()
 	{
-		uiService.getContainer().querySelector("#submitWord")
-			.classList.add("busy");
-		
 		gameService.submitWord(gameService.wordAttempt);
 		
 		uiService.clearWordAttempt();
-		
- 		uiService.getContainer().querySelector("#submitWord")
- 			.classList.remove("busy");
 	}
 	this.clearWordAttempt = function()
 	{
@@ -303,7 +300,7 @@ wordScramble.uiService = function(gameContainer, gameService)
 		{
 			uiService.startNewGame();
 		}
-	}	
+	}
 	this.selectedLetterEventHandler = function(evt)
 	{
 		var letter = evt.target.getAttribute("data-letter");
@@ -401,6 +398,14 @@ wordScramble.uiService = function(gameContainer, gameService)
 	
 	// feedback
 	
+	this.setBusy = function()
+	{
+ 		uiService.getContainer().classList.add("busy");
+	}
+	this.unsetBusy = function()
+	{
+ 		uiService.getContainer().classList.remove("busy");
+	}
 	this.provideFeedback = function(feedback)
 	{
 		uiService.getContainer()
@@ -427,6 +432,7 @@ wordScramble.uiService = function(gameContainer, gameService)
 	{
 		uiService.cleanup();
 		uiService.setup();
+		uiService.unsetBusy();
 	}
 	gameService.onWordAttemptAccepted = function(wordAttempt)
 	{
