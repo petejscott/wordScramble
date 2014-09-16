@@ -3,70 +3,6 @@
 var wordScramble = wordScramble || {};
 wordScramble.wordFinder = function(wordList)
 {
-	function filterWordsLackingLetters(words, letters)
-	{
-		var filtered = [];
-		for (var i = 0, len = words.length; i < len; i++)
-		{
-			var thisWord = words[i];
-			var wordLetters = thisWord.split("");
-
-			var match = wordLetters.every(function(wl)
-			{
-				// make sure letters are not repeated
-				var count = wordLetters.filter(function(w)
-				{
-					return w == wl;
-				}).length;
-				if (count == 1)
-				{
-					// make sure each word letter exists in letterList
-					return letters.indexOf(wl) !== -1;
-				}
-			});
-
-			if (match)
-			{
-				filtered.push(thisWord);
-			}
-		}
-		return filtered;
-	}
-
-	function filterWordsWithExtraLetters(words, letters)
-	{
-		var filtered = [];
-		for (var i = 0, len = letters.length; i < len; i++)
-		{
-			var wordsThatContainLetter = words.filter(function(w)
-			{
-				return w.indexOf(letters[i]) !== -1;
-			});
-			filtered = filtered.concat(wordsThatContainLetter);
-		}
-		return filtered;
-	}
-
-	function filterDuplicateWords(words)
-	{
-		var filtered = [];
-		var filtered = words.filter(function(element, index, array)
-		{
-			return array.indexOf(element) >= index;
-		});
-		return filtered;
-	}
-
-	function filterWordsByLength(words, minimumWordLength)
-	{
-		var filtered = [];
-		var filtered = words.filter(function(w)
-		{
-			return w.length >= minimumWordLength;
-		});
-		return filtered;
-	}
-
 	function mapWordsToWordObjects(words)
 	{
 		var wordObjects = words.map(function(w)
@@ -84,13 +20,52 @@ wordScramble.wordFinder = function(wordList)
 		});
 	}
 
+	var permArr = [];
+	var usedChars = [];
+	function permute(input)
+	{
+		var i, ch;
+		for (i = 0; i < input.length; i++)
+		{
+			ch = input.splice(i, 1)[0];
+			usedChars.push(ch);
+			if (input.length == 0)
+			{
+				permArr.push(usedChars.slice());
+			}
+			permute(input);
+			input.splice(i, 0, ch);
+			usedChars.pop();
+		}
+		return permArr
+	};
+
 	this.queryObjects = function(mininumWordLength, letterList)
 	{
 		var words = wordList;
-		words = filterWordsLackingLetters(words, letterList);
-		words = filterWordsWithExtraLetters(words, letterList);
-		words = filterDuplicateWords(words);
-		words = filterWordsByLength(words, mininumWordLength);
+
+		// filter our words to not exceed the length of letterList
+		// and to at least meet the minimumWordLength
+		words = words.filter(function(w){
+			return w.length <= letterList.length && w.length >= mininumWordLength;
+		});
+
+		// get all possible permutations of the letterList
+		var letterPermutations = permute(letterList);
+		var wordPermutations = letterPermutations.map(function(lp)
+		{
+			return lp.join('');
+		});
+
+		// find wordPermutations that match w or contain w
+		words = words.filter(function(w)
+		{
+			var found = wordPermutations.some(function(wp)
+			{
+				return wp.indexOf(w) !== -1;
+			});
+			if (found) return w;
+		});
 
 		var wordObjects = mapWordsToWordObjects(words);
 		wordObjects = sortWordObjectsByLength(wordObjects);

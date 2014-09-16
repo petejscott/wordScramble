@@ -15,14 +15,7 @@ wordScramble.letterService = (function()
 		{
 			var randomIndex = Math.floor(Math.random() * letters.length);
 			var letter = letters[randomIndex];
-			if (random.indexOf(letter) == -1)
-			{
-				random.push(letter);
-			}
-			else
-			{
-				i--;
-			}
+			random.push(letter);
 		}
 		return random;
 	}
