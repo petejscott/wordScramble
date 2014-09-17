@@ -190,13 +190,17 @@ wordScramble.letterListManager = (function()
 		var token = evt.target.getAttribute("id");
 
 		var loIndex = getLetterObjectIndexByToken(token);
-		if (loIndex !== -1)
+		if (loIndex === -1)
+		{
+			// not a valid letter selection
+			return
+		}
+		else
 		{
 			// registered as selected. needs to be unselected if allowed
 			if (letterObjects[loIndex].selected === true)
 			{
-				//TODO: this can be a separate subscription now.
-				wordScramble.pubsub.publish("wordScramble/submitLetter",
+				wordScramble.pubsub.publish("wordScramble/removeLetter",
 				{
 					"letter":evt.target.getAttribute("data-letter"),
 					"token":token

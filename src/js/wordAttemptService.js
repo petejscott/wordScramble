@@ -5,7 +5,40 @@ wordScramble.wordAttemptService = ( function()
 {
 	var service = {};
 
+	var CONST_ELEMENT_ID = "#wordAttempt";
 	var wordAttempts = [];
+
+	function getElement()
+	{
+		return document.querySelector(CONST_ELEMENT_ID);
+	}
+
+	function subscribe()
+	{
+		wordScramble.pubsub.subscribe("wordScramble/wordAttemptUpdated", function(topic, data)
+		{
+			var el = getElement();
+			if (el === null) return;
+			el.textContent = data.wordString;
+		});
+		wordScramble.pubsub.subscribe("wordScramble/submitLetter", function(topic, data)
+		{
+			var letter = data.letter;
+			var token = data.token;
+			service.add(letter, token);
+		});
+		wordScramble.pubsub.subscribe("wordScramble/removeLetter", function(topic, data)
+		{
+			var letter = data.letter;
+			var token = data.token;
+			service.removePrevious();
+			return;
+		});
+		wordScramble.pubsub.subscribe("wordScramble/clearWordAttempt", function()
+		{
+			service.clear();
+		});
+	}
 
 	service.getByLetter = function(letter)
 	{
@@ -95,6 +128,8 @@ wordScramble.wordAttemptService = ( function()
 			"allTokens":service.getAllTokens()
 		});
 	};
+
+	subscribe();
 
 	return service;
 }());

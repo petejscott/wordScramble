@@ -64,7 +64,7 @@ wordScramble.wordFinder = function(wordList)
 			{
 				return wp.indexOf(w) !== -1;
 			});
-			if (found) return w;
+			if (found === true) return w;
 		});
 
 		var wordObjects = mapWordsToWordObjects(words);
@@ -74,7 +74,7 @@ wordScramble.wordFinder = function(wordList)
 	}
 }
 
-onmessage = function(evt)
+var onmessage = function(evt)
 {
 	var data = JSON.parse(evt.data);
 

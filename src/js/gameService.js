@@ -14,6 +14,23 @@ wordScramble.gameService = function(dService, configuration)
 		return letters;
 	}
 
+	(function subscribe(gService)
+	{
+		wordScramble.pubsub.subscribe("wordScramble/endGame", function()
+		{
+			gService.clearGameCache();
+		});
+		wordScramble.pubsub.subscribe("wordScramble/startGame", function()
+		{
+			gService.startGame();
+		});
+		wordScramble.pubsub.subscribe("wordScramble/submitWord", function()
+		{
+			gService.submitWordAttempt(wordScramble.wordAttemptService.getWordString());
+			wordScramble.pubsub.publish("wordScramble/clearWordAttempt");
+		});
+	})(this);
+
 	// create a word attempt object for these 6 methods
 	this.addAttempt = function(letter, id)
 	{
@@ -94,10 +111,16 @@ wordScramble.gameService = function(dService, configuration)
 				var worker = new Worker("js/wordFinder_worker.js");
 
 				var messageCount = 0;
-				worker.onmessage = function(evt)
+				worker.addEventListener('error', function(evt)
+				{
+					console.log(evt);
+				});
+				worker.addEventListener('message', function(evt)
 				{
 					if (configuration.debug)
-						console.log("firing off wordFinder_worker (iteration " + messageCount + ")");
+					{
+						console.log("firing off wordFinder_worker (iteration " + messageCount + ") with letters " + JSON.stringify(letters));
+					}
 					messageCount++;
 
 					var words = JSON.parse(evt.data);
@@ -125,7 +148,8 @@ wordScramble.gameService = function(dService, configuration)
 						data.letters = letters;
 						gService.onDataReady(data);
 					}
-				}
+				});
+
 				worker.postMessage(JSON.stringify(
 				{
 					"words" : dService.getDictionary(),

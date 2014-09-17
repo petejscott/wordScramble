@@ -8,7 +8,7 @@ wordScramble.pubsub = ( function()
 	var topics = {};
 	var subUid = -1;
 
-	var globalSub = null;
+	var snoop = true;
 
 	ps.publish = function(topic, args)
 	{
@@ -24,20 +24,12 @@ wordScramble.pubsub = ( function()
 			subscribers[len].func(topic, args);
 		}
 
-		if (globalSub !== null)
+		if (snoop)
 		{
-			globalSub.func(topic, args);
+			console.log("snoop: " + topic + " with " + args);
 		}
 
 		return this;
-	};
-
-	ps.subscribeAll = function(func)
-	{
-		globalSub = {
-			token : -1,
-			func : func
-		};
 	};
 
 	ps.subscribe = function(topic, func)

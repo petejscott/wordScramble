@@ -91,6 +91,7 @@ body, input {
 	padding: 0.25em 1em;
 	background: #333;
 	color: #eee;
+	font-size:0.8em;
 }
 #gameTitle {
 	display: block;
@@ -102,6 +103,11 @@ body, input {
 	text-decoration: none;
 	border-bottom: 1px solid #ddd;
 	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+	outline:0;
+	transition: color 0.25s;
+}
+#newGame:hover {
+	color:#fff;
 }
 
 #maskedWords {
@@ -109,15 +115,15 @@ body, input {
 	overflow-y: auto;
 	padding: 0.5em;
 	border-bottom: 1px solid #999;
-	background: #f6f6f6;
+	background: #ECF0F1;
 	transition: all 1s;
 }
 .word {
 	margin: 0.25em 0.5em 0.25em 0;
 	padding: 0 0.5em;
 	line-height: 1.75em;
-	background: #f9f9f9;
-	outline: 1px solid #ddd;
+	background: #EDF1F2;
+	outline: 1px solid #f9f9f9;
 	display: inline-block;
 	white-space: nowrap;
 }
@@ -193,7 +199,7 @@ body, input {
 	font-size: 1.5em;
 	margin-left: 0.5em;
 	display: inline-block;
-	transition: color 0.2s, background 0.25s;
+	transition: color 0.2s, background 0.25s, border 0.25s;
 	text-align: center;
 	background: #f9f9f9;
 	border: 2px solid #fff;
@@ -225,14 +231,14 @@ body, input {
 }
 
 #turnSubmit {
-	padding: 0.25em 0;
+	padding: 0.25em;
 	align-self: stretch;
 	flex: 2 0 auto;
 	display: flex;
 	justify-content: center;
-	align-items: center;
-	background: #f0f0f0;
-	border-top: 1px solid #bbb;
+	align-items: stretch;
+	background: #3498db;
+	border-top: 1px solid #2a8bcc;
 }
 #submitWord {
 	outline: 0;
@@ -245,6 +251,7 @@ body, input {
 	padding: 0.25em 0.5em;
 	color: #eee;
 	display: inline-block;
+	width:100%;
 	line-height: 1.5em;
 	vertical-align: middle;
 	font-size: 1.5em;
@@ -258,7 +265,7 @@ body, input {
 }
 
 #previousWordsWrapper {
-	display: none;
+	display: flex;
 	justify-content: center;
 	flex-direction: column;
 	align-items: center;
@@ -269,19 +276,25 @@ body, input {
 	left: 0;
 	background: rgba(0,0,0,0.85);
 	z-index: 100;
+	color: #fff;
+	transition: transform 0.5s;
+	transform: translateX(-100%);
 }
 #previousWordsWrapper.visible {
 	display: flex;
-	animation: fadein 0.5s;
-	-webkit-animation: fadein 0.5s;
+	transform: translateX(0);
+}
+#previousWordsWrapper.flyoff {
+	animation: flyleft 0.5s;
+	-webkit-animation: flyleft 0.5s;
 }
 #previousWordsTitle {
-	color: #fff;
 	padding: 0.5em;
 	margin: 0 1em;
 }
 #previousWords {
 	background: #fff;
+	color:#111;
 	border: 1px solid #999;
 	padding: 1em;
 	display: flex;
@@ -295,7 +308,6 @@ body, input {
 	border-color: #078E40;
 }
 #previousWordsCloser {
-	color: #fff;
 	padding: 0.5em;
 	margin: 0 1em;
 	cursor: pointer;
@@ -317,6 +329,17 @@ body, input {
 	}
 	to {
 		opacity: 1;
+	}
+}
+
+@keyframes flyleft {
+	100% {
+		transform: translateX(-100%);
+	}
+}
+@-webkit-keyframes flyleft {
+	100% {
+		transform: translateX(-100%);
 	}
 }
 

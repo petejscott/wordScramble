@@ -76,7 +76,12 @@ wordScramble.dictionaryService.prototype.retrieveDictionary = function(pathToDic
 
 wordScramble.dictionaryService.prototype.parseDictionary = function(dict, dService)
 {
-	var words = dict.split("\n");
+	var end = '\n';
+	if (dict.indexOf("\r\n") !== -1)
+	{
+		end = "\r\n";
+	}
+	var words = dict.split(end); //dict.split(/\r\n|\r|\n/g);
 	dService.setDictionary(words);
 }
 
