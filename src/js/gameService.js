@@ -3,9 +3,8 @@
 var wordScramble = wordScramble || {};
 wordScramble.gameService = function(dService, configuration)
 {
-	var _data =
-	{
-	};
+	var _data = {};
+	var wordAttempt = [];
 
 	function getLetters()
 	{
@@ -15,7 +14,42 @@ wordScramble.gameService = function(dService, configuration)
 		return letters;
 	}
 
-
+	// create a word attempt object for these 6 methods
+	this.addAttempt = function(letter, id)
+	{
+		if (!id) id = -1;
+		wordAttempt.push({"letter":letter,"id":id});
+	}
+	this.getPreviousAttempt = function()
+	{
+		if (wordAttempt.length == 0) return null;
+		return wordAttempt[wordAttempt.length];
+	}
+	this.removePreviousAttempt = function()
+	{
+		if (wordAttempt.length > 0)
+		{
+			return wordAttempt.pop();
+		}
+		return null;
+	}
+	this.getAttempts = function()
+	{
+		return wordAttempt;
+	}
+	this.clearAttempt = function()
+	{
+		wordAttempt = [];
+	}
+	this.getWordAttemptString = function()
+	{
+		var str = "";
+		wordAttempt.forEach(function(w)
+		{
+			str+=w.letter;
+		});
+		return str;
+	}
 	this.getGameData = function()
 	{
 		return _data;
@@ -23,10 +57,6 @@ wordScramble.gameService = function(dService, configuration)
 	this.saveGameData = function()
 	{
 		window.localStorage.setItem(gService.storageKey, JSON.stringify(_data));
-	}
-	this.shuffleLetters = function()
-	{
-		_data.letters = wordScramble.letterService.shuffleLetters(_data.letters);
 	}
 	this.setWordSolved = function(wordObject)
 	{
@@ -36,15 +66,10 @@ wordScramble.gameService = function(dService, configuration)
 	}
 	this.startGame = function()
 	{
-		if (configuration.debug)
-			console.log("startGame");
-
 		var gService = this;
-		gService.wordAttempt = "";
+		gService.clearAttempt();
 		dService.onDictionaryReady = function()
 		{
-			if (configuration.debug)
-				console.log("onDictionaryReady");
 			var data =
 			{
 			};
@@ -57,8 +82,6 @@ wordScramble.gameService = function(dService, configuration)
 					var jdata = window.localStorage.getItem(gService.storageKey);
 					data = JSON.parse(jdata);
 					dataLoadSuccess = true;
-					if (configuration.debug)
-						console.log("dataLoadSuccess === true: " + JSON.stringify(data));
 				}
 				catch(e)
 				{
@@ -67,9 +90,6 @@ wordScramble.gameService = function(dService, configuration)
 			}
 			if (!dataLoadSuccess || !data.letters || data.letters.length === 0 || !data.words || data.words.length === 0)
 			{
-				if (configuration.debug)
-					console.log("dataLoadSuccess === false");
-
 				var letters = getLetters();
 				var worker = new Worker("js/wordFinder_worker.js");
 
@@ -121,70 +141,64 @@ wordScramble.gameService = function(dService, configuration)
 		}
 		gService.onDataReady = function(data)
 		{
-			if (configuration.debug)
-				console.log("onDataReady: " + JSON.stringify(data));
+			wordScramble.pubsub.publish("wordScramble/lettersChanged", { "letters":data.letters });
+			wordScramble.pubsub.publish("wordScramble/wordsChanged", { "words":data.words });
+
 			_data = data;
 			window.localStorage.setItem(gService.storageKey, JSON.stringify(data));
 
-			if (configuration.debug)
-				console.log("calling onGameReady...");
-			gService.onGameReady(gService);
+			wordScramble.pubsub.publish("wordScramble/gameReady", {  });
 		}
 		dService.loadDictionary(configuration.dictionaryUrl);
 	}
 }
 
 wordScramble.gameService.prototype.storageKey = 'wordScramble.gameData';
-wordScramble.gameService.prototype.wordAttempt = "";
-wordScramble.gameService.prototype.removeCache = function()
+wordScramble.gameService.prototype.clearGameCache = function()
 {
+	var words = this.getGameData().words;
+	wordScramble.pubsub.publish("wordScramble/gameOver", {"words":words});
 	window.localStorage.removeItem(this.storageKey);
 }
-wordScramble.gameService.prototype.submitWord = function(wordAttempt)
+wordScramble.gameService.prototype.submitWordAttempt = function(word)
 {
-	var result = this.getGameData().words.filter(function(o)
+	var words = this.getGameData().words;
+	var result = words.filter(function(o)
 	{
-		return o.word === wordAttempt;
+		return o.word === word;
 	});
 	if (result && result[0] != null)
 	{
 		if (result[0].solved === true)
 		{
-			if (this.onWordAttemptAlreadyAccepted)
-			{
-				this.onWordAttemptAlreadyAccepted(wordAttempt);
-			}
+			wordScramble.pubsub.publish("wordScramble/wordAttemptAlreadyExists", {"word":word});
 		}
 		else
 		{
 			this.setWordSolved(result[0]);
-			if (this.onWordAttemptAccepted)
-			{
-				this.onWordAttemptAccepted(wordAttempt);
-			}
+
+			// refetch to get updated value.
+			words = this.getGameData().words;
+
+			wordScramble.pubsub.publish("wordScramble/wordsChanged", {"words":words});
+			wordScramble.pubsub.publish("wordScramble/wordAttemptAccepted", {"word":word});
 		}
 	}
-	else if (this.onWordAttemptRejected)
+	else
 	{
-		this.onWordAttemptRejected(wordAttempt);
+		wordScramble.pubsub.publish("wordScramble/wordAttemptRejected", {"word":word});
 	}
 
-	this.wordAttempt = "";
+	this.clearAttempt();
 
-	var victory = this.getGameData().words.every(function(o, i)
+	var victory = words.every(function(o, i)
 	{
 		return o.solved === true;
 	});
-	if (victory && this.onAllWordsSolved)
+	if (victory)
 	{
-		this.onAllWordsSolved();
+		wordScramble.pubsub.publish("wordScramble/allWordsSolved", {"words":words});
 	}
 
 	this.saveGameData();
 }
-
-wordScramble.gameService.prototype.onGameReady = null;
-wordScramble.gameService.prototype.onWordAttemptAccepted = null;
-wordScramble.gameService.prototype.onWordAttemptAlreadyAccepted = null;
-wordScramble.gameService.prototype.onWordAttemptRejected = null;
-wordScramble.gameService.prototype.onAllWordsSolved = null;

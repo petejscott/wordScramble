@@ -39,7 +39,15 @@
 	<script src="js/pubsub.js" type="text/javascript"></script>
 	<script src="js/dictionaryService.js" type="text/javascript"></script>
 	<script src="js/letterService.js" type="text/javascript"></script>
-	<script src="js/uiService.js" type="text/javascript"></script>
+
+	<script src="js/uiModules/newGameManager.js" type="text/javascript"></script>
+	<script src="js/uiModules/submitWordManager.js" type="text/javascript"></script>
+	<script src="js/uiModules/clearWordAttemptManager.js" type="text/javascript"></script>
+	<script src="js/uiModules/letterListManager.js" type="text/javascript"></script>
+	<script src="js/uiModules/maskedWordsManager.js" type="text/javascript"></script>
+	<script src="js/uiModules/previousWordsManager.js" type="text/javascript"></script>
+
+	<script src="js/wordAttemptService.js" type="text/javascript"></script>
 	<script src="js/gameService.js" type="text/javascript"></script>
 	<script src="config.js" type="text/javascript"></script>
 	<script type="text/javascript">
@@ -54,10 +62,9 @@
 		var gService = new wordScramble.gameService(dService, activeConfiguration);
 		//gService.removeCache();
 
-		var uiService = new wordScramble.uiService(document.querySelector("#gameContainer"), gService);
-
 		gService.startGame();
 
 	</script>
+	<script src="js/uiService.js" type="text/javascript"></script>
 </body>
 </html>

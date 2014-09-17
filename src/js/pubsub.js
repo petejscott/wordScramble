@@ -8,6 +8,8 @@ wordScramble.pubsub = ( function()
 	var topics = {};
 	var subUid = -1;
 
+	var globalSub = null;
+
 	ps.publish = function(topic, args)
 	{
 		if (!topics[topic])
@@ -22,7 +24,20 @@ wordScramble.pubsub = ( function()
 			subscribers[len].func(topic, args);
 		}
 
+		if (globalSub !== null)
+		{
+			globalSub.func(topic, args);
+		}
+
 		return this;
+	};
+
+	ps.subscribeAll = function(func)
+	{
+		globalSub = {
+			token : -1,
+			func : func
+		};
 	};
 
 	ps.subscribe = function(topic, func)
