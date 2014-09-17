@@ -117,10 +117,6 @@ wordScramble.gameService = function(dService, configuration)
 				});
 				worker.addEventListener('message', function(evt)
 				{
-					if (configuration.debug)
-					{
-						console.log("firing off wordFinder_worker (iteration " + messageCount + ") with letters " + JSON.stringify(letters));
-					}
 					messageCount++;
 
 					var words = JSON.parse(evt.data);
