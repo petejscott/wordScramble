@@ -66,7 +66,7 @@ wordScramble.uiService = (function(configuration, gameService)
 	{
 		if (configuration.debug && configuration.debug === true)
 		{
-			snoop();
+			//snoop();
 		}
 
 		wordScramble.pubsub.subscribe("wordScramble/endGame", function()
