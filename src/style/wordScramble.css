@@ -39,28 +39,22 @@ body, input {
 }
 
 /* error feedback */
-#gameContainer.error #maskedWords {
-	animation: error 1s ease-in-out;
-	-webkit-animation: error 1s ease-in-out;
-}
+#gameContainer.error .letterButton,
+#gameContainer.error #maskedWords,
 #gameContainer.error #turnSubmit {
 	animation: error 1s ease-in-out;
 	-webkit-animation: error 1s ease-in-out;
 }
 /* warning feedback */
-#gameContainer.warning #maskedWords {
-	animation: warning 1s ease-in-out;
-	-webkit-animation: warning 1s ease-in-out;
-}
+#gameContainer.warning .letterButton,
+#gameContainer.warning #maskedWords,
 #gameContainer.warning #turnSubmit {
 	animation: warning 1s ease-in-out;
 	-webkit-animation: warning 1s ease-in-out;
 }
 /* success feedback */
-#gameContainer.success #maskedWords {
-	animation: success 1s ease-in-out;
-	-webkit-animation: success 1s ease-in-out;
-}
+#gameContainer.success .letterButton,
+#gameContainer.success #maskedWords,
 #gameContainer.success #turnSubmit {
 	animation: success 1s ease-in-out;
 	-webkit-animation: success 1s ease-in-out;
@@ -331,52 +325,34 @@ body, input {
 }
 
 @keyframes error {
-	0%, 100% {
-		border-color:transparent;
-	}
-	40%, 60% {
+	50% {
 		border-color:#c72c1c;
 	}
 }
 @-webkit-keyframes error {
-	0%, 100% {
-		border-color:transparent;
-	}
-	40%, 60% {
+	50% {
 		border-color:#c72c1c;
 	}
 }
 
 @keyframes warning {
-	0%, 100% {
-		border-color:transparent;
-	}
-	40%, 60% {
+	50% {
 		border-color:#c6de22;
 	}
 }
 @-webkit-keyframes warning {
-	0%, 100% {
-		border-color:transparent;
-	}
-	40%, 60% {
+	50% {
 		border-color:#c6dd22;
 	}
 }
 
 @keyframes success {
-	0%, 100% {
-		border-color:transparent;
-	}
-	40%, 60% {
+	50% {
 		border-color:#078e40;
 	}
 }
 @-webkit-keyframes success {
-	0%, 100% {
-		border-color:transparent;
-	}
-	40%, 60% {
+	50% {
 		border-color:#078e40;
 	}
 }
