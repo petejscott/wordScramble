@@ -4,7 +4,6 @@ var wordScramble = wordScramble || {};
 wordScramble.gameService = function(dService, configuration)
 {
 	var _data = {};
-	var wordAttempt = [];
 
 	function getLetters()
 	{
@@ -31,42 +30,7 @@ wordScramble.gameService = function(dService, configuration)
 		});
 	})(this);
 
-	// create a word attempt object for these 6 methods
-	this.addAttempt = function(letter, id)
-	{
-		if (!id) id = -1;
-		wordAttempt.push({"letter":letter,"id":id});
-	}
-	this.getPreviousAttempt = function()
-	{
-		if (wordAttempt.length == 0) return null;
-		return wordAttempt[wordAttempt.length];
-	}
-	this.removePreviousAttempt = function()
-	{
-		if (wordAttempt.length > 0)
-		{
-			return wordAttempt.pop();
-		}
-		return null;
-	}
-	this.getAttempts = function()
-	{
-		return wordAttempt;
-	}
-	this.clearAttempt = function()
-	{
-		wordAttempt = [];
-	}
-	this.getWordAttemptString = function()
-	{
-		var str = "";
-		wordAttempt.forEach(function(w)
-		{
-			str+=w.letter;
-		});
-		return str;
-	}
+
 	this.getGameData = function()
 	{
 		return _data;
@@ -84,7 +48,6 @@ wordScramble.gameService = function(dService, configuration)
 	this.startGame = function()
 	{
 		var gService = this;
-		gService.clearAttempt();
 		dService.onDictionaryReady = function()
 		{
 			var data =
@@ -118,6 +81,7 @@ wordScramble.gameService = function(dService, configuration)
 				worker.addEventListener('message', function(evt)
 				{
 					messageCount++;
+					console.log("wordFinder: iteration " + messageCount);
 
 					var words = JSON.parse(evt.data);
 
@@ -208,8 +172,6 @@ wordScramble.gameService.prototype.submitWordAttempt = function(word)
 	{
 		wordScramble.pubsub.publish("wordScramble/wordAttemptRejected", {"word":word});
 	}
-
-	this.clearAttempt();
 
 	var victory = words.every(function(o, i)
 	{

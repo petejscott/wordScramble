@@ -38,19 +38,6 @@ body, input {
 	flex: 0 1 auto;
 }
 
-/* busy feedback */
-#gameContainer.busy #maskedWords {
-	flex: 4 0 auto;
-	background: #ff9;
-	text-align: center;
-}
-#gameContainer.busy #letterContainer,
-#gameContainer.busy #turnActions,
-#gameContainer.busy #wordAttempt,
-#gameContainer.busy #turnSubmit {
-	display: none;
-}
-
 /* error feedback */
 #gameContainer.error #maskedWords {
 	animation: error 1s ease-in-out;
