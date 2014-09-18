@@ -100,11 +100,11 @@ body, input {
 	transition: all 1s;
 }
 .word {
-	margin: 0.25em 0.5em 0.25em 0;
+	margin: 0.25em 0.35em 0.25em 0;
 	padding: 0 0.5em;
 	line-height: 1.75em;
-	background: #EDF1F2;
-	outline: 1px solid #f9f9f9;
+	background: #f0f3f4;
+	outline: 1px solid #dde1e2;
 	display: inline-block;
 	white-space: nowrap;
 }
