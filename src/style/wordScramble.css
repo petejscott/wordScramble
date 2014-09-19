@@ -158,8 +158,8 @@ body, input {
 	align-items: center;
 }
 #letterContainer.shuffling .letterButton {
-	animation: wobble 0.3s;
-	-webkit-animation: wobble 0.3s;
+	animation: rotate 0.3s;
+	-webkit-animation: rotate 0.3s;
 }
 #letterList {
 	padding: 0.25em 0.5em;
@@ -315,14 +315,14 @@ body, input {
 	}
 }
 
-@keyframes wobble {
-	50% {
-		transform: rotate(180deg);
+@keyframes rotate {
+	100% {
+		transform: rotate(360deg);
 	}
 }
-@-webkit-keyframes wobble {
-	50% {
-		transform: rotate(180deg);
+@-webkit-keyframes rotate {
+	100% {
+		transform: rotate(360deg);
 	}
 }
 
