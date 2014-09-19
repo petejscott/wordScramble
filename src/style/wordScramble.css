@@ -264,8 +264,8 @@ body, input {
 	transform: translateX(0);
 }
 #previousWordsWrapper.flyoff {
-	animation: flyleft 0.5s;
-	-webkit-animation: flyleft 0.5s;
+	animation: flyleft 0.25s;
+	-webkit-animation: flyleft 0.25s;
 }
 #previousWordsTitle {
 	padding: 0.5em;

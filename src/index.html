@@ -18,31 +18,35 @@
 </head>
 <body ontouchstart="">
 
-	<div id="gameContainer" class="main">
+	<article id="gameContainer" class="main">
 
 		<header id="gameHeader" class="container">
-			<h1 id="gameTitle">WordScramble</h1>
-			<a href="index.html" title="start a new game" id="newGame">New Game</a>
+			<hgroup>
+				<h1 id="gameTitle">WordScramble</h1>
+			</hgroup>
+			<nav>
+				<a href="index.html" title="start a new game" id="newGame">New Game</a>
+			</nav>
 		</header>
 
-		<div id="maskedWords" class="container"></div>
+		<section id="maskedWords" class="container"></section>
 
-		<div id="turnActions" class="container">
+		<section id="turnActions" class="container">
 			<span id="wordAttempt"></span>
 			<a href="#" id="clearWordAttempt">clear</a>
-		</div>
+		</section>
 
-		<div id="letterContainer" class="container">
+		<section id="letterContainer" class="container">
 			<div id="letterList" class="container"></div>
-		</div>
+		</section>
 
-		<div id="turnSubmit" class="container">
+		<section id="turnSubmit" class="container">
 			<input type="button" id="submitWord" value="Submit Word" />
-		</div>
+		</section>
 
-	</div>
+	</article>
 
-	<div id="previousWordsWrapper"></div>
+	<aside id="previousWordsWrapper"></aside>
 
 	<script src="config.js" type="text/javascript"></script>
 	<script src="js/pubsub.js" type="text/javascript"></script>
