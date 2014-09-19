@@ -99,13 +99,6 @@ wordScramble.previousWordsManager = (function()
 		clear();
 	};
 
-	manager.touchCoords = {
-		startX: null,
-		startY: null,
-		endX: null,
-		endY: null
-	};
-
 	function subscribe()
 	{
 		wordScramble.pubsub.subscribe("wordScramble/gameOver", function(topic,data)
@@ -121,38 +114,25 @@ wordScramble.previousWordsManager = (function()
 		var el = getElement();
 		if (el === null) return;
 
-		//TODO move all the touch handling into its own module
-		// with parameters for callback, axis, direction, and
-		// distance (latter as percentage of screen size, perhaps?)
-		el.addEventListener('touchstart', function(evt)
+		var callback = function(evt)
 		{
-			manager.touchCoords.startX = evt.targetTouches[0].clientX;
-			manager.touchCoords.startY = evt.targetTouches[0].clientY;
-			manager.touchCoords.endX = manager.touchCoords.startX;
-			manager.touchCoords.endY = manager.touchCoords.startY;
-		});
-		el.addEventListener('touchmove', function(evt)
-		{
-			var newX = evt.targetTouches[0].clientX;
-            var newY = evt.targetTouches[0].clientY;
-            var absX = Math.abs(manager.touchCoords.endX - newX);
-            var absY = Math.abs(manager.touchCoords.endY - newY);
+			el.classList.add('flyoff');
 
-			if (absX > absY && // mostly horizontal swipe
-				newX < manager.touchCoords.startX && // towards the left
-				absX > 160) // and at least 160px (TODO this will vary by screen size, presumably?)
-			{
-				el.classList.add('flyoff');
+			el.addEventListener(
+				'animationend',
+				manager.closePreviousWordsClickHandler,
+				false);
+			el.addEventListener(
+				'webkitAnimationEnd',
+				manager.closePreviousWordsClickHandler,
+				false);
+		}
 
-				el.addEventListener(
-					'animationend',
-					manager.closePreviousWordsClickHandler,
-					false);
-				el.addEventListener(
-					'webkitAnimationEnd',
-					manager.closePreviousWordsClickHandler,
-					false);
-			}
+		var swipeHandler = new wordScramble.swipeHandler({
+			element: el,
+			callback: callback,
+			direction: 'left',
+			distance: 160
 		});
 	}
 
