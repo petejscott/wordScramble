@@ -155,7 +155,7 @@ body, input {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-around;
-	align-items: space-around;
+	align-items: center;
 }
 #letterList {
 	padding: 0.25em 0.5em;
