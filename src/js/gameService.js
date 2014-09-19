@@ -1,9 +1,12 @@
 'use strict';
 
 var wordScramble = wordScramble || {};
-wordScramble.gameService = function(dService, configuration)
+wordScramble.gameService = (function(dService, configuration)
 {
-	var _data = {};
+	var gService = {};
+	var storageKey = 'wordScramble.gameData';
+	
+	var data = {};
 
 	function getLetters()
 	{
@@ -12,42 +15,97 @@ wordScramble.gameService = function(dService, configuration)
 
 		return letters;
 	}
+	
+	function saveGameData()
+	{
+		window.localStorage.setItem(storageKey, JSON.stringify(data));
+	}
+	
+	function setWordSolved(wordObject)
+	{
+		var index = data.words.indexOf(wordObject);
+		wordObject.solved = true;
+		data.words.splice(index, 1, wordObject);
+	}
 
-	(function subscribe(gService)
+	function subscribe()
 	{
 		wordScramble.pubsub.subscribe("wordScramble/endGame", function()
 		{
-			gService.clearGameCache();
+			clearGameCache();
 		});
 		wordScramble.pubsub.subscribe("wordScramble/startGame", function()
 		{
-			gService.startGame();
+			startGame();
 		});
 		wordScramble.pubsub.subscribe("wordScramble/submitWord", function()
 		{
-			gService.submitWordAttempt(wordScramble.wordAttemptService.getWordString());
+			submitWordAttempt(wordScramble.wordAttemptService.getWordString());
 			wordScramble.pubsub.publish("wordScramble/clearWordAttempt");
 		});
-	})(this);
+	}
+	
+	function clearGameCache()
+	{
+		var words = data.words;
+		wordScramble.pubsub.publish("wordScramble/gameOver", {"words":words});
+		window.localStorage.removeItem(storageKey);
+	}
+	
+	function submitWordAttempt(word)
+	{
+		var words = data.words;
+		var result = words.filter(function(o)
+		{
+			return o.word === word;
+		});
+		if (result && result[0] != null)
+		{
+			if (result[0].solved === true)
+			{
+				wordScramble.pubsub.publish("wordScramble/wordAttemptAlreadyExists", {"word":word});
+			}
+			else
+			{
+				setWordSolved(result[0]);
+	
+				// refetch to get updated value.
+				words = data.words;
+	
+				wordScramble.pubsub.publish("wordScramble/wordsChanged", {"words":words});
+				wordScramble.pubsub.publish("wordScramble/wordAttemptAccepted", {"word":word});
+			}
+		}
+		else
+		{
+			wordScramble.pubsub.publish("wordScramble/wordAttemptRejected", {"word":word});
+		}
+	
+		var victory = words.every(function(o, i)
+		{
+			return o.solved === true;
+		});
+		if (victory)
+		{
+			wordScramble.pubsub.publish("wordScramble/allWordsSolved", {"words":words});
+		}
+	
+		saveGameData();
+	}
+	
+	function onDataReady(gameData)
+	{
+		data = gameData;
+		
+		wordScramble.pubsub.publish("wordScramble/lettersChanged", { "letters":data.letters });
+		wordScramble.pubsub.publish("wordScramble/wordsChanged", { "words":data.words });
+		wordScramble.pubsub.publish("wordScramble/gameReady", {  });
+		
+		window.localStorage.setItem(storageKey, JSON.stringify(data));
+	}
 
-
-	this.getGameData = function()
+	function startGame()
 	{
-		return _data;
-	}
-	this.saveGameData = function()
-	{
-		window.localStorage.setItem(gService.storageKey, JSON.stringify(_data));
-	}
-	this.setWordSolved = function(wordObject)
-	{
-		var index = _data.words.indexOf(wordObject);
-		wordObject.solved = true;
-		_data.words.splice(index, 1, wordObject);
-	}
-	this.startGame = function()
-	{
-		var gService = this;
 		dService.onDictionaryReady = function()
 		{
 			var data =
@@ -55,11 +113,11 @@ wordScramble.gameService = function(dService, configuration)
 			};
 
 			var dataLoadSuccess = false;
-			if (window.localStorage !== null && window.localStorage.getItem(gService.storageKey) !== null)
+			if (window.localStorage !== null && window.localStorage.getItem(storageKey) !== null)
 			{
 				try
 				{
-					var jdata = window.localStorage.getItem(gService.storageKey);
+					var jdata = window.localStorage.getItem(storageKey);
 					data = JSON.parse(jdata);
 					dataLoadSuccess = true;
 				}
@@ -106,7 +164,7 @@ wordScramble.gameService = function(dService, configuration)
 					{
 						data.words = words;
 						data.letters = letters;
-						gService.onDataReady(data);
+						onDataReady(data);
 					}
 				});
 
@@ -119,68 +177,19 @@ wordScramble.gameService = function(dService, configuration)
 			}
 			else
 			{
-				gService.onDataReady(data);
+				onDataReady(data);
 			}
 
 		}
-		gService.onDataReady = function(data)
-		{
-			wordScramble.pubsub.publish("wordScramble/lettersChanged", { "letters":data.letters });
-			wordScramble.pubsub.publish("wordScramble/wordsChanged", { "words":data.words });
-
-			_data = data;
-			window.localStorage.setItem(gService.storageKey, JSON.stringify(data));
-
-			wordScramble.pubsub.publish("wordScramble/gameReady", {  });
-		}
+		
 		dService.loadDictionary(configuration.dictionaryUrl);
 	}
-}
+	
+	subscribe();
+	startGame();
+	
+	return gService;
+	
+})(dService, activeConfiguration);
 
-wordScramble.gameService.prototype.storageKey = 'wordScramble.gameData';
-wordScramble.gameService.prototype.clearGameCache = function()
-{
-	var words = this.getGameData().words;
-	wordScramble.pubsub.publish("wordScramble/gameOver", {"words":words});
-	window.localStorage.removeItem(this.storageKey);
-}
-wordScramble.gameService.prototype.submitWordAttempt = function(word)
-{
-	var words = this.getGameData().words;
-	var result = words.filter(function(o)
-	{
-		return o.word === word;
-	});
-	if (result && result[0] != null)
-	{
-		if (result[0].solved === true)
-		{
-			wordScramble.pubsub.publish("wordScramble/wordAttemptAlreadyExists", {"word":word});
-		}
-		else
-		{
-			this.setWordSolved(result[0]);
 
-			// refetch to get updated value.
-			words = this.getGameData().words;
-
-			wordScramble.pubsub.publish("wordScramble/wordsChanged", {"words":words});
-			wordScramble.pubsub.publish("wordScramble/wordAttemptAccepted", {"word":word});
-		}
-	}
-	else
-	{
-		wordScramble.pubsub.publish("wordScramble/wordAttemptRejected", {"word":word});
-	}
-
-	var victory = words.every(function(o, i)
-	{
-		return o.solved === true;
-	});
-	if (victory)
-	{
-		wordScramble.pubsub.publish("wordScramble/allWordsSolved", {"words":words});
-	}
-
-	this.saveGameData();
-}
