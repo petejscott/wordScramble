@@ -39,25 +39,19 @@ body, input {
 }
 
 /* error feedback */
-#gameContainer.error .letterButton,
-#gameContainer.error #maskedWords,
-#gameContainer.error #turnSubmit {
-	animation: error 1s ease-in-out;
-	-webkit-animation: error 1s ease-in-out;
+#gameContainer.error .letterButton {
+	animation: error 0.5s ease-in-out;
+	-webkit-animation: error 0.5s ease-in-out;
 }
 /* warning feedback */
-#gameContainer.warning .letterButton,
-#gameContainer.warning #maskedWords,
-#gameContainer.warning #turnSubmit {
-	animation: warning 1s ease-in-out;
-	-webkit-animation: warning 1s ease-in-out;
+#gameContainer.warning .letterButton {
+	animation: warning 0.5s ease-in-out;
+	-webkit-animation: warning 0.5s ease-in-out;
 }
 /* success feedback */
-#gameContainer.success .letterButton,
-#gameContainer.success #maskedWords,
-#gameContainer.success #turnSubmit {
-	animation: success 1s ease-in-out;
-	-webkit-animation: success 1s ease-in-out;
+#gameContainer.success .letterButton {
+	animation: success 0.5s ease-in-out;
+	-webkit-animation: success 0.5s ease-in-out;
 }
 
 /* layout styles */
