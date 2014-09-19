@@ -154,14 +154,14 @@ body, input {
 	flex: 2 0 auto;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+	justify-content: space-around;
+	align-items: space-around;
 }
 #letterList {
-	padding: 0.25em 0;
-	align-self: stretch;
-	flex: 1 0 auto;
+	padding: 0.25em 0.5em;
+	flex: 2 0 auto;
 	display: flex;
+	flex-direction: row;
 	justify-content: center;
 	align-items: center;
 }
@@ -196,7 +196,11 @@ body, input {
 }
 
 #shuffler {
-	display: block;
+	align-self: center;
+	flex: 1 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	padding: 0.25em;
 	color: #3498db;
 	transition: color 0.25s;
