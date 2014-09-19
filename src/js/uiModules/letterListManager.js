@@ -82,7 +82,7 @@ wordScramble.letterListManager = (function()
 			letterButton.setAttribute("value", o.letter);
 			letterButton.setAttribute("id", o.token);
 
-			letterButton.addEventListener('click', manager.letterClickEventHandler, false);
+			letterButton.addEventListener('click', letterClickEventHandler, false);
 			letterList.appendChild(letterButton);
 		}
 
@@ -90,7 +90,7 @@ wordScramble.letterListManager = (function()
 		shuffler.appendChild(document.createTextNode("shuffle"));
 		shuffler.setAttribute("href", "#shuffle");
 		shuffler.setAttribute("id", "shuffler");
-		shuffler.addEventListener('click', manager.shuffleClickEventHandler, false);
+		shuffler.addEventListener('click', shuffleClickEventHandler, false);
 
 		el.appendChild(letterList);
 		el.appendChild(shuffler);
@@ -184,7 +184,7 @@ wordScramble.letterListManager = (function()
 		});
 	}
 
-	manager.letterClickEventHandler = function(evt)
+	function letterClickEventHandler(evt)
 	{
 		evt.target.blur();
 		var token = evt.target.getAttribute("id");
@@ -218,8 +218,38 @@ wordScramble.letterListManager = (function()
 		}
 		evt.preventDefault();
 	}
-	manager.shuffleClickEventHandler = function(evt)
+	function endShuffle(evt)
 	{
+		var el = getElement();
+		if (el === null) return;
+
+		el.classList.remove("shuffling");
+
+		el.removeEventListener(
+			'animationend',
+			endShuffle,
+			false);
+		el.removeEventListener(
+			'webkitAnimationEnd',
+			endShuffle,
+			false);
+	}
+	function shuffleClickEventHandler (evt)
+	{
+		var el = getElement();
+		if (el !== null)
+		{
+			el.classList.add("shuffling");
+
+			el.addEventListener(
+				'animationend',
+				endShuffle,
+				false);
+			el.addEventListener(
+				'webkitAnimationEnd',
+				endShuffle,
+				false);
+		}
 		shuffle();
 		wordScramble.pubsub.publish("wordScramble/lettersChanged", {});
 		evt.preventDefault();
