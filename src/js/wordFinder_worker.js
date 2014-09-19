@@ -137,6 +137,11 @@ var onmessage = function(evt)
 	var wordList = 		data.words;
 	var letterList = 	data.letters;
 
+	if (!wordList)
+	{
+		throw "No words provided to wordFinder";
+	}
+
 	var wordFinder = new wordScramble.wordFinder(wordList);
 	var wordObjects = wordFinder.queryObjects(configuration.minWordLength, letterList);
 

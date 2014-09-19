@@ -1,94 +1,84 @@
 'use strict';
 
 var wordScramble = wordScramble || {};
-wordScramble.dictionaryService = function()
+wordScramble.dictionaryService = (function(configuration)
 {
-	var _dict = {};
+	var dictService = {};
 
-	this.setDictionary = function(dict)
+	var dict = {};
+	var storageKey = "wordScramble.dict";
+
+	function setDictionary(input)
 	{
-		if (!dict)
+		if (!input)
 		{
 			throw "Cannot set dictionary to an empty value";
 		}
-		_dict = dict;
+		dict = parseDictionary(input);
+		wordScramble.pubsub.publish("wordScramble/dictionaryReady", { "dict" : dict });
+	}
 
-		if (this.onDictionaryReady)
+	function parseDictionary(input)
+	{
+		var end = '\n';
+		if (input.indexOf("\r\n") !== -1)
 		{
-			this.onDictionaryReady();
+			end = "\r\n";
+		}
+		var words = input.split(end);
+		return words;
+	}
+
+	function removeCache()
+	{
+		if (window.localStorage !== null)
+		{
+			window.localStorage.removeItem(storageKey);
 		}
 	}
-	this.getDictionary = function()
-	{
-		return _dict;
-	}
-}
 
-wordScramble.dictionaryService.prototype.storageKey = 'wordScramble.dict';
-wordScramble.dictionaryService.prototype.onDictionaryReady = null;
-
-wordScramble.dictionaryService.prototype.loadDictionary = function(pathToDict)
-{
-	if (!pathToDict)
+	dictService.getDictionary = function()
 	{
-		throw "Missing path to dictionary";
-	}
-	this.retrieveDictionary(pathToDict, this.parseDictionary);
-}
-
-wordScramble.dictionaryService.prototype.retrieveDictionary = function(pathToDict, callback)
-{
-	if (!pathToDict)
-	{
-		throw "Missing path to dictionary";
+		return dict;
 	}
 
-	var dService = this;
-
-	if (window.localStorage !== null && window.localStorage.getItem(dService.storageKey) !== null)
+	dictService.loadDictionary = function(pathToDict)
 	{
-		callback(window.localStorage.getItem(dService.storageKey), dService);
-		return;
-	}
-	var filename = pathToDict;
-
-	var xmlhttp = new XMLHttpRequest();
-	xmlhttp.onreadystatechange = function()
-	{
-		if (xmlhttp.status == 200 && xmlhttp.readyState == 4)
+		if (!pathToDict)
 		{
-			var dict = xmlhttp.responseText;
-			if (window.localStorage !== null)
-			{
-				window.localStorage.setItem(dService.storageKey, dict);
-			}
-			callback(dict, dService);
+			throw "Missing path to dictionary";
 		}
-		else if (xmlhttp.status != 200 && xmlhttp.readyState == 4)
+		if (window.localStorage !== null && window.localStorage.getItem(storageKey) !== null)
 		{
-			throw "Cannot retrieve dictionary";
+			setDictionary(window.localStorage.getItem(storageKey));
 			return;
 		}
-	}
-	xmlhttp.open("GET", filename, true);
-	xmlhttp.send();
-}
+		var filename = pathToDict;
 
-wordScramble.dictionaryService.prototype.parseDictionary = function(dict, dService)
-{
-	var end = '\n';
-	if (dict.indexOf("\r\n") !== -1)
-	{
-		end = "\r\n";
+		var xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function()
+		{
+			if (xmlhttp.status == 200 && xmlhttp.readyState == 4)
+			{
+				var response = xmlhttp.responseText;
+				if (window.localStorage !== null)
+				{
+					window.localStorage.setItem(storageKey, response);
+				}
+				setDictionary(response);
+			}
+			else if (xmlhttp.status != 200 && xmlhttp.readyState == 4)
+			{
+				throw "Cannot retrieve dictionary";
+				return;
+			}
+		}
+		xmlhttp.open("GET", filename, true);
+		xmlhttp.send();
 	}
-	var words = dict.split(end); //dict.split(/\r\n|\r|\n/g);
-	dService.setDictionary(words);
-}
 
-wordScramble.dictionaryService.prototype.removeCache = function()
-{
-	if (window.localStorage !== null)
-	{
-		window.localStorage.removeItem(this.storageKey);
-	}
-}
+	dictService.loadDictionary(configuration.dictionaryUrl);
+
+	return dictService;
+
+})(wordScramble.configuration);
