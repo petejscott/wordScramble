@@ -58,6 +58,9 @@ body, input {
 
 #gameContainer {
 	position:fixed;
+	width:100%;
+	top:0;
+	left:0;
 	transition: all 0.5s;
 	transform: translateX(0);
 }
