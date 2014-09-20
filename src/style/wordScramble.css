@@ -10,8 +10,8 @@ html {
 	line-height: 1.5em;
 }
 body {
-	background: #fff;
-	color: #222;
+	background: #0468ab;
+	color: #eef;
 	margin: 0;
 	padding: 0;
 	height: 100%;
@@ -56,6 +56,34 @@ body, input {
 
 /* layout styles */
 
+#gameContainer {
+	position:fixed;
+	transition: all 0.5s;
+	transform: translateX(0);
+}
+body.status #gameContainer {
+	transform: translateX(100%);
+}
+#status {
+	display:none;
+	opacity:0;
+	transition: all 0.5s;
+}
+body.status #status {
+	outline:1px solid #ccc;
+	opacity:1;
+	display: flex;
+	flex-direction:column;
+	align-self: center;
+	flex: 1 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding:0.5em;
+	height:100%;
+	text-transform:uppercase;
+}
+
 #gameHeader {
 	flex: 0 1 auto;
 	min-height: 2.5em;
@@ -92,6 +120,7 @@ body, input {
 	border-bottom: 1px solid #999;
 	background: #ECF0F1;
 	transition: all 1s;
+	color:#556;
 }
 .word {
 	margin: 0.25em 0.35em 0.25em 0;
@@ -118,6 +147,7 @@ body, input {
 }
 
 #turnActions {
+	background:#fff;
 	flex: 0 0 auto;
 	height: 1.5em;
 	display: flex;
@@ -149,6 +179,7 @@ body, input {
 }
 
 #letterContainer {
+	background:#fff;
 	padding: 0.25em 0;
 	align-self: stretch;
 	flex: 2 0 auto;
@@ -268,8 +299,8 @@ body, input {
 	transform: translateX(0);
 }
 #previousWordsWrapper.flyoff {
-	animation: flyleft 0.25s;
-	-webkit-animation: flyleft 0.25s;
+	animation: flyoff-left 0.25s;
+	-webkit-animation: flyoff-left 0.25s;
 }
 #previousWordsTitle {
 	padding: 0.5em;
@@ -326,12 +357,23 @@ body, input {
 	}
 }
 
-@keyframes flyleft {
+@keyframes flyoff-right {
+	100% {
+		transform: translateX(100%);
+	}
+}
+@-webkit-keyframes flyoff-right {
+	100% {
+		transform: translateX(100%);
+	}
+}
+
+@keyframes flyoff-left {
 	100% {
 		transform: translateX(-100%);
 	}
 }
-@-webkit-keyframes flyleft {
+@-webkit-keyframes flyoff-left {
 	100% {
 		transform: translateX(-100%);
 	}

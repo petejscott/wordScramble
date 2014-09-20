@@ -5,9 +5,15 @@ wordScramble.gameService = (function(configuration)
 {
 	var gService = {};
 
+	var CONST_ELEMENT_ID = "#gameContainer";
 	var storageKey = 'wordScramble.gameData';
 	var dictionary = [];
 	var data = {};
+
+	function getElement()
+	{
+		return document.querySelector(CONST_ELEMENT_ID);
+	}
 
 	function getLetters()
 	{
@@ -101,6 +107,14 @@ wordScramble.gameService = (function(configuration)
 
 	function onDataReady(gameData)
 	{
+		var el = document.querySelector("body");
+		if (el !== null)
+		{
+			el.classList.remove("status");
+			var status = document.querySelector("#status");
+			status.textContent = "";
+		}
+
 		data = gameData;
 
 		wordScramble.pubsub.publish("wordScramble/lettersChanged", { "letters":data.letters });
@@ -112,6 +126,14 @@ wordScramble.gameService = (function(configuration)
 
 	function startGame()
 	{
+		var el = document.querySelector("body");
+		if (el !== null)
+		{
+			el.classList.add("status");
+			var status = document.querySelector("#status");
+			status.textContent = "Preparing game...";
+		}
+
 		var data = {};
 
 		var dataLoadSuccess = false;
@@ -169,12 +191,14 @@ wordScramble.gameService = (function(configuration)
 					onDataReady(data);
 				}
 			});
+			//window.setTimeout(function(){
 			worker.postMessage(JSON.stringify(
 			{
 				"words" : dictionary,
 				"configuration" : configuration,
 				"letters" : letters
 			}));
+			//},5000);
 		}
 		else
 		{
