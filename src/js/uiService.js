@@ -1,7 +1,7 @@
 'use strict';
 
 var wordScramble = wordScramble || {};
-wordScramble.uiService = (function()
+wordScramble.uiService = (function(pubsub)
 {
 	var uiService = {};
 
@@ -31,27 +31,27 @@ wordScramble.uiService = (function()
 
 	function subscribe()
 	{
-		wordScramble.pubsub.subscribe("wordScramble/gameReady", function()
+		pubsub.subscribe("wordScramble/gameReady", function()
 		{
 
 		});
-		wordScramble.pubsub.subscribe("wordScramble/wordAttemptAccepted", function(topic, data)
+		pubsub.subscribe("wordScramble/wordAttemptAccepted", function(topic, data)
 		{
 			provideFeedback('success');
 		});
-		wordScramble.pubsub.subscribe("wordScramble/wordAttemptAlreadyExists", function(topic, data)
+		pubsub.subscribe("wordScramble/wordAttemptAlreadyExists", function(topic, data)
 		{
 			provideFeedback('warning');
 		});
-		wordScramble.pubsub.subscribe("wordScramble/wordAttemptRejected", function(topic, data)
+		pubsub.subscribe("wordScramble/wordAttemptRejected", function(topic, data)
 		{
 			provideFeedback('error');
 		});
-		wordScramble.pubsub.subscribe("wordScramble/allWordsSolved", function(topic, data)
+		pubsub.subscribe("wordScramble/allWordsSolved", function(topic, data)
 		{
 			var words = data.words;
-			wordScramble.pubsub.publish("wordScramble/endGame", {"words":words});
-			wordScramble.pubsub.publish("wordScramble/startGame", {});
+			pubsub.publish("wordScramble/endGame", {"words":words});
+			pubsub.publish("wordScramble/startGame", {});
 		});
 	}
 
@@ -59,4 +59,4 @@ wordScramble.uiService = (function()
 
 	return uiService;
 
-})();
+})(window.pubsubz);

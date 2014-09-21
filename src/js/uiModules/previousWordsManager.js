@@ -1,7 +1,7 @@
 'use strict';
 
 var wordScramble = wordScramble || {};
-wordScramble.previousWordsManager = (function()
+wordScramble.previousWordsManager = (function(pubsub)
 {
 	var manager = {};
 
@@ -101,7 +101,7 @@ wordScramble.previousWordsManager = (function()
 
 	function subscribe()
 	{
-		wordScramble.pubsub.subscribe("wordScramble/gameOver", function(topic,data)
+		pubsub.subscribe("wordScramble/gameOver", function(topic,data)
 		{
 			var words = data.words;
 			clear();
@@ -141,4 +141,4 @@ wordScramble.previousWordsManager = (function()
 
 	return manager;
 
-})();
+})(window.pubsubz);

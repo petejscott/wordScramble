@@ -7,7 +7,7 @@ wordScramble.wordFinder = function(wordList)
 	{
 		var wordObjects = words.map(function(w)
 		{
-			return { "word" : w, "solved" : false, "chars" : w.length };
+			return { "word" : w.word, "solved" : false, "chars" : w.length };
 		});
 		return wordObjects;
 	}
@@ -73,16 +73,16 @@ wordScramble.wordFinder = function(wordList)
 		{
 			var found = wordPermutations.some(function(wp)
 			{
-				return wp.indexOf(w) !== -1;
+				return wp.indexOf(w.word) !== -1;
 			});
 			if (found === true)
 			{
 				// get a count of each distinct letter
-				var wordLetters = w.split("");
+				var wordLetters = w.word.split("");
 				wordLetters.forEach(function(l)
 				{
 					// count of the number of occurrences in this word
-					var wordCnt = w.split(l).length - 1;
+					var wordCnt = w.word.split(l).length - 1;
 					// current count from letterCount
 					var currentCnt = letterCounts.charAt(letterCounts.indexOf(l)+1,0);
 					// compare and update if necessary
@@ -113,10 +113,10 @@ wordScramble.wordFinder = function(wordList)
 			if (permCnt != currentCnt)
 			{
 				// throw it all out and start over, sadly.
-				console.log("expected "+permCnt+" occurrences of "+letter+", but only "+currentCnt+" were actually used.");
-				console.log(letterList);
-				console.log(letterCounts);
-				console.log(words);
+				//console.log("expected "+permCnt+" occurrences of "+letter+", but only "+currentCnt+" were actually used.");
+				//console.log(letterList);
+				//console.log(letterCounts);
+				//console.log(words);
 				return [];
 				break;
 			}
@@ -134,16 +134,21 @@ var onmessage = function(evt)
 	var data = JSON.parse(evt.data);
 
 	var configuration = data.configuration;
-	var wordList = 		data.words;
+	var wordList = 		data.dictionary;
 	var letterList = 	data.letters;
 
-	if (!wordList)
+	if (!wordList || wordList.length === 0)
 	{
-		throw "No words provided to wordFinder";
+		throw new Error("No words provided to wordFinder");
 	}
 
 	var wordFinder = new wordScramble.wordFinder(wordList);
 	var wordObjects = wordFinder.queryObjects(configuration.minWordLength, letterList);
 
-	postMessage(JSON.stringify(wordObjects));
+	var message = {
+		words : wordObjects,
+		letters : letterList
+	};
+
+	postMessage(JSON.stringify(message));
 };

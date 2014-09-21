@@ -1,7 +1,7 @@
 'use strict';
 
 var wordScramble = wordScramble || {};
-wordScramble.clearWordAttemptManager = (function()
+wordScramble.clearWordAttemptManager = (function(pubsub)
 {
 	var manager = {};
 
@@ -28,7 +28,7 @@ wordScramble.clearWordAttemptManager = (function()
 		el.addEventListener(
 			'click', manager.eventHandler, false);
 
-		wordScramble.pubsub.subscribe("wordScramble/wordAttemptUpdated", function(topic, data)
+		pubsub.subscribe("wordScramble/wordAttemptUpdated", function(topic, data)
 		{
 			if (data.wordString.length > 0)
 			{
@@ -43,7 +43,7 @@ wordScramble.clearWordAttemptManager = (function()
 
 	manager.eventHandler = function(evt)
 	{
-		wordScramble.pubsub.publish("wordScramble/clearWordAttempt", {"target":evt.target});
+		pubsub.publish("wordScramble/clearWordAttempt", {"target":evt.target});
 		evt.preventDefault();
 	}
 
@@ -56,4 +56,4 @@ wordScramble.clearWordAttemptManager = (function()
 
 	return manager;
 
-})();
+})(window.pubsubz);

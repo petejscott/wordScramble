@@ -1,7 +1,7 @@
 'use strict';
 
 var wordScramble = wordScramble || {};
-wordScramble.letterListManager = (function()
+wordScramble.letterListManager = (function(pubsub)
 {
 	var manager = {};
 
@@ -146,13 +146,13 @@ wordScramble.letterListManager = (function()
 
 	function subscribe()
 	{
-		wordScramble.pubsub.subscribe("wordScramble/lettersChanged", function(topic,data)
+		pubsub.subscribe("wordScramble/lettersChanged", function(topic,data)
 		{
 			var letters = data.letters || null;
 			clear();
 			render(letters);
 		});
-		wordScramble.pubsub.subscribe("wordScramble/wordAttemptUpdated", function(topic, data)
+		pubsub.subscribe("wordScramble/wordAttemptUpdated", function(topic, data)
 		{
 			var tokens = data.allTokens;
 			var lastToken = tokens[tokens.length - 1];
@@ -200,7 +200,7 @@ wordScramble.letterListManager = (function()
 			// registered as selected. needs to be unselected if allowed
 			if (letterObjects[loIndex].selected === true)
 			{
-				wordScramble.pubsub.publish("wordScramble/removeLetter",
+				pubsub.publish("wordScramble/removeLetter",
 				{
 					"letter":evt.target.getAttribute("data-letter"),
 					"token":token
@@ -209,7 +209,7 @@ wordScramble.letterListManager = (function()
 			// not yet selected. submit it!
 			else
 			{
-				wordScramble.pubsub.publish("wordScramble/submitLetter",
+				pubsub.publish("wordScramble/submitLetter",
 				{
 					"letter":evt.target.getAttribute("data-letter"),
 					"token":token
@@ -251,7 +251,7 @@ wordScramble.letterListManager = (function()
 				false);
 		}
 		shuffle();
-		wordScramble.pubsub.publish("wordScramble/lettersChanged", {});
+		pubsub.publish("wordScramble/lettersChanged", {});
 		evt.preventDefault();
 	}
 
@@ -259,4 +259,4 @@ wordScramble.letterListManager = (function()
 
 	return manager;
 
-})();
+})(window.pubsubz);

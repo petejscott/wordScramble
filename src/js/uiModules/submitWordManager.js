@@ -1,7 +1,7 @@
 'use strict';
 
 var wordScramble = wordScramble || {};
-wordScramble.submitWordManager = (function()
+wordScramble.submitWordManager = (function(pubsub)
 {
 	var manager = {};
 
@@ -31,7 +31,7 @@ wordScramble.submitWordManager = (function()
 
 	manager.eventHandler = function(evt)
 	{
-		wordScramble.pubsub.publish("wordScramble/submitWord", {"target":evt.target});
+		pubsub.publish("wordScramble/submitWord", {"target":evt.target});
 		evt.preventDefault();
 	}
 
@@ -44,4 +44,4 @@ wordScramble.submitWordManager = (function()
 
 	return manager;
 
-})();
+})(window.pubsubz);

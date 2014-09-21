@@ -1,7 +1,7 @@
 'use strict';
 
 var wordScramble = wordScramble || {};
-wordScramble.wordAttemptService = ( function()
+wordScramble.wordAttemptService = ( function(pubsub)
 {
 	var service = {};
 
@@ -15,26 +15,26 @@ wordScramble.wordAttemptService = ( function()
 
 	function subscribe()
 	{
-		wordScramble.pubsub.subscribe("wordScramble/wordAttemptUpdated", function(topic, data)
+		pubsub.subscribe("wordScramble/wordAttemptUpdated", function(topic, data)
 		{
 			var el = getElement();
 			if (el === null) return;
 			el.textContent = data.wordString;
 		});
-		wordScramble.pubsub.subscribe("wordScramble/submitLetter", function(topic, data)
+		pubsub.subscribe("wordScramble/submitLetter", function(topic, data)
 		{
 			var letter = data.letter;
 			var token = data.token;
 			service.add(letter, token);
 		});
-		wordScramble.pubsub.subscribe("wordScramble/removeLetter", function(topic, data)
+		pubsub.subscribe("wordScramble/removeLetter", function(topic, data)
 		{
 			var letter = data.letter;
 			var token = data.token;
 			service.removePrevious();
 			return;
 		});
-		wordScramble.pubsub.subscribe("wordScramble/clearWordAttempt", function()
+		pubsub.subscribe("wordScramble/clearWordAttempt", function()
 		{
 			service.clear();
 		});
@@ -88,7 +88,7 @@ wordScramble.wordAttemptService = ( function()
 	service.removePrevious = function()
 	{
 		var old = wordAttempts.pop();
-		wordScramble.pubsub.publish("wordScramble/wordAttemptUpdated",
+		pubsub.publish("wordScramble/wordAttemptUpdated",
 		{
 			"type":"remove",
 			"wordString":service.getWordString(),
@@ -102,7 +102,7 @@ wordScramble.wordAttemptService = ( function()
 	service.clear = function()
 	{
 		wordAttempts = [];
-		wordScramble.pubsub.publish("wordScramble/wordAttemptUpdated",
+		pubsub.publish("wordScramble/wordAttemptUpdated",
 		{
 			"type":"remove",
 			"wordString":service.getWordString(),
@@ -119,7 +119,7 @@ wordScramble.wordAttemptService = ( function()
 			"letter": letter,
 			"token" : token
 		});
-		wordScramble.pubsub.publish("wordScramble/wordAttemptUpdated",
+		pubsub.publish("wordScramble/wordAttemptUpdated",
 		{
 			"type":"add",
 			"wordString":service.getWordString(),
@@ -132,4 +132,4 @@ wordScramble.wordAttemptService = ( function()
 	subscribe();
 
 	return service;
-}());
+}(window.pubsubz));

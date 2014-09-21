@@ -1,7 +1,7 @@
 'use strict';
 
 var wordScramble = wordScramble || {};
-wordScramble.newGameManager = (function()
+wordScramble.newGameManager = (function(pubsub)
 {
 	var manager = {};
 
@@ -31,8 +31,8 @@ wordScramble.newGameManager = (function()
 
 	manager.eventHandler = function(evt)
 	{
-		wordScramble.pubsub.publish("wordScramble/endGame", {"target":evt.target});
-		wordScramble.pubsub.publish("wordScramble/startGame", {"target":evt.target});
+		pubsub.publish("wordScramble/endGame", {"target":evt.target});
+		pubsub.publish("wordScramble/startGame", {"target":evt.target});
 		evt.preventDefault();
 	}
 
@@ -45,4 +45,4 @@ wordScramble.newGameManager = (function()
 
 	return manager;
 
-})();
+})(window.pubsubz);

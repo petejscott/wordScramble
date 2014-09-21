@@ -1,7 +1,7 @@
 'use strict';
 
 var wordScramble = wordScramble || {};
-wordScramble.maskedWordsManager = (function()
+wordScramble.maskedWordsManager = (function(pubsub)
 {
 	var manager = {};
 
@@ -65,7 +65,7 @@ wordScramble.maskedWordsManager = (function()
 
 	function subscribe()
 	{
-		wordScramble.pubsub.subscribe("wordScramble/wordsChanged", function(topic,data)
+		pubsub.subscribe("wordScramble/wordsChanged", function(topic,data)
 		{
 			var words = data.words;
 			clear();
@@ -77,4 +77,4 @@ wordScramble.maskedWordsManager = (function()
 
 	return manager;
 
-})();
+})(window.pubsubz);

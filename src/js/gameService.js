@@ -1,7 +1,7 @@
 'use strict';
 
 var wordScramble = wordScramble || {};
-wordScramble.gameService = (function(configuration)
+wordScramble.gameService = (function(configuration, pubsub)
 {
 	var gService = {};
 
@@ -13,14 +13,6 @@ wordScramble.gameService = (function(configuration)
 	function getElement()
 	{
 		return document.querySelector(CONST_ELEMENT_ID);
-	}
-
-	function getLetters()
-	{
-		var count = configuration.letterCount;
-		var letters = wordScramble.letterService.getUniqueRandomLetters(count);
-
-		return letters;
 	}
 
 	function saveGameData()
@@ -37,30 +29,41 @@ wordScramble.gameService = (function(configuration)
 
 	function subscribe()
 	{
-		wordScramble.pubsub.subscribe("wordScramble/endGame", function()
+		pubsub.subscribe("wordScramble/endGame", function()
 		{
 			clearGameCache();
 		});
-		wordScramble.pubsub.subscribe("wordScramble/startGame", function()
+		pubsub.subscribe("wordScramble/startGame", function()
 		{
 			startGame();
 		});
-		wordScramble.pubsub.subscribe("wordScramble/submitWord", function()
+		pubsub.subscribe("wordScramble/submitWord", function()
 		{
 			submitWordAttempt(wordScramble.wordAttemptService.getWordString());
-			wordScramble.pubsub.publish("wordScramble/clearWordAttempt");
+			pubsub.publish("wordScramble/clearWordAttempt");
 		});
-		wordScramble.pubsub.subscribe("wordScramble/dictionaryReady", function(topic, data)
+		pubsub.subscribe("wordScramble/gameReady", function(topic, d)
 		{
-			dictionary = data.dict;
-			startGame();
+			var el = document.querySelector("body");
+			if (el !== null)
+			{
+				el.classList.remove("status");
+				var status = document.querySelector("#status");
+				status.textContent = "";
+			}
+			data = d.gameData;
+
+			pubsub.publish("wordScramble/lettersChanged", { "letters":data.letters });
+-			pubsub.publish("wordScramble/wordsChanged", { "words":data.words });
+
+			saveGameData();
 		});
 	}
 
 	function clearGameCache()
 	{
 		var words = data.words;
-		wordScramble.pubsub.publish("wordScramble/gameOver", {"words":words});
+		pubsub.publish("wordScramble/gameOver", {"words":words});
 		window.localStorage.removeItem(storageKey);
 	}
 
@@ -75,7 +78,7 @@ wordScramble.gameService = (function(configuration)
 		{
 			if (result[0].solved === true)
 			{
-				wordScramble.pubsub.publish("wordScramble/wordAttemptAlreadyExists", {"word":word});
+				pubsub.publish("wordScramble/wordAttemptAlreadyExists", {"word":word});
 			}
 			else
 			{
@@ -84,13 +87,13 @@ wordScramble.gameService = (function(configuration)
 				// refetch to get updated value.
 				words = data.words;
 
-				wordScramble.pubsub.publish("wordScramble/wordsChanged", {"words":words});
-				wordScramble.pubsub.publish("wordScramble/wordAttemptAccepted", {"word":word});
+				pubsub.publish("wordScramble/wordsChanged", {"words":words});
+				pubsub.publish("wordScramble/wordAttemptAccepted", {"word":word});
 			}
 		}
 		else
 		{
-			wordScramble.pubsub.publish("wordScramble/wordAttemptRejected", {"word":word});
+			pubsub.publish("wordScramble/wordAttemptRejected", {"word":word});
 		}
 
 		var victory = words.every(function(o, i)
@@ -99,29 +102,10 @@ wordScramble.gameService = (function(configuration)
 		});
 		if (victory)
 		{
-			wordScramble.pubsub.publish("wordScramble/allWordsSolved", {"words":words});
+			pubsub.publish("wordScramble/allWordsSolved", {"words":words});
 		}
 
 		saveGameData();
-	}
-
-	function onDataReady(gameData)
-	{
-		var el = document.querySelector("body");
-		if (el !== null)
-		{
-			el.classList.remove("status");
-			var status = document.querySelector("#status");
-			status.textContent = "";
-		}
-
-		data = gameData;
-
-		wordScramble.pubsub.publish("wordScramble/lettersChanged", { "letters":data.letters });
-		wordScramble.pubsub.publish("wordScramble/wordsChanged", { "words":data.words });
-		wordScramble.pubsub.publish("wordScramble/gameReady", {  });
-
-		window.localStorage.setItem(storageKey, JSON.stringify(data));
 	}
 
 	function startGame()
@@ -134,82 +118,14 @@ wordScramble.gameService = (function(configuration)
 			status.textContent = "Preparing game...";
 		}
 
-		var data = {};
-
-		var dataLoadSuccess = false;
-		if (window.localStorage !== null && window.localStorage.getItem(storageKey) !== null)
-		{
-			try
-			{
-				var jdata = window.localStorage.getItem(storageKey);
-				data = JSON.parse(jdata);
-				dataLoadSuccess = true;
-			}
-			catch(e)
-			{
-				console.log(e);
-			}
-		}
-		if (!dataLoadSuccess || !data.letters || data.letters.length === 0 || !data.words || data.words.length === 0)
-		{
-			var letters = getLetters();
-			var worker = new Worker("js/wordFinder_worker.js");
-
-			var messageCount = 0;
-			worker.addEventListener('error', function(evt)
-			{
-				console.log(evt);
-			});
-			worker.addEventListener('message', function(evt)
-			{
-				messageCount++;
-				console.log("wordFinder: iteration " + messageCount);
-
-				var words = JSON.parse(evt.data);
-
-				if (messageCount >= 10)
-				{
-					throw "Too many iterations; giving up";
-				}
-
-				if (words.length < configuration.minWords)
-				{
-					// new letters
-					letters = getLetters();
-					// work again
-					worker.postMessage(JSON.stringify(
-					{
-						"words" : dictionary,
-						"configuration" : configuration,
-						"letters" : letters
-					}));
-				}
-				else
-				{
-					data.words = words;
-					data.letters = letters;
-					onDataReady(data);
-				}
-			});
-			//window.setTimeout(function(){
-			worker.postMessage(JSON.stringify(
-			{
-				"words" : dictionary,
-				"configuration" : configuration,
-				"letters" : letters
-			}));
-			//},5000);
-		}
-		else
-		{
-			onDataReady(data);
-		}
+		wordScramble.gameBuilder.build(wordScramble.dict);
 	}
 
 	subscribe();
+	startGame();
 
 	return gService;
 
-})(wordScramble.configuration);
+})(wordScramble.configuration, window.pubsubz);
 
 
