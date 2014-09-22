@@ -28,7 +28,7 @@ wordScramble.gameService = (function(configuration, pubsub)
 			gameData = JSON.parse(storedData);
 			return true;
 		}
-		return false
+		return false;
 	}
 
 	function setWordSolved(wordObject)
@@ -131,8 +131,7 @@ wordScramble.gameService = (function(configuration, pubsub)
 		}
 
 		var loaded = loadGameData();
-		if (gameData && gameData.words && gameData.words.length > 0 &&
-			gameData.letters && gameData.letters.length > 0)
+		if (loaded)
 		{
 			pubsub.publish("wordScramble/gameReady", { gameData : gameData });
 		}
