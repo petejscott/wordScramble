@@ -47,6 +47,7 @@ wordScramble.gameService = (function(configuration, pubsub)
 		pubsub.subscribe("wordScramble/startGame", function()
 		{
 			startGame();
+			pubsub.publish("wordScramble/clearWordAttempt");
 		});
 		pubsub.subscribe("wordScramble/submitWord", function()
 		{
