@@ -20,6 +20,7 @@ build: $(SRCS)
 	cat $(SRCS) >build/wordScramble.js
 	jsmin <build/wordScramble.js >build/wordScramble-min.js
 	cp src/config.js build/config.js
+	cp src/style/wordScramble/wordScramble.css build/wordScramble.css
 	cp src/prod.html build/index.html
 
 clean:
