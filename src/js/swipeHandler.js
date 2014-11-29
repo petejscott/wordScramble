@@ -7,6 +7,8 @@ wordScramble.swipeHandler = function(swipeConfiguration)
 	{
 		throw "swipeConfiguration is required!";
 	}
+	
+	var isSwiping = false;
 
 	var touchCoords = {
 		startX: null,
@@ -52,6 +54,22 @@ wordScramble.swipeHandler = function(swipeConfiguration)
 		return false;
 	}
 
+	function handleSwipe(callback, evt)
+	{
+		if (isSwiping === true) 
+		{   
+			return;
+		}           
+		isSwiping = true;
+		
+		callback(evt);
+	}
+	
+	swipeConfiguration.element.addEventListener('touchend', function(evt)
+	{
+		isSwiping = false;
+	});
+
 	swipeConfiguration.element.addEventListener('touchstart', function(evt)
 	{
 		touchCoords.startX = evt.targetTouches[0].clientX;
@@ -72,28 +90,28 @@ wordScramble.swipeHandler = function(swipeConfiguration)
 		{
 			if (absX > swipeConfiguration.distance)
 			{
-				swipeConfiguration.callback(evt);
+				handleSwipe(swipeConfiguration.callback, evt);
 			}
 		}
 		else if (direction === 'right' && isRightSwipe(absX,absY,newX,newY))
 		{
 			if (absX > swipeConfiguration.distance)
 			{
-				swipeConfiguration.callback(evt);
+				handleSwipe(swipeConfiguration.callback, evt);
 			}
 		}
 		else if (direction === 'up' && isUpSwipe(absX,absY,newX,newY))
 		{
 			if (absY > swipeConfiguration.distance)
 			{
-				swipeConfiguration.callback(evt);
+				handleSwipe(swipeConfiguration.callback, evt);
 			}
 		}
 		else if (direction === 'down' && isDownSwipe(absX,absY,newX,newY))
 		{
 			if (absY > swipeConfiguration.distance)
 			{
-				swipeConfiguration.callback(evt);
+				handleSwipe(swipeConfiguration.callback, evt);
 			}
 		}
 	});
