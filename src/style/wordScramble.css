@@ -34,6 +34,23 @@ body, input {
 	height: 100%;
 }
 
+header {
+	box-shadow: 0 1px 1px -1px rgba(0,0,0,0.25);
+	padding:0 1rem;
+}
+header .menuToggle {
+	margin-right: 0.5em;
+	cursor: pointer;
+	font-weight:normal;
+}
+header h1 { 
+	font-size:1rem;
+	line-height:3.5rem;
+	display:inline-block; 
+	margin:0; 
+	font-weight:normal;
+}
+
 .container {
 	flex: 0 1 auto;
 }
@@ -87,33 +104,40 @@ body.status #status {
 	text-transform:uppercase;
 }
 
+nav ul {
+	margin: 0.5em 0; 
+	padding: 0;
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+}
+nav li {	
+	transition: background 0.5s;
+	padding: 0.2em 1em;
+}
+nav li:hover {
+	background-color:#f6f6f6;
+}
+nav li a {
+	display: block;
+	line-height: 2.6em;
+	text-decoration: none;
+	color: #222;
+}
+
 #gameHeader {
 	flex: 0 1 auto;
-	min-height: 2.5em;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
-	padding: 0.25em 1em;
-	background: #333;
-	color: #eee;
+	background:#0062a5;
+	color:#fff;
 	font-size:0.8em;
 }
 #gameTitle {
-	display: block;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-}
-#newGame {
 	display: inline-block;
-	color: #eee;
-	text-decoration: none;
-	border-bottom: 1px solid #ddd;
 	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-	outline:0;
-	transition: color 0.25s;
-}
-#newGame:hover {
-	color:#fff;
 }
 
 #maskedWords {

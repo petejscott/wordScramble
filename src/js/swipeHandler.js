@@ -62,14 +62,13 @@ wordScramble.swipeHandler = function(swipeConfiguration)
 		}           
 		isSwiping = true;
 		
-		callback(evt);
+		callback(evt, swipeConfiguration.opts);
 	}
 	
 	swipeConfiguration.element.addEventListener('touchend', function(evt)
 	{
 		isSwiping = false;
 	});
-
 	swipeConfiguration.element.addEventListener('touchstart', function(evt)
 	{
 		touchCoords.startX = evt.targetTouches[0].clientX;
@@ -114,6 +113,8 @@ wordScramble.swipeHandler = function(swipeConfiguration)
 				handleSwipe(swipeConfiguration.callback, evt);
 			}
 		}
+		
+		evt.preventDefault();
 	});
 
 }
