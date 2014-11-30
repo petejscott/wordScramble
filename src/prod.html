@@ -4,17 +4,31 @@
 	<meta charset="utf-8" />
 	<meta http-equiv="cache-control" content="public, max-age=31536000" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-	<title>WordScramble</title>
-	<link rel="stylesheet" type="text/css" href="wordScramble.css" />
+	<title>WordScramble</title>	
+	<link rel="stylesheet" type="text/css" href="style/drawer.css" />
+	<link rel="stylesheet" type="text/css" href="style/wordScramble.css" />
+	<link rel="stylesheet" href="font/fontello/css/fontello.css" />
 </head>
 <body ontouchstart="">
 
 	<aside id="status"></aside>
+	
+	<div id="menu" class="drawer" data-swipe-target="#gameContainer" data-slide-in-dir="right" data-slide-out-dir="left" data-toggle-selector=".menuToggle">
+		<header>
+			<h1>WordScramble Menu</h1>
+		</header>
+		<nav>
+			<ul>
+				<li><a href="index.html" class="menuToggle" title="start a new game" id="newGame">New Game</a></li>
+			</ul>
+		</nav>
+	</div>	
 
 	<article id="gameContainer" class="main">
 
 		<header id="gameHeader" class="container">
 			<hgroup>
+				<span class="icon-menu menuToggle" title="menu"></span>
 				<h1 id="gameTitle">WordScramble</h1>
 			</hgroup>
 			<nav>
