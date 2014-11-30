@@ -27,7 +27,7 @@
 	box-shadow:0 0 4px rgba(0,0,0,0.5);
 	transform: translateX(0);
 }
-#main::before {
+.main::before {
 	content: " ";
 	position: absolute;
 	top: 0;
@@ -38,11 +38,11 @@
 	z-index: 10;
 	transition: background .2s;
 }
-.drawer.visible ~ #main::before {
+.drawer.visible ~ .main::before {
 	width: 100%;
 	background: rgba(0,0,0,0.5);
 }
-.drawer.flyoff ~ #main::before {
+.drawer.flyoff ~ .main::before {
 	background: rgba(0,0,0,0);
 }
 .drawer[data-slide-in-dir="right"].flyoff {
