@@ -38,7 +38,7 @@ header {
 	box-shadow: 0 1px 1px -1px rgba(0,0,0,0.25);
 	padding:0 1rem;
 }
-header .menuToggle {
+header .toggle {
 	margin-right: 0.5em;
 	cursor: pointer;
 	font-weight:normal;
@@ -50,7 +50,12 @@ header h1 {
 	margin:0; 
 	font-weight:normal;
 }
-
+h2 {
+	font-weight:normal;
+	font-size: 1.1rem;
+	margin:0;
+	color:#0062a5;
+}
 .container {
 	flex: 0 1 auto;
 }
@@ -305,48 +310,26 @@ nav li a {
 	color: #fff;
 }
 
-#previousWordsWrapper {
-	display: flex;
-	justify-content: center;
-	flex-direction: column;
-	align-items: center;
-	height: 100%;
-	width: 100%;
-	position: absolute;
-	top: 0;
-	left: 0;
-	background: rgba(0,0,0,0.85);
-	z-index: 100;
-	color: #fff;
-	transition: transform 0.5s;
-	transform: translateX(-100%);
+#gameSummaryContents {
+	padding: 0 1em;
+	margin: 1em 0;
 }
-#previousWordsWrapper.visible {
-	display: flex;
-	transform: translateX(0);
-}
-#previousWordsWrapper.flyoff {
-	animation: flyoff-left 0.25s;
-	-webkit-animation: flyoff-left 0.25s;
+
+#currentGameSummaryContents, 
+#previousGameSummaryContents {
+	margin-bottom: 0.5em;
 }
 #previousWordsTitle {
-	padding: 0.5em;
-	margin: 0 1em;
+	color:#888;
 }
 #previousWords {
 	background: #fff;
 	color:#111;
-	border: 1px solid #999;
-	padding: 1em;
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: center;
-	align-items: center;
-	margin: 0 1em;
+	margin: 0;
 }
 #previousWords.victory {
-	background-color: #27AE60;
-	border-color: #078E40;
 }
 #previousWordsCloser {
 	padding: 0.5em;

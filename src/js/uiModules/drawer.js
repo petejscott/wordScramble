@@ -61,6 +61,7 @@
 		var callback = function(evt)
 		{
 			drawer.classList.toggle('visible');
+			evt.preventDefault();
 		}
 		for (var i=0, len=toggles.length; i<len; i++)
 		{

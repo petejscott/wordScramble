@@ -14,23 +14,36 @@
 
 	<aside id="status"></aside>
 
-	<div id="menu" class="drawer" data-swipe-target="#gameContainer" data-slide-in-dir="right" data-slide-out-dir="left" data-toggle-selector=".menuToggle">
+	<aside id="menu" class="drawer" data-swipe-target="#gameContainer" data-slide-in-dir="right" data-slide-out-dir="left" data-toggle-selector=".menuToggle, .menuItem">
 		<header>
-			<span class="icon-cancel menuToggle" title="close menu"></span>
+			<span class="icon-cancel menuToggle toggle" title="close menu"></span>
 			<h1>WordScramble Menu</h1>
 		</header>
 		<nav>
 			<ul>
-				<li><a href="index.html" class="menuToggle" title="start a new game" id="newGame">New Game</a></li>
+				<li><a href="index.html" class="menuItem" title="start a new game" id="newGame">New Game</a></li>
+				<!-- <li><a href="index.html" class="menuItem gameSummaryToggle" title="view game summary" id="gameSummaryToggle">Game Summary</a></li> -->
 			</ul>
 		</nav>
-	</div>	
+	</aside>
+	
+	<aside id="gameSummary" class="drawer" data-swipe-target="#gameContainer" data-slide-in-dir="left" data-slide-out-dir="right" data-toggle-selector=".gameSummaryToggle">
+		<header>
+			<span class="icon-cancel gameSummaryToggle toggle" title="close game summary"></span>
+			<h1>Game Summary</h1>
+		</header>
+		<div id="gameSummaryContents">
+			<section id="currentGameSummaryContents"></section>
+			<h2>Previous Game</h2>
+			<section id="previousGameSummaryContents">No data available.</section>
+		</div>
+	</aside>
 	
 	<article id="gameContainer" class="main">
 
 		<header id="gameHeader" class="container">
 			<hgroup>
-				<span class="icon-menu menuToggle" title="open menu"></span>
+				<span class="icon-menu menuToggle toggle" title="open menu"></span>
 				<h1 id="gameTitle">WordScramble</h1>
 			</hgroup>
 		</header>
@@ -51,8 +64,6 @@
 		</section>
 
 	</article>
-
-	<aside id="previousWordsWrapper"></aside>
 
 	<script type="text/javascript">
 		//window.localStorage.removeItem("wordScramble.gameData");

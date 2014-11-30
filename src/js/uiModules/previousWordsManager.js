@@ -5,7 +5,7 @@ wordScramble.previousWordsManager = (function(pubsub)
 {
 	var manager = {};
 
-	var CONST_ELEMENT_ID = "#previousWordsWrapper";
+	var CONST_ELEMENT_ID = "#previousGameSummaryContents";
 
 	function getElement()
 	{
@@ -21,17 +21,6 @@ wordScramble.previousWordsManager = (function(pubsub)
 		{
 			el.removeChild(el.firstChild);
 		}
-		el.classList.remove("visible");
-		el.classList.remove("flyoff");
-
-		el.removeEventListener(
-			'animationend',
-			manager.closePreviousWordsClickHandler,
-			false);
-		el.removeEventListener(
-			'webkitAnimationEnd',
-			manager.closePreviousWordsClickHandler,
-			false);
 	}
 
 	function render(words)
@@ -82,18 +71,21 @@ wordScramble.previousWordsManager = (function(pubsub)
 		}
 		previousWordsTitle.appendChild(document.createTextNode(titleText));
 
-		var previousWordsCloser = document.createElement("div");
-		previousWordsCloser.setAttribute("id", "previousWordsCloser");
-		previousWordsCloser.appendChild(document.createTextNode("close this list"));
-
-		previousWordsCloser.addEventListener('click', manager.closePreviousWordsClickHandler, true);
-
 		el.appendChild(previousWordsTitle);
 		el.appendChild(previousWordsContainer);
-		el.classList.add("visible");
-		el.appendChild(previousWordsCloser);
 	}
 
+	function showSummary()
+	{
+		var summaryDrawer = document.querySelector("#gameSummary");
+		if (summaryDrawer === null) return;
+		
+		if (!summaryDrawer.classList.contains("visible"))
+		{
+			summaryDrawer.classList.add("visible");
+		}
+	}
+	
 	manager.closePreviousWordsClickHandler = function(evt)
 	{
 		clear();
@@ -106,38 +98,11 @@ wordScramble.previousWordsManager = (function(pubsub)
 			var words = data.words;
 			clear();
 			render(words);
-		});
-	}
-
-	function bindListeners()
-	{
-		var el = getElement();
-		if (el === null) return;
-
-		var callback = function(evt)
-		{
-			el.classList.add('flyoff');
-
-			el.addEventListener(
-				'animationend',
-				manager.closePreviousWordsClickHandler,
-				false);
-			el.addEventListener(
-				'webkitAnimationEnd',
-				manager.closePreviousWordsClickHandler,
-				false);
-		}
-
-		var swipeHandler = new wordScramble.swipeHandler({
-			element: el,
-			callback: callback,
-			direction: 'left',
-			distance: 160
+			showSummary();
 		});
 	}
 
 	subscribe();
-	bindListeners();
 
 	return manager;
 
