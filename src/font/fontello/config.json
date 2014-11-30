@@ -8,8 +8,14 @@
   "glyphs": [
     {
       "uid": "2cfb3f2b46b34a1790aec0aa846297b6",
-      "css": "menu-1",
+      "css": "menu",
       "code": 59392,
+      "src": "entypo"
+    },
+    {
+      "uid": "c709da589c923ba3c2ad48d9fc563e93",
+      "css": "cancel",
+      "code": 59393,
       "src": "entypo"
     }
   ]
