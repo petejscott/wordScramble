@@ -9,6 +9,7 @@ SRCS = src/js/lib/pubsubz.js \
        src/js/uiModules/letterListManager.js \
        src/js/uiModules/maskedWordsManager.js \
        src/js/uiModules/previousWordsManager.js \
+       src/js/uiModules/currentWordsManager.js \
        src/js/dict/json_dict.js \
        src/js/gameBuilder/gameBuilder_letters.js \
        src/js/gameBuilder/gameBuilder.js \

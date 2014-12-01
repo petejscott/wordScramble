@@ -123,6 +123,8 @@ wordScramble.gameService = (function(configuration, pubsub)
 		}
 
 		saveGameData();
+		
+		pubsub.publish("wordScramble/currentGameDataAvailable", {"words": words});
 	}
 
 	function startGame()
@@ -144,12 +146,13 @@ wordScramble.gameService = (function(configuration, pubsub)
 		{
 			wordScramble.gameBuilder.build(wordScramble.dict);
 		}
+		pubsub.publish("wordScramble/currentGameDataAvailable", {"words":gameData.words});
 		
 		var previousGameDataStr = window.localStorage.getItem(previousStorageKey);
-	//	if (!previousGameData) return;
+		if (previousGameDataStr.length === 0) return;
 		
 		var previousGameData = JSON.parse(previousGameDataStr);
-	//	if (previousGameData === null) return;
+		if (previousGameData === null) return;
 		
 		pubsub.publish("wordScramble/previousGameDataAvailable", {"words":previousGameData.words});
 	}

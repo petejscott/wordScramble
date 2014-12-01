@@ -318,10 +318,14 @@ nav li a {
 #currentGameSummaryContents, 
 #previousGameSummaryContents {
 	margin-bottom: 0.5em;
+	padding-bottom: 1em;
+	border-bottom: 1px solid #eee;
 }
+#currentWordsTitle,
 #previousWordsTitle {
 	color:#888;
 }
+#currentWords,
 #previousWords {
 	background: #fff;
 	color:#111;
@@ -329,12 +333,8 @@ nav li a {
 	flex-wrap: wrap;
 	margin: 0;
 }
+#currentWords.victory,
 #previousWords.victory {
-}
-#previousWordsCloser {
-	padding: 0.5em;
-	margin: 0 1em;
-	cursor: pointer;
 }
 
 /* animations */

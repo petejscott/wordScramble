@@ -38,7 +38,6 @@ wordScramble.previousWordsManager = (function(pubsub)
 		for (var i = 0, len = words.length; i < len; i++)
 		{
 			var wordContainer = document.createElement("span");
-			;
 			var wordObject = words[i];
 
 			var wordNode = document.createTextNode(wordObject.word);
