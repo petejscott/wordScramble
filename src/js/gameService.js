@@ -7,6 +7,7 @@ wordScramble.gameService = (function(configuration, pubsub)
 
 	var CONST_ELEMENT_ID = "#gameContainer";
 	var storageKey = 'wordScramble.gameData';
+	var previousStorageKey = 'wordScramble.previousGameData';
 	var dictionary = [];
 	var gameData = {};
 
@@ -75,9 +76,12 @@ wordScramble.gameService = (function(configuration, pubsub)
 
 	function clearGameCache()
 	{
+		window.localStorage.removeItem(previousStorageKey);		
+		window.localStorage.setItem(previousStorageKey, JSON.stringify(gameData));
+		window.localStorage.removeItem(storageKey);	
+		
 		var words = gameData.words;
 		pubsub.publish("wordScramble/gameOver", {"words":words});
-		window.localStorage.removeItem(storageKey);
 	}
 
 	function submitWordAttempt(word)
@@ -140,6 +144,14 @@ wordScramble.gameService = (function(configuration, pubsub)
 		{
 			wordScramble.gameBuilder.build(wordScramble.dict);
 		}
+		
+		var previousGameDataStr = window.localStorage.getItem(previousStorageKey);
+	//	if (!previousGameData) return;
+		
+		var previousGameData = JSON.parse(previousGameDataStr);
+	//	if (previousGameData === null) return;
+		
+		pubsub.publish("wordScramble/previousGameDataAvailable", {"words":previousGameData.words});
 	}
 
 	subscribe();

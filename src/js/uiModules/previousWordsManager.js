@@ -95,10 +95,14 @@ wordScramble.previousWordsManager = (function(pubsub)
 	{
 		pubsub.subscribe("wordScramble/gameOver", function(topic,data)
 		{
+			pubsub.publish("wordScramble/previousGameDataAvailable", data);
+			showSummary();
+		});
+		pubsub.subscribe("wordScramble/previousGameDataAvailable", function(topic, data)
+		{
 			var words = data.words;
 			clear();
 			render(words);
-			showSummary();
 		});
 	}
 
