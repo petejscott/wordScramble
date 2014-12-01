@@ -123,8 +123,6 @@ wordScramble.gameService = (function(configuration, pubsub)
 		}
 
 		saveGameData();
-		
-		pubsub.publish("wordScramble/currentGameDataAvailable", {"words": words});
 	}
 
 	function startGame()
@@ -146,7 +144,6 @@ wordScramble.gameService = (function(configuration, pubsub)
 		{
 			wordScramble.gameBuilder.build(wordScramble.dict);
 		}
-		pubsub.publish("wordScramble/currentGameDataAvailable", {"words":gameData.words});
 		
 		var previousGameDataStr = window.localStorage.getItem(previousStorageKey);
 		if (previousGameDataStr.length === 0) return;

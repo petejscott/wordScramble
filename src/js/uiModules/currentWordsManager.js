@@ -103,7 +103,7 @@ wordScramble.currentWordsManager = (function(pubsub)
 
 	function subscribe()
 	{
-		pubsub.subscribe("wordScramble/currentGameDataAvailable", function(topic, data)
+		pubsub.subscribe("wordScramble/wordsChanged", function(topic, data)
 		{
 			var words = data.words;
 			clear();
