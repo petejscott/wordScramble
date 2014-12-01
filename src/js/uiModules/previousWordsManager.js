@@ -85,11 +85,6 @@ wordScramble.previousWordsManager = (function(pubsub)
 			summaryDrawer.classList.add("visible");
 		}
 	}
-	
-	manager.closePreviousWordsClickHandler = function(evt)
-	{
-		clear();
-	};
 
 	function subscribe()
 	{
