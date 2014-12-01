@@ -1,6 +1,6 @@
 'use strict'
 
-; (function(win, mobutil) {
+; (function(win, swipeHandler) {
 
 	var manager = {};
 	
@@ -88,7 +88,7 @@
 			drawer.classList.add('visible');
 		}
 		
-		var swipeHandler = new mobutil.swipeHandler({
+		var swipe = new swipeHandler({
 			element: swipe_target,
 			opts: { 'target_drawer' : drawer },
 			callback: callback,
@@ -119,7 +119,7 @@
 				false);
 		}
 
-		var swipeHandler = new mobutil.swipeHandler({
+		var swipe = new swipeHandler({
 			element: drawer,
 			opts: { 'target_drawer' : drawer },
 			callback: callback,
@@ -130,4 +130,4 @@
 	
 	bindListeners();
 
-})(this, wordScramble);
+})(this, wordScramble.swipeHandler);
