@@ -9,6 +9,7 @@
 	color:#333;
 	z-index: 100;
 	transition: all 0.5s;
+	overflow-y: auto;
 }
 .drawer[data-slide-in-dir="right"] {
 	transform: translateX(-100%);

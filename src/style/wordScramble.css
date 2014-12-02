@@ -27,7 +27,6 @@
 	article#gameContainer {
 		position:static;
 		flex-grow:2;
-		font-size: 1.25em;
 		order: 2;
 	}
 	article#gameContainer::before {
@@ -37,6 +36,9 @@
 		display: flex;
 		flex-wrap: nowrap;
 		justify-content: center;
+	}
+	#letterList {
+		font-size: 1.25em;
 	}
 	.toggle {
 		display: none;
@@ -152,7 +154,7 @@ body.status #status {
 }
 
 nav ul {
-	margin: 0.5em 0; 
+	margin: 0.25em 0 0.5em 0; 
 	padding: 0;
 	list-style: none;
 	display: flex;
@@ -181,6 +183,7 @@ nav li a {
 	background:#0062a5;
 	color:#fff;
 	font-size:0.8em;
+	box-shadow: 0 1px 1px -1px rgba(0,0,0,0.5);
 }
 #gameTitle {
 	display: inline-block;
@@ -191,10 +194,10 @@ nav li a {
 	flex: 0 0 auto;
 	overflow-y: auto;
 	padding: 0.5em;
-	border-bottom: 1px solid #999;
-	background: #ECF0F1;
+	background: #eee;
 	transition: all 1s;
-	color:#556;
+	color:#555;
+	box-shadow: 0 1px 1px -1px rgba(0,0,0,0.25);
 }
 .word {
 	margin: 0.25em 0.35em 0.25em 0;
@@ -310,7 +313,7 @@ nav li a {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding: 0.25em;
+	padding: 0.25em 0.5em;
 	color: #3498db;
 	transition: color 0.25s;
 }
