@@ -55,6 +55,7 @@ wordScramble.previousWordsManager = (function(pubsub)
 			var defineElement = document.createElement("a");
 			var defineUrl = "https://www.google.com/search?q=define+" + wordObject.word;
 			defineElement.setAttribute("href", defineUrl);
+			defineElement.setAttribute("title", "definition");
 			defineElement.setAttribute("target", "_blank");
 
 			defineElement.appendChild(wordNode);
