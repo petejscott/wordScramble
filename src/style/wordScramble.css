@@ -199,28 +199,34 @@ nav li a {
 	color:#555;
 	box-shadow: 0 1px 1px -1px rgba(0,0,0,0.25);
 }
-.word {
-	margin: 0.25em 0.35em 0.25em 0;
-	padding: 0 0.5em;
-	line-height: 1.75em;
+#maskedWords .word {
 	background: #f0f3f4;
 	outline: 1px solid #dde1e2;
+	margin: 0.25em 0.35em 0.25em 0;
+	padding: 0 0.5em;
+}
+#maskedWords .word.solved,
+#maskedWords .word.missed {
+	padding: 0 0.25em;
+}
+.word {
+	line-height: 1.75em;
 	display: inline-block;
 	white-space: nowrap;
+	padding: 0 0.25em;
+}
+#maskedWords .word.solved,
+#maskedWords .word.missed {
+	outline-width: 0;
+	background-color: transparent;
 }
 .word.solved, .word.solved a {
 	color: #078E40;
-	outline-color: #078E40;
 	text-transform: uppercase;
-	outline-width: 0;
-	padding: 0 0.25em;
 }
 .word.missed, .word.missed a {
 	color: #D31145;
-	outline-color: #D31145;
 	text-transform: uppercase;
-	outline-width: 0;
-	padding: 0 0.25em;
 }
 
 #turnActions {
