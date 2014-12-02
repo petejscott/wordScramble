@@ -177,7 +177,7 @@ nav li a {
 }
 
 #gameHeader {
-	flex: 0 1 auto;
+	flex: 0 0 auto;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -246,7 +246,6 @@ nav li a {
 	max-width: 75%;
 	overflow: hidden;
 	text-transform: uppercase;
-	font-weight: bold;
 	color: #222;
 	text-overflow: ellipsis;
 }
@@ -254,6 +253,7 @@ nav li a {
 	display: none;
 	color: #3498db;
 	transition: color 0.25s;
+	font-weight: 300;
 }
 #clearWordAttempt:hover, #clearWordAttempt:active {
 	color: #197abb;
@@ -370,6 +370,9 @@ nav li a {
 #gameSummaryContents {
 	padding: 0 1em;
 	margin: 1em 0;
+}
+#gameSummaryContents .word {
+	padding: 0 0.75em 0 0;
 }
 
 #currentGameSummaryContents, 
