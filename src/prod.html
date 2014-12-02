@@ -2,9 +2,19 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="theme-color" content="#0466a9">
 	<meta http-equiv="cache-control" content="public, max-age=31536000" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-	<title>WordScramble</title>	
+	<title>WordScramble</title>
+	<link rel="icon" type="image/png" href="image/ws.ico-192.png" sizes="192x192" />
+	<link rel="icon" type="image/png" href="image/ws.ico-144.png" sizes="144x144" />
+	<link rel="icon" type="image/png" href="image/ws.ico-96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="image/ws.ico-48.png" sizes="48x48" />
+	<link rel="icon" type="image/png" href="image/ws.ico-32.png" sizes="32x32" />
+	<link rel="apple-touch-icon" href="image/ws.ico-192.png" />
+	<link rel="manifest" href="manifest.json" />
+	<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,500' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" type="text/css" href="style/drawer.css" />
 	<link rel="stylesheet" type="text/css" href="style/wordScramble.css" />
 	<link rel="stylesheet" href="font/fontello/css/fontello.css" />
@@ -13,27 +23,39 @@
 
 	<aside id="status"></aside>
 	
-	<div id="menu" class="drawer" data-swipe-target="#gameContainer" data-slide-in-dir="right" data-slide-out-dir="left" data-toggle-selector=".menuToggle">
+	<aside id="menu" class="drawer" data-swipe-target="#gameContainer" data-slide-in-dir="right" data-slide-out-dir="left" data-toggle-selector=".menuToggle, .menuItem">
 		<header>
-			<h1>WordScramble Menu</h1>
+			<span class="icon-cancel menuToggle toggle" title="close menu"></span>
+			<h1>Menu</h1>
 		</header>
 		<nav>
 			<ul>
-				<li><a href="index.html" class="menuToggle" title="start a new game" id="newGame">New Game</a></li>
+				<li><a href="index.html" class="menuItem" title="start a new game" id="newGame">New Game</a></li>
+				<li><a href="index.html" class="menuItem gameSummaryToggle" title="view game summary" id="gameSummaryToggle">Game Summary</a></li>
 			</ul>
 		</nav>
-	</div>	
+	</aside>
+	
+	<aside id="gameSummary" class="drawer" data-swipe-target="#gameContainer" data-slide-in-dir="left" data-slide-out-dir="right" data-toggle-selector=".gameSummaryToggle">
+		<header>
+			<span class="icon-cancel gameSummaryToggle toggle" title="close game summary"></span>
+			<h1>Game Summary</h1>
+		</header>
+		<div id="gameSummaryContents">
+			<h2>Current Game</h2>
+			<section id="currentGameSummaryContents">No data available.</section>
+			<h2>Previous Game</h2>
+			<section id="previousGameSummaryContents">No data available.</section>
+		</div>
+	</aside>
 
 	<article id="gameContainer" class="main">
 
 		<header id="gameHeader" class="container">
 			<hgroup>
-				<span class="icon-menu menuToggle" title="menu"></span>
+				<span class="icon-menu menuToggle toggle" title="open menu"></span>
 				<h1 id="gameTitle">WordScramble</h1>
 			</hgroup>
-			<nav>
-				<a href="index.html" title="start a new game" id="newGame">New Game</a>
-			</nav>
 		</header>
 
 		<section id="maskedWords" class="container"></section>

@@ -63,7 +63,7 @@ body {
 	overflow-y: auto;
 }
 body, input {
-	font-family: 	Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT",
+	font-family: 	Roboto, Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT",
 					"Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L",
 					Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -159,6 +159,8 @@ nav ul {
 	list-style: none;
 	display: flex;
 	flex-direction: column;
+	font-size: 0.9em;
+	font-weight: 300;
 }
 nav li {	
 	transition: background 0.5s;
@@ -214,6 +216,7 @@ nav li a {
 	display: inline-block;
 	white-space: nowrap;
 	padding: 0 0.25em;
+	font-weight: 300;
 }
 #maskedWords .word.solved,
 #maskedWords .word.missed {
@@ -299,6 +302,7 @@ nav li a {
 	box-shadow: 0 0 2px rgba(0,0,0,0.5);
 	border-radius: 50%;
 	outline: 0;
+	font-weight: 300;
 }
 .letterButton:first-child {
 	margin-left: 0;
@@ -322,6 +326,7 @@ nav li a {
 	padding: 0.25em 0.5em;
 	color: #3498db;
 	transition: color 0.25s;
+	font-weight: 300;
 }
 #shuffler:hover, #shuffler:active {
 	color: #197abb;
@@ -354,6 +359,7 @@ nav li a {
 	font-size: 1.5em;
 	min-height: 1.5em;
 	transition: color 0.25s, background 0.25s, border 0.25s;
+	font-weight: 500;
 }
 #submitWord:hover, #submitWord:active {
 	background: #197abb;
@@ -375,6 +381,7 @@ nav li a {
 #currentWordsTitle,
 #previousWordsTitle {
 	color:#888;
+	font-weight: 300;
 }
 #currentWords,
 #previousWords {
