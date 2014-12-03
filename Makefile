@@ -1,6 +1,6 @@
 .PHONY: clean
 
-SRCS = src/js/lib/pubsubz.js \
+JSSRCS = src/js/lib/pubsubz.js \
        src/js/swipeHandler.js \
        src/js/uiModules/drawer.js \
        src/js/uiModules/newGameManager.js \
@@ -17,15 +17,30 @@ SRCS = src/js/lib/pubsubz.js \
        src/js/gameService.js \
        src/js/uiService.js
 
-build: $(SRCS)
+CSSSRCS = src/style/*.css
+
+all: js css font image app
+
+prep:
 	mkdir -p build
-	cat $(SRCS) >build/wordScramble.js
+
+app: prep
+	cp src/prod.html build/index.html
+	cp src/webapp.manifest.json build/webapp.manifest.json
+
+image: prep
+	cp -r src/image build/image
+
+font: prep
+	cp -r src/font build/font
+
+js: prep $(JSSRCS)
+	cat $(JSSRCS) >build/wordScramble.js
 	jsmin <build/wordScramble.js >build/wordScramble-min.js
 	cp src/config.js build/config.js
-	cp src/style/wordScramble.css build/wordScramble.css
-	cp src/style/drawer.css build/drawer.css
-	cp -r src/font/ build/font/
-	cp src/prod.html build/index.html
+
+css: prep $(CSSSRCS)
+	awk 'FNR==1{print ""}{print}' $(CSSSRCS) > build/wordScramble.css
 
 clean:
 	rm -rf build
