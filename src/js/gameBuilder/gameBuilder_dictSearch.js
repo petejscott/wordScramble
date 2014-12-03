@@ -1,3 +1,4 @@
+/* gameBuilder_dictSearch.js */
 'use strict';
 
 var wordScramble = wordScramble || {};
@@ -152,3 +153,4 @@ var onmessage = function(evt)
 
 	postMessage(JSON.stringify(message));
 };
+

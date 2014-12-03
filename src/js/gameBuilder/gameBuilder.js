@@ -1,3 +1,4 @@
+/* gameBuilder.js */
 'use strict';
 
 var wordScramble = wordScramble || {};
@@ -75,3 +76,4 @@ wordScramble.gameBuilder = (function(configuration, pubsub)
 	};
 
 })(wordScramble.configuration, window.pubsubz);
+

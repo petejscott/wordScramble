@@ -1,3 +1,4 @@
+/* swipeHandler.js */
 'use strict';
 
 var wordScramble = wordScramble || {};
@@ -117,4 +118,5 @@ wordScramble.swipeHandler = function(swipeConfiguration)
 		evt.preventDefault();
 	});
 
-}
+};
+

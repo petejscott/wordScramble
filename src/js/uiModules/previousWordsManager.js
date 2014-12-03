@@ -1,3 +1,4 @@
+/* previousWordsManager.js */
 'use strict';
 
 var wordScramble = wordScramble || {};
@@ -106,3 +107,5 @@ wordScramble.previousWordsManager = (function(pubsub)
 	return manager;
 
 })(window.pubsubz);
+
+

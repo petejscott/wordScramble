@@ -1,3 +1,4 @@
+/* drawer.js */
 'use strict'
 
 ; (function(win, swipeHandler) {
@@ -131,3 +132,4 @@
 	bindListeners();
 
 })(this, wordScramble.swipeHandler);
+

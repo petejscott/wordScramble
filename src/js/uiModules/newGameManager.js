@@ -1,3 +1,4 @@
+/* newGameManager.js */
 'use strict';
 
 var wordScramble = wordScramble || {};
@@ -46,3 +47,4 @@ wordScramble.newGameManager = (function(pubsub)
 	return manager;
 
 })(window.pubsubz);
+

@@ -1,3 +1,4 @@
+/* maskedWordsManager.js */
 'use strict';
 
 var wordScramble = wordScramble || {};
@@ -78,3 +79,4 @@ wordScramble.maskedWordsManager = (function(pubsub)
 	return manager;
 
 })(window.pubsubz);
+

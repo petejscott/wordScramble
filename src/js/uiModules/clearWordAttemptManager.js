@@ -1,3 +1,4 @@
+/* clearWordAttemptManager.js */
 'use strict';
 
 var wordScramble = wordScramble || {};
@@ -57,3 +58,4 @@ wordScramble.clearWordAttemptManager = (function(pubsub)
 	return manager;
 
 })(window.pubsubz);
+

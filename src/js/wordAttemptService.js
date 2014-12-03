@@ -1,3 +1,4 @@
+/* wordAttemptService.js */
 'use strict';
 
 var wordScramble = wordScramble || {};
@@ -133,3 +134,4 @@ wordScramble.wordAttemptService = ( function(pubsub)
 
 	return service;
 }(window.pubsubz));
+

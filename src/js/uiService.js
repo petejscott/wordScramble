@@ -1,3 +1,4 @@
+/* uiService.js */
 'use strict';
 
 var wordScramble = wordScramble || {};
@@ -60,3 +61,4 @@ wordScramble.uiService = (function(pubsub)
 	return uiService;
 
 })(window.pubsubz);
+

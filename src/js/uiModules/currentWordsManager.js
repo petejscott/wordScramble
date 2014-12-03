@@ -1,3 +1,4 @@
+/* currentWordsManager.js */
 'use strict';
 
 var wordScramble = wordScramble || {};
@@ -121,3 +122,4 @@ wordScramble.currentWordsManager = (function(pubsub)
 	return manager;
 
 })(window.pubsubz);
+

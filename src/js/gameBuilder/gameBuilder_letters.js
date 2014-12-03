@@ -1,3 +1,4 @@
+/* gameBuilder_letters.js */
 'use strict';
 
 var wordScramble = wordScramble || {};
@@ -22,3 +23,4 @@ wordScramble.gameBuilderLetters = (function()
 
 	return ls;
 })();
+

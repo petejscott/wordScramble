@@ -1,3 +1,4 @@
+/* letterListManager.js */
 'use strict';
 
 var wordScramble = wordScramble || {};
@@ -260,3 +261,4 @@ wordScramble.letterListManager = (function(pubsub)
 	return manager;
 
 })(window.pubsubz);
+

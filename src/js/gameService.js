@@ -1,3 +1,4 @@
+/* gameService.js */
 'use strict';
 
 var wordScramble = wordScramble || {};
@@ -160,5 +161,4 @@ wordScramble.gameService = (function(configuration, pubsub)
 	return gService;
 
 })(wordScramble.configuration, window.pubsubz);
-
 

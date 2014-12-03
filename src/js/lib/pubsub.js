@@ -1,3 +1,4 @@
+/* pubsub.js */
 'use strict;'
 
 var pubsub = (function () {
@@ -123,3 +124,4 @@ var pubsub = (function () {
         getSubscriptionCount: getSubscriptionCount
     }
 })();
+

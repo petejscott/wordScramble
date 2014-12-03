@@ -1,3 +1,4 @@
+/* submitWordManager.js */
 'use strict';
 
 var wordScramble = wordScramble || {};
@@ -45,3 +46,4 @@ wordScramble.submitWordManager = (function(pubsub)
 	return manager;
 
 })(window.pubsubz);
+
