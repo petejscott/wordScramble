@@ -13,7 +13,7 @@
 	aside#menu {
 		order: 1;
 	}
-	aside#gameSummary {
+	aside#statistics {
 		order: 3;
 	}
 	body.status aside#status {
@@ -43,10 +43,16 @@
 	.toggle {
 		display: none;
 	}
-	#gameSummaryToggle { 
+	#statisticsToggle { 
 		display: none;
+	}	
+	#submitWord:hover {
+		background: #399adb;
+		color: #fff;
 	}
 }
+
+a, button, input, .toggle { -webkit-tap-highlight-color: transparent; }
 
 html {
 	height: 100%;
@@ -129,6 +135,7 @@ h2 {
 	width:100%;
 	top:0;
 	left:0;
+	overflow-y: auto;
 	transition: all 0.5s;
 	transform: translateX(0);
 }
@@ -367,11 +374,7 @@ nav a[class*=" icon-"]:before {
 	font-weight: 400;
 	border-radius: 0.5em;
 }
-#submitWord:hover {
-	background: #197abb;
-	color: #fff;
-}
-#submitWord:active {		
+#submitWord:focus {
 	animation: active-button 1s;
 	-webkit-animation: active-button 1s;
 }
@@ -411,13 +414,13 @@ nav a[class*=" icon-"]:before {
 
 @keyframes active-button {
 	50% {
-		background-color: #197abb;
+		background-color: #399adb;
 		color:#fff;
 	}
 }
 @-webkit-keyframes active-button {
 	50% {
-		background-color: #197abb;
+		background-color: #399adb;
 		color:#fff;
 	}
 }

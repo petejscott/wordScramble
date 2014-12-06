@@ -94,7 +94,7 @@ wordScramble.currentWordsManager = (function(pubsub)
 
 	function showSummary()
 	{
-		var summaryDrawer = document.querySelector("#gameSummary");
+		var summaryDrawer = document.querySelector("#statistics");
 		if (summaryDrawer === null) return;
 		
 		if (!summaryDrawer.classList.contains("visible"))

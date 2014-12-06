@@ -17,7 +17,7 @@
 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,500' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" type="text/css" href="wordScramble.css" />
 </head>
-<body ontouchstart="">
+<body>
 
 	<aside id="status"></aside>
 	
@@ -29,17 +29,17 @@
 		<nav>
 			<ul>
 				<li><a href="index.html" class="icon-frown menuItem" title="start a new game" id="newGame">New Game</a></li>
-				<li><a href="index.html" class="icon-chart-pie menuItem gameSummaryToggle" title="view statistics" id="gameSummaryToggle">Statistics</a></li>
+				<li><a href="index.html" class="icon-chart-pie menuItem statisticsToggle" title="view statistics" id="statisticsToggle">Statistics</a></li>
 			</ul>
 		</nav>
 	</aside>
 	
-	<aside id="gameSummary" class="drawer" data-swipe-target="#gameContainer" data-slide-in-dir="left" data-slide-out-dir="right" data-toggle-selector=".gameSummaryToggle">
+	<aside id="statistics" class="drawer" data-swipe-target="#gameContainer" data-slide-in-dir="left" data-slide-out-dir="right" data-toggle-selector=".statisticsToggle">
 		<header>
-			<span class="icon-cancel gameSummaryToggle toggle" title="close game summary"></span>
-			<h1>Game Summary</h1>
+			<span class="icon-cancel statisticsToggle toggle" title="close statistics"></span>
+			<h1>Statistics</h1>
 		</header>
-		<div id="gameSummaryContents">
+		<div class="card" id="gameSummaryContents">
 			<h2>Current Game</h2>
 			<section id="currentGameSummaryContents">No data available.</section>
 			<h2>Previous Game</h2>
