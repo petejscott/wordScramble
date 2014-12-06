@@ -63,7 +63,7 @@ body {
 	overflow-y: auto;
 }
 body, input {
-	font-family: 	Roboto, Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT",
+	font-family: "Roboto", Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT",
 					"Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L",
 					Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -170,7 +170,7 @@ nav li:hover {
 	background-color:#f6f6f6;
 }
 nav li a {
-	margin: 0.25em 0;
+	margin: 0.5em 0;
 	display: block;
 	line-height: 2.6em;
 	text-decoration: none;
@@ -187,7 +187,7 @@ nav li a {
 	background:#0062a5;
 	color:#fff;
 	font-size:0.8em;
-	box-shadow: 0 1px 1px -1px rgba(0,0,0,0.25);
+	box-shadow: 0 1px 2px rgba(0,0,0,0.25);
 }
 #gameTitle {
 	display: inline-block;
@@ -201,7 +201,6 @@ nav li a {
 	background: transparent;
 	transition: all 1s;
 	color:#555;
-	box-shadow: 0 1px 1px -1px rgba(0,0,0,0.25);
 }
 #maskedWords .word {
 	background: #fcfcfc;
@@ -338,16 +337,16 @@ nav li a {
 #turnSubmit {
 	padding: 0.25em;
 	align-self: stretch;
-	flex: 2 0 auto;
+	flex: 1 0 auto;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background: #f6f6f6;
+	background: #fafafa;
 	border-top: 1px dotted #ddd;
 }
 #submitWord {
 	outline: 0;
-	background: #39aadb;
+	background: #0062a5;
 	border: 0;
 	cursor: pointer;
 	padding: 0.25em 0.5em;
@@ -359,7 +358,7 @@ nav li a {
 	width: 8em;
 	min-height: 3em;
 	transition: color 0.25s, background 0.25s, border 0.25s;
-	font-weight: 500;
+	font-weight: 400;
 	border-radius: 0.5em;
 }
 #submitWord:hover {
