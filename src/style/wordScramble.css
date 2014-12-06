@@ -85,7 +85,8 @@ header {
 header .toggle {
 	margin-right: 0.5em;
 	cursor: pointer;
-	font-weight:normal;
+	font-weight:100;
+	opacity: .75;
 }
 header h1 { 
 	font-size:1rem;
@@ -177,6 +178,11 @@ nav li a {
 	color: #222;
 	padding: 0.2em 1em;
 }
+nav a[class^="icon-"]:before, 
+nav a[class*=" icon-"]:before {
+	margin-right: 1em;
+	color: #999;
+ }
 
 #gameHeader {
 	flex: 0 0 auto;
