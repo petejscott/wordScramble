@@ -16,14 +16,6 @@
 	aside#statistics {
 		order: 3;
 	}
-	body.status aside#status {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		z-index: 0;
-	}
 	article#gameContainer {
 		position:static;
 		flex-grow:2;
@@ -60,8 +52,8 @@ html {
 	line-height: 1.5em;
 }
 body {
-	background: #0468ab;
-	color: #eef;
+	background: #fff;
+	color: #222;
 	margin: 0;
 	padding: 0;
 	height: 100%;
@@ -82,6 +74,10 @@ body, input {
 	align-content: stretch;
 	align-items: stretch;
 	height: 100%;
+}
+
+#status { 
+	display:none;
 }
 
 header {
@@ -131,35 +127,9 @@ h2 {
 
 #gameContainer {
 	background:#fff;
-	position:fixed;
 	width:100%;
-	top:0;
-	left:0;
 	overflow-y: auto;
 	transition: all 0.5s;
-	transform: translateX(0);
-}
-body.status #gameContainer {
-	transform: translateX(100%);
-}
-#status {
-	display:none;
-	opacity:0;
-	transition: all 0.5s;
-}
-body.status #status {
-	outline:1px solid #ccc;
-	opacity:1;
-	display: flex;
-	flex-direction:column;
-	align-self: center;
-	flex: 1 0 auto;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	padding:0.5em;
-	height:100%;
-	text-transform:uppercase;
 }
 
 nav ul {
