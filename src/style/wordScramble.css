@@ -123,6 +123,7 @@ h2 {
 /* layout styles */
 
 #gameContainer {
+	background:#fff;
 	position:fixed;
 	width:100%;
 	top:0;
@@ -169,6 +170,7 @@ nav li:hover {
 	background-color:#f6f6f6;
 }
 nav li a {
+	margin: 0.25em 0;
 	display: block;
 	line-height: 2.6em;
 	text-decoration: none;
@@ -185,7 +187,7 @@ nav li a {
 	background:#0062a5;
 	color:#fff;
 	font-size:0.8em;
-	box-shadow: 0 1px 1px -1px rgba(0,0,0,0.5);
+	box-shadow: 0 1px 1px -1px rgba(0,0,0,0.25);
 }
 #gameTitle {
 	display: inline-block;
@@ -196,14 +198,14 @@ nav li a {
 	flex: 0 0 auto;
 	overflow-y: auto;
 	padding: 0.5em;
-	background: #eee;
+	background: transparent;
 	transition: all 1s;
 	color:#555;
 	box-shadow: 0 1px 1px -1px rgba(0,0,0,0.25);
 }
 #maskedWords .word {
-	background: #f0f3f4;
-	outline: 1px solid #dde1e2;
+	background: #fcfcfc;
+	outline: 1px solid #f0f0f0;
 	margin: 0.25em 0.35em 0.25em 0;
 	padding: 0 0.5em;
 }
@@ -233,14 +235,15 @@ nav li a {
 }
 
 #turnActions {
-	background:#fff;
+	background:#fafafa;
 	flex: 0 0 auto;
 	height: 1.5em;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	padding: 1em;
-	border-bottom: 1px dotted #ddd;
+	border-top: 1px dotted #eee;
+	border-bottom: 1px dotted #eee;
 }
 #wordAttempt {
 	max-width: 75%;
@@ -338,33 +341,34 @@ nav li a {
 	flex: 2 0 auto;
 	display: flex;
 	justify-content: center;
-	align-items: stretch;
-	background: #3498db;
-	border-top: 1px solid #2a8bcc;
+	align-items: center;
+	background: #f6f6f6;
+	border-top: 1px dotted #ddd;
 }
 #submitWord {
 	outline: 0;
-	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
-	background: #3498db;
+	background: #39aadb;
 	border: 0;
-	border-bottom: 2px solid #2a8bcc;
 	cursor: pointer;
-	box-shadow: inset 0 -2px #2a8bcc;
 	padding: 0.25em 0.5em;
 	color: #eee;
 	display: inline-block;
-	width:100%;
 	line-height: 1.5em;
 	vertical-align: middle;
 	font-size: 1.5em;
-	min-height: 1.5em;
+	width: 8em;
+	min-height: 3em;
 	transition: color 0.25s, background 0.25s, border 0.25s;
 	font-weight: 500;
+	border-radius: 0.5em;
 }
-#submitWord:hover, #submitWord:active {
+#submitWord:hover {
 	background: #197abb;
-	border-color: #0165ba;
 	color: #fff;
+}
+#submitWord:active {		
+	animation: active-button 1s;
+	-webkit-animation: active-button 1s;
 }
 
 #gameSummaryContents {
@@ -399,6 +403,19 @@ nav li a {
 }
 
 /* animations */
+
+@keyframes active-button {
+	50% {
+		background-color: #197abb;
+		color:#fff;
+	}
+}
+@-webkit-keyframes active-button {
+	50% {
+		background-color: #197abb;
+		color:#fff;
+	}
+}
 
 @keyframes fadein {
 	from {
