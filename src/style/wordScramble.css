@@ -111,17 +111,17 @@ h2 {
 }
 
 /* error feedback */
-#appContainer.error .letterButton {
+#gameContainer.error .letterButton {
 	animation: error 0.5s ease-in-out;
 	-webkit-animation: error 0.5s ease-in-out;
 }
 /* warning feedback */
-#appContainer.warning .letterButton {
+#gameContainer.warning .letterButton {
 	animation: warning 0.5s ease-in-out;
 	-webkit-animation: warning 0.5s ease-in-out;
 }
 /* success feedback */
-#appContainer.success .letterButton {
+#gameContainer.success .letterButton {
 	animation: success 0.5s ease-in-out;
 	-webkit-animation: success 0.5s ease-in-out;
 }
