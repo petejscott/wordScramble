@@ -101,7 +101,6 @@ wordScramble.gameService = (function(configuration, pubsub)
 		pubsub.subscribe("wordScramble/startGame", function()
 		{
 			startGame();
-			setGameUI();
 			pubsub.publish("wordScramble/clearWordAttempt");
 		});
 		pubsub.subscribe("wordScramble/submitWord", function()
@@ -116,6 +115,8 @@ wordScramble.gameService = (function(configuration, pubsub)
 			pubsub.publish("wordScramble/lettersChanged", { "letters":gameData.letters });
 			pubsub.publish("wordScramble/wordsChanged", { "words":gameData.words });
 
+			setGameUI();
+			
 			saveGameData();
 		});
 	}
