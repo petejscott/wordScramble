@@ -57,5 +57,5 @@ wordScramble.clearWordAttemptManager = (function(pubsub)
 
 	return manager;
 
-})(window.pubsubz);
+})(window.pubsub);
 

@@ -87,12 +87,16 @@ wordScramble.letterListManager = (function(pubsub)
 			letterList.appendChild(letterButton);
 		}
 
-		var shuffler = document.createElement("a");
-		shuffler.appendChild(document.createTextNode("shuffle"));
-		shuffler.setAttribute("href", "#shuffle");
-		shuffler.setAttribute("id", "shuffler");
-		shuffler.addEventListener('click', shuffleClickEventHandler, false);
-
+		var shufflerLink = document.createElement("a");
+		shufflerLink.appendChild(document.createTextNode("shuffle"));
+		shufflerLink.setAttribute("href", "#shuffle");
+		shufflerLink.setAttribute("id", "shuffler");
+		shufflerLink.addEventListener('click', shuffleClickEventHandler, false);
+		
+		var shuffler = document.createElement("div");
+		shuffler.setAttribute("class", "shuffleContainer");
+		shuffler.appendChild(shufflerLink);
+		
 		el.appendChild(letterList);
 		el.appendChild(shuffler);
 
@@ -260,5 +264,5 @@ wordScramble.letterListManager = (function(pubsub)
 
 	return manager;
 
-})(window.pubsubz);
+})(window.pubsub);
 

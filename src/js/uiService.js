@@ -6,16 +6,15 @@ wordScramble.uiService = (function(pubsub)
 {
 	var uiService = {};
 
-	var CONST_ELEMENT_ID = "#gameContainer";
-
-	function getElement()
+	var CONST_GAME_ELEMENT_ID = "#gameContainer";
+	function getElement(selector)
 	{
-		return document.querySelector(CONST_ELEMENT_ID);
+		return document.querySelector(selector);
 	}
 
 	function provideFeedback(feedback)
 	{
-		var el = getElement();
+		var el = getElement(CONST_GAME_ELEMENT_ID);
 		if (el === null) return;
 
 		document.addEventListener('animationend', function(evt)
@@ -29,7 +28,7 @@ wordScramble.uiService = (function(pubsub)
 
 		el.classList.add(feedback);
 	}
-
+	
 	function subscribe()
 	{
 		pubsub.subscribe("wordScramble/gameReady", function()
@@ -60,5 +59,5 @@ wordScramble.uiService = (function(pubsub)
 
 	return uiService;
 
-})(window.pubsubz);
+})(window.pubsub);
 

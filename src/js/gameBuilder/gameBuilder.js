@@ -75,5 +75,5 @@ wordScramble.gameBuilder = (function(configuration, pubsub)
 		build : build
 	};
 
-})(wordScramble.configuration, window.pubsubz);
+})(wordScramble.configuration, window.pubsub);
 

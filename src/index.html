@@ -23,7 +23,7 @@
 
 	<aside id="status"></aside>
 
-	<aside id="menu" class="drawer" data-swipe-target="#gameContainer" data-slide-in-dir="right" data-slide-out-dir="left" data-toggle-selector=".menuToggle, .menuItem">
+	<aside id="menu" class="drawer" data-swipe-target="#appContainer" data-slide-in-dir="right" data-slide-out-dir="left" data-toggle-selector=".menuToggle, .menuItem">
 		<header>
 			<span class="icon-cancel menuToggle toggle" title="close menu"></span>
 			<h1>Menu</h1>
@@ -36,7 +36,7 @@
 		</nav>
 	</aside>
 	
-	<aside id="statistics" class="drawer" data-swipe-target="#gameContainer" data-slide-in-dir="left" data-slide-out-dir="right" data-toggle-selector=".statisticsToggle">
+	<aside id="statistics" class="drawer" data-swipe-target="#appContainer" data-slide-in-dir="left" data-slide-out-dir="right" data-toggle-selector=".statisticsToggle">
 		<header>
 			<span class="icon-cancel statisticsToggle toggle" title="close statistics"></span>
 			<h1>Statistics</h1>
@@ -49,38 +49,42 @@
 		</div>
 	</aside>
 	
-	<article id="gameContainer" class="main">
+	<main id="appContainer" class="main">
 
-		<header id="gameHeader" class="container">
+		<header id="appHeader" class="container">
 			<hgroup>
 				<span class="icon-menu menuToggle toggle" title="open menu"></span>
-				<h1 id="gameTitle">WordScramble</h1>
+				<h1 id="appTitle">WordScramble</h1>
 			</hgroup>
 		</header>
 
-		<section id="maskedWords" class="container"></section>
+		<article id="gameContainer">
+		
+			<section id="maskedWords" class="container"></section>
 
-		<section id="turnActions" class="container">
-			<span id="wordAttempt"></span>
-			<a href="#" id="clearWordAttempt">clear</a>
-		</section>
+			<section id="turnActions" class="container">
+				<span id="wordAttempt"></span>
+				<a href="#" id="clearWordAttempt">clear</a>
+			</section>
 
-		<section id="letterContainer" class="container">
-			<div id="letterList" class="container"></div>
-		</section>
+			<section id="letterContainer" class="container">
+				<div id="letterList" class="container"></div>
+			</section>
 
-		<section id="turnSubmit" class="container">
-			<input type="button" id="submitWord" value="Submit Word" />
-		</section>
+			<section id="turnSubmit" class="container">
+				<input type="button" id="submitWord" value="Submit Word" />
+			</section>
 
-	</article>
+		</article>
+		
+	</main>
 
 	<script type="text/javascript">
 		//window.localStorage.removeItem("wordScramble.gameData");
 	</script>
 
 	<script src="config.js" type="text/javascript"></script>
-	<script src="js/lib/pubsubz.js" type="text/javascript"></script>
+	<script src="js/lib/pubsub.js" type="text/javascript"></script>
 
 	<script src="js/swipeHandler.js" type="text/javascript"></script>
 

@@ -121,5 +121,5 @@ wordScramble.currentWordsManager = (function(pubsub)
 
 	return manager;
 
-})(window.pubsubz);
+})(window.pubsub);
 

@@ -6,17 +6,22 @@ wordScramble.gameService = (function(configuration, pubsub)
 {
 	var gService = {};
 
-	var CONST_ELEMENT_ID = "#gameContainer";
 	var storageKey = 'wordScramble.gameData';
 	var previousStorageKey = 'wordScramble.previousGameData';
 	var dictionary = [];
 	var gameData = {};
 
-	function getElement()
+	var CONST_TURN_ACTIONS_ELEMENT_ID = "#turnActions";
+	var CONST_LETTER_LIST_ELEMENT_ID = "#letterList";
+	var CONST_WORD_LIST_ELEMENT_ID = "#maskedWords";
+	var CONST_SUBMIT_ELEMENT_ID = "#turnSubmit";
+	var CONST_SHUFFLE_ELEMENT_ID = ".shuffleContainer";
+	
+	function getElement(selector)
 	{
-		return document.querySelector(CONST_ELEMENT_ID);
+		return document.querySelector(selector);
 	}
-
+	
 	function saveGameData()
 	{
 		window.localStorage.setItem(storageKey, JSON.stringify(gameData));
@@ -39,16 +44,64 @@ wordScramble.gameService = (function(configuration, pubsub)
 		wordObject.solved = true;
 		gameData.words.splice(index, 1, wordObject);
 	}
+	
+	function clearElement(el)
+	{
+		if (el === null) return;
+		while (el.firstChild)
+		{
+			el.removeChild(el.firstChild);
+		}
+	}
+	
+	function clearGameUI()
+	{
+		var statusUI = getElement(CONST_LETTER_LIST_ELEMENT_ID);
+		if (statusUI !== null) 
+		{
+			clearElement(statusUI);
+		}
+		statusUI.textContent = "Preparing Game...";
+		
+		var shuff = getElement(CONST_SHUFFLE_ELEMENT_ID);
+		if (!shuff.classList.contains("hide")) shuff.classList.add("hide");
+		
+		var turnActions = getElement(CONST_TURN_ACTIONS_ELEMENT_ID);
+		if (!turnActions.classList.contains("hide")) turnActions.classList.add("hide");
+		
+		var turnSubmit = getElement(CONST_SUBMIT_ELEMENT_ID);		
+		if (!turnSubmit.classList.contains("hide")) turnSubmit.classList.add("hide");
+		
+		var wordList = getElement(CONST_WORD_LIST_ELEMENT_ID);
+		if (!wordList.classList.contains("hide")) wordList.classList.add("hide");
+	}
+	
+	function setGameUI()
+	{
+		var shuff = getElement(CONST_SHUFFLE_ELEMENT_ID);
+		if (shuff.classList.contains("hide")) shuff.classList.remove("hide");		
+		
+		var turnActions = getElement(CONST_TURN_ACTIONS_ELEMENT_ID);
+		if (turnActions.classList.contains("hide")) turnActions.classList.remove("hide");
+		
+		var turnSubmit = getElement(CONST_SUBMIT_ELEMENT_ID);		
+		if (turnSubmit.classList.contains("hide")) turnSubmit.classList.remove("hide");
+		
+		var wordList = getElement(CONST_WORD_LIST_ELEMENT_ID);
+		if (wordList.classList.contains("hide")) wordList.classList.remove("hide");
+	}
 
 	function subscribe()
 	{
 		pubsub.subscribe("wordScramble/endGame", function()
 		{
+			clearGameUI();
 			clearGameCache();
 		});
 		pubsub.subscribe("wordScramble/startGame", function()
 		{
 			startGame();
+			setGameUI();
 			pubsub.publish("wordScramble/clearWordAttempt");
 		});
 		pubsub.subscribe("wordScramble/submitWord", function()
@@ -58,18 +111,10 @@ wordScramble.gameService = (function(configuration, pubsub)
 		});
 		pubsub.subscribe("wordScramble/gameReady", function(topic, data)
 		{
-			console.log(data);
-			var el = document.querySelector("body");
-			if (el !== null)
-			{
-				el.classList.remove("status");
-				var status = document.querySelector("#status");
-				status.textContent = "";
-			}
 			gameData = data.gameData;
 
 			pubsub.publish("wordScramble/lettersChanged", { "letters":gameData.letters });
--			pubsub.publish("wordScramble/wordsChanged", { "words":gameData.words });
+			pubsub.publish("wordScramble/wordsChanged", { "words":gameData.words });
 
 			saveGameData();
 		});
@@ -128,14 +173,6 @@ wordScramble.gameService = (function(configuration, pubsub)
 
 	function startGame()
 	{
-		var el = document.querySelector("body");
-		if (el !== null)
-		{
-			el.classList.add("status");
-			var status = document.querySelector("#status");
-			status.textContent = "Preparing game...";
-		}
-
 		var loaded = loadGameData();
 		if (loaded)
 		{
@@ -160,5 +197,5 @@ wordScramble.gameService = (function(configuration, pubsub)
 
 	return gService;
 
-})(wordScramble.configuration, window.pubsubz);
+})(wordScramble.configuration, window.pubsub);
 

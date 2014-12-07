@@ -46,5 +46,5 @@ wordScramble.newGameManager = (function(pubsub)
 
 	return manager;
 
-})(window.pubsubz);
+})(window.pubsub);
 

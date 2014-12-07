@@ -1,6 +1,6 @@
 .PHONY: clean
 
-JSSRCS = src/js/lib/pubsubz.js \
+JSSRCS = src/js/lib/pubsub.js \
        src/js/swipeHandler.js \
        src/js/uiModules/drawer.js \
        src/js/uiModules/newGameManager.js \

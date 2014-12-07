@@ -133,5 +133,5 @@ wordScramble.wordAttemptService = ( function(pubsub)
 	subscribe();
 
 	return service;
-}(window.pubsubz));
+}(window.pubsub));
 
