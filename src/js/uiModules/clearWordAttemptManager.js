@@ -13,6 +13,16 @@ wordScramble.clearWordAttemptManager = (function(pubsub)
 		return document.querySelector(CONST_ELEMENT_ID);
 	}
 
+	function setVisible(el)
+	{
+		el.classList.remove("fadeout");
+		el.classList.add("fadein");
+	}
+	function setHidden(el)
+	{
+		el.classList.remove("fadein");		
+		el.classList.add("fadeout");
+	}
 	function cleanup()
 	{
 		var el = getElement();
@@ -33,11 +43,11 @@ wordScramble.clearWordAttemptManager = (function(pubsub)
 		{
 			if (data.wordString.length > 0)
 			{
-				el.classList.add("visible");
+				setVisible(el);
 			}
 			else
 			{
-				el.classList.remove("visible");
+				setHidden(el);
 			}
 		});
 	}

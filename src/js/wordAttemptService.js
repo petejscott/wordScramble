@@ -14,13 +14,49 @@ wordScramble.wordAttemptService = ( function(pubsub)
 		return document.querySelector(CONST_ELEMENT_ID);
 	}
 
+	function removeContents(evt)
+	{		
+		var el = evt.target;
+		if (el === null) return;
+		
+		el.classList.remove("fadeout");
+		el.textContent = "";
+		
+		el.removeEventListener(
+			'animationend',
+			removeContents,
+			false);
+		el.removeEventListener(
+			'webkitAnimationEnd',
+			removeContents,
+			false);
+	}
+	
 	function subscribe()
 	{
 		pubsub.subscribe("wordScramble/wordAttemptUpdated", function(topic, data)
 		{
 			var el = getElement();
 			if (el === null) return;
-			el.textContent = data.wordString;
+			if (data.wordString.length === 0)
+			{
+				// clearing the word attempt. Fade out before clearing
+				el.addEventListener(
+					'animationend',
+					removeContents,
+					false);
+				el.addEventListener(
+					'webkitAnimationEnd',
+					removeContents,
+					false);
+					
+				el.classList.add("fadeout");
+			}
+			else
+			{
+				// updating content, just replace what's there with the new content
+				el.textContent = data.wordString;
+			}
 		});
 		pubsub.subscribe("wordScramble/submitLetter", function(topic, data)
 		{

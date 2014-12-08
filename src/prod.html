@@ -49,27 +49,33 @@
 
 	<main id="appContainer" class="main">
 
-		<header id="gameHeader" class="container">
+		<header id="appHeader" class="container">
 			<hgroup>
 				<span class="icon-menu menuToggle toggle" title="open menu"></span>
-				<h1 id="gameTitle">WordScramble</h1>
+				<h1 id="appTitle">WordScramble</h1>
 			</hgroup>
 		</header>
 
-		<section id="maskedWords" class="container"></section>
+		<article id="gameContainer">
+		
+			<section id="maskedWords" class="container hide"></section>
 
-		<section id="turnActions" class="container">
-			<span id="wordAttempt"></span>
-			<a href="#" id="clearWordAttempt">clear</a>
-		</section>
+			<section id="turnActions" class="container hide">
+				<span id="wordAttempt"></span>
+				<a href="#" id="clearWordAttempt">clear</a>
+			</section>
 
-		<section id="letterContainer" class="container">
-			<div id="letterList" class="container"></div>
-		</section>
+			<section id="letterContainer" class="container">
+				<div id="letterList" class="container">Preparing Game...</div>
+			</section>
 
-		<section id="turnSubmit" class="container">
-			<input type="button" id="submitWord" value="Submit Word" />
-		</section>
+			<section id="turnSubmit" class="container hide">
+				<input type="button" id="submitWord" value="Submit Word" />
+			</section>
+
+		</article>
+		
+	</main>
 
 	</main>
 
