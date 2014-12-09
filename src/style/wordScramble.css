@@ -357,9 +357,13 @@ nav a[class*=" icon-"]:before {
 	transition: color 0.25s, background 0.25s;
 	font-weight: 300;
 }
-#shuffler:hover, #shuffler:active {
+#shuffler:hover {
 	color: #197abb;
 	background: #f9f9f9;
+}
+#shuffler:active {
+	animation: active-shuffle 1s;
+	-webkit-animation: active-shuffle 1s;
 }
 
 #turnSubmit {
@@ -437,6 +441,17 @@ nav a[class*=" icon-"]:before {
 	50% {
 		background-color: #399adb;
 		color:#fff;
+	}
+}
+
+@keyframes active-shuffle {
+	50% {
+		background-color: #f6f6f6;
+	}
+}
+@-webkit-keyframes active-shuffle {
+	50% {
+		background-color: #f6f6f6;
 	}
 }
 
