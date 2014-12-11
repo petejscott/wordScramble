@@ -15,12 +15,12 @@
 
 @keyframes active-shuffle {
 	50% {
-		background-color: #f6f6f6;
+		background-color: #fff;
 	}
 }
 @-webkit-keyframes active-shuffle {
 	50% {
-		background-color: #f6f6f6;
+		background-color: #fff;
 	}
 }
 

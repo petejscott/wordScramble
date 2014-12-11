@@ -38,6 +38,10 @@
 	#statisticsToggle { 
 		display: none;
 	}	
+	#shuffler:hover {
+		color: #197abb;
+		background: #f9f9f9;
+	}
 	#submitWord:hover {
 		background: #399adb;
 		color: #fff;
