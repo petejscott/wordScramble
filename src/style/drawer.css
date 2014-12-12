@@ -19,7 +19,7 @@
 	transform: translateX(100%);
 	right: 0;
 }
-.drawer header {
+.drawer-title {
 	background:#eee;
 	color:#555;
 }

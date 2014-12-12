@@ -66,12 +66,7 @@ header h1 {
 	margin:0; 
 	font-weight:normal;
 }
-h2 {
-	font-weight:normal;
-	font-size: 1.1rem;
-	margin:0;
-	color:#0062a5;
-}
+
 .container {
 	flex: 0 1 auto;
 }
@@ -108,6 +103,16 @@ h2 {
 	-webkit-animation: success-text 0.25s;
 	animation-fill-mode: forwards;
 	-webkit-animation-fill-mode: forwards;
+}
+
+#statusContainer {
+	display: flex;
+	flex-grow: 1;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+	color: #0062a5;
+	text-transform: uppercase;
 }
 
 /* nav styles */
@@ -348,19 +353,12 @@ nav a[class*=" icon-"]:before {
 	-webkit-animation: active-button 0.25s;
 }
 
-#gameSummaryContents {
-	padding: 0 1em;
-	margin: 1em 0;
-}
 #gameSummaryContents .word {
 	padding: 0 0.75em 0 0;
 }
 
 #currentGameSummaryContents, 
 #previousGameSummaryContents {
-	margin-bottom: 0.5em;
-	padding-bottom: 1em;
-	border-bottom: 1px solid #eee;
 }
 #currentWordsTitle,
 #previousWordsTitle {

@@ -54,52 +54,41 @@ wordScramble.gameService = (function(configuration, pubsub)
 		}
 	}
 	
-	function clearGameUI()
+	function clearGameUI(statusText)
 	{
-		var statusUI = getElement(CONST_LETTER_LIST_ELEMENT_ID);
+		var statusUI = getElement("#statusContainer");
 		if (statusUI !== null) 
 		{
 			clearElement(statusUI);
 		}
-		statusUI.textContent = "Preparing Game...";
+		statusUI.textContent = statusText;
 		
-		var shuff = getElement(CONST_SHUFFLE_ELEMENT_ID);
-		if (!shuff.classList.contains("hide")) shuff.classList.add("hide");
+		var gc = getElement("#gameContainer");
+		if (!gc.classList.contains("hide")) gc.classList.add("hide");
 		
-		var turnActions = getElement(CONST_TURN_ACTIONS_ELEMENT_ID);
-		if (!turnActions.classList.contains("hide")) turnActions.classList.add("hide");
-		
-		var turnSubmit = getElement(CONST_SUBMIT_ELEMENT_ID);		
-		if (!turnSubmit.classList.contains("hide")) turnSubmit.classList.add("hide");
-		
-		var wordList = getElement(CONST_WORD_LIST_ELEMENT_ID);
-		if (!wordList.classList.contains("hide")) wordList.classList.add("hide");
+		var sc = getElement("#statusContainer");
+		if (sc.classList.contains("hide")) sc.classList.remove("hide");		
 	}
 	
 	function setGameUI()
-	{
-		var shuff = getElement(CONST_SHUFFLE_ELEMENT_ID);
-		if (shuff.classList.contains("hide")) shuff.classList.remove("hide");		
+	{		
+		var gc = getElement("#gameContainer");
+		if (gc.classList.contains("hide")) gc.classList.remove("hide");
 		
-		var turnActions = getElement(CONST_TURN_ACTIONS_ELEMENT_ID);
-		if (turnActions.classList.contains("hide")) turnActions.classList.remove("hide");
-		
-		var turnSubmit = getElement(CONST_SUBMIT_ELEMENT_ID);		
-		if (turnSubmit.classList.contains("hide")) turnSubmit.classList.remove("hide");
-		
-		var wordList = getElement(CONST_WORD_LIST_ELEMENT_ID);
-		if (wordList.classList.contains("hide")) wordList.classList.remove("hide");
+		var sc = getElement("#statusContainer");
+		if (!sc.classList.contains("hide")) sc.classList.add("hide");		
 	}
 
 	function subscribe()
 	{
 		pubsub.subscribe("wordScramble/endGame", function()
 		{
-			clearGameUI();
+			clearGameUI("Preparing game...");
 			clearGameCache();
 		});
 		pubsub.subscribe("wordScramble/startGame", function()
 		{
+			clearGameUI("Preparing game...");
 			startGame();
 			pubsub.publish("wordScramble/clearWordAttempt");
 		});

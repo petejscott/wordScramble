@@ -1,0 +1,19 @@
+.card { 
+	margin:0.5em;
+	background:#fff;
+	border:1px solid #eee;
+	box-shadow:0 0 1px rgba(0,0,0,0.1);
+	border-radius: 4px;
+}
+.card-title {
+	font-size:1rem;
+	color: #888;
+	font-weight:normal;
+	font-size: 1rem;
+	margin:0;
+	padding: 0.2em 0.5em;
+	background: #f6f6f6;
+}
+.card-contents {
+	padding:0.5em;
+}

@@ -17,16 +17,15 @@
 	<link href='http://fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="style/large-screen.css" />
 	<link rel="stylesheet" href="style/drawer.css" />
+	<link rel="stylesheet" href="style/card.css" />
 	<link rel="stylesheet" href="style/wordScramble.css" />
 	<link rel="stylesheet" href="style/animation.css" />
 	<link rel="stylesheet" href="style/fontello.css" />
 </head>
 <body>
 
-	<aside id="status"></aside>
-
 	<aside id="menu" class="drawer" data-swipe-target="#appContainer" data-slide-in-dir="right" data-slide-out-dir="left" data-toggle-selector=".menuToggle, .menuItem">
-		<header>
+		<header class="drawer-title">
 			<span class="icon-cancel menuToggle toggle" title="close menu"></span>
 			<h1>Menu</h1>
 		</header>
@@ -39,15 +38,19 @@
 	</aside>
 	
 	<aside id="statistics" class="drawer" data-swipe-target="#appContainer" data-slide-in-dir="left" data-slide-out-dir="right" data-toggle-selector=".statisticsToggle">
-		<header>
+		<header class="drawer-title">
 			<span class="icon-cancel statisticsToggle toggle" title="close statistics"></span>
 			<h1>Statistics</h1>
 		</header>
-		<div class="card" id="gameSummaryContents">
-			<h2>Current Game</h2>
-			<section id="currentGameSummaryContents">No data available.</section>
-			<h2>Previous Game</h2>
-			<section id="previousGameSummaryContents">No data available.</section>
+		<div id="gameSummaryContents">
+			<section class="card">
+				<h2 class="card-title">Current Game</h2>
+				<div class="card-contents" id="currentGameSummaryContents">No data available.</div>
+			</section>
+			<section class="card">
+				<h2 class="card-title">Previous Games</h2>
+				<div class="card-contents" id="previousGameSummaryContents">No data available.</div>
+			</section>
 		</div>
 	</aside>
 	
@@ -60,20 +63,23 @@
 			</hgroup>
 		</header>
 
-		<article id="gameContainer">
+		<aside id="statusContainer">
+			<noscript>This application requires JavaScript</noscript>
+		</aside>
+		<article id="gameContainer" class="hide">
 		
-			<section id="maskedWords" class="container hide"></section>
+			<section id="maskedWords" class="container"></section>
 
-			<section id="turnActions" class="container hide">
+			<section id="turnActions" class="container">
 				<span id="wordAttempt"></span>
 				<a href="#" id="clearWordAttempt">clear</a>
 			</section>
 
 			<section id="letterContainer" class="container">
-				<div id="letterList" class="container">Preparing Game...</div>
+				<div id="letterList" class="container"></div>
 			</section>
 
-			<section id="turnSubmit" class="container hide">
+			<section id="turnSubmit" class="container">
 				<input type="button" id="submitWord" value="Submit Word" />
 			</section>
 
