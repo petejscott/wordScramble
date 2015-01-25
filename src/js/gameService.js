@@ -174,7 +174,7 @@ wordScramble.gameService = (function(configuration, pubsub)
 		}
 		
 		var previousGameDataStr = window.localStorage.getItem(previousStorageKey);
-		if (previousGameDataStr.length === 0) return;
+		if (previousGameDataStr === null || previousGameDataStr.length === 0) return;
 		
 		var previousGameData = JSON.parse(previousGameDataStr);
 		if (previousGameData === null) return;
