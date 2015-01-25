@@ -32,7 +32,7 @@ image: prep
 	cp -r src/image build/image
 
 font: prep
-	cp -r src/font build/font
+	cp -r src/style/font build/font
 
 js: prep $(JSSRCS)
 	cat $(JSSRCS) >build/wordScramble.js
