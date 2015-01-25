@@ -39,7 +39,7 @@ wordScramble.gameBuilder = (function(configuration, pubsub)
 	function build(dictionary)
 	{
 		var data = {};
-		var worker = new Worker("js/gameBuilder/gameBuilder_dictSearch.js");
+		var worker = new Worker("workers/gameBuilder_dictSearch.js");
 		var messageCount = 0;
 
 		worker.addEventListener('error', function(evt)
