@@ -4,7 +4,7 @@
 	font-weight: 300;
 	src: local('Roboto Light'),
 	local('Roboto-Light'),
-	url(fonts/Roboto-Light.ttf) format('truetype');
+	url(font/Roboto-Light.ttf) format('truetype');
 }
 @font-face {
 	font-family: 'Roboto';
@@ -12,5 +12,5 @@
 	font-weight: 400;
 	src: local('Roboto Regular'),
 	local('Roboto-Regular'),
-	url(fonts/Roboto-Regular.ttf) format('truetype');
+	url(font/Roboto-Regular.ttf) format('truetype');
 }
