@@ -151,6 +151,10 @@ wordScramble.letterListManager = (function(pubsub)
 
 	function subscribe()
 	{
+		pubsub.subscribe("wordScramble/shuffleRequest", function(topic,data)
+		{
+			shuffleClickEventHandler(null);
+		});
 		pubsub.subscribe("wordScramble/lettersChanged", function(topic,data)
 		{
 			var letters = data.letters || null;
@@ -257,7 +261,7 @@ wordScramble.letterListManager = (function(pubsub)
 		}
 		shuffle();
 		pubsub.publish("wordScramble/lettersChanged", {});
-		evt.preventDefault();
+		if (evt !== null) evt.preventDefault();
 	}
 
 	subscribe();
