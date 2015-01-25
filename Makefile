@@ -38,6 +38,7 @@ js: prep $(JSSRCS)
 	cat $(JSSRCS) >build/wordScramble.js
 	jsmin <build/wordScramble.js >build/wordScramble-min.js
 	cp src/config.js build/config.js
+	cp -r src/workers build/workers
 
 css: prep $(CSSSRCS)
 	awk 'FNR==1{print ""}{print}' $(CSSSRCS) > build/wordScramble.css
