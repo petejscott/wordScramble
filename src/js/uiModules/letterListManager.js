@@ -67,23 +67,7 @@ wordScramble.letterListManager = (function(pubsub)
 
 		for (var i = 0, len = letterObjects.length; i < len; i++)
 		{
-			var o = letterObjects[i];
-
-			var letterButton = document.createElement("input");
-
-			letterButton.classList.add('letterButton');
-
-			letterButton.setAttribute("data-focused", o.focused);
-			letterButton.setAttribute("data-selected", o.selected);
-			letterButton.setAttribute("data-letter", o.letter);
-			letterButton.setAttribute("data-token", o.token);
-
-			letterButton.setAttribute("type", "button");
-			letterButton.setAttribute("tabindex", "-1");
-			letterButton.setAttribute("value", o.letter);
-			letterButton.setAttribute("id", o.token);
-
-			letterButton.addEventListener('click', letterClickEventHandler, false);
+			var letterButton = makeLetterButton(letterObjects[i]);
 			letterList.appendChild(letterButton);
 		}
 
@@ -101,6 +85,25 @@ wordScramble.letterListManager = (function(pubsub)
 		el.appendChild(shuffler);
 
 		setStates();
+	}
+	
+	function makeLetterButton(letterObject) {
+		var letterButton = document.createElement("input");
+
+		letterButton.classList.add('letterButton');
+
+		letterButton.setAttribute("data-focused", letterObject.focused);
+		letterButton.setAttribute("data-selected", letterObject.selected);
+		letterButton.setAttribute("data-letter", letterObject.letter);
+		letterButton.setAttribute("data-token", letterObject.token);
+
+		letterButton.setAttribute("type", "button");
+		letterButton.setAttribute("tabindex", "-1");
+		letterButton.setAttribute("value",letterObject.letter);
+		letterButton.setAttribute("id", letterObject.token);
+
+		letterButton.addEventListener('click', letterClickEventHandler, false);
+		return letterButton;
 	}
 
 	function setStates()
