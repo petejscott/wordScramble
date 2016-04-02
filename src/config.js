@@ -1,6 +1,6 @@
-var wordScramble = wordScramble || {};
+var wordScramble = wordScramble || {}
 wordScramble.configuration = {
-	letterCount : 5,
-	minWords : 5,
-	minWordLength : 3
-};
+  letterCount: 5,
+  minWords: 5,
+  minWordLength: 3
+}
