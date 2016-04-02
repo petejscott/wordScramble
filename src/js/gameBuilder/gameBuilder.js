@@ -1,79 +1,61 @@
 /* gameBuilder.js */
-'use strict';
+'use strict'
 
-var wordScramble = wordScramble || {};
-wordScramble.gameBuilder = (function(configuration, pubsub)
-{
-	var gbuilder = {};
+var wordScramble = wordScramble || {}
+wordScramble.gameBuilder = (function (configuration, pubsub) {
+  var retries = 10
 
-	var data = {};
-	var retries = 10;
+  function getNewLetters () {
+    var count = configuration.letterCount
+    var letters = wordScramble.gameBuilderLetters.getUniqueRandomLetters(count)
 
-	function getNewLetters()
-	{
-		var count = configuration.letterCount;
-		var letters = wordScramble.gameBuilderLetters.getUniqueRandomLetters(count);
+    return letters
+  }
 
-		return letters;
-	}
+  function onDataReady (gameData) {
+    pubsub.publish('wordScramble/gameReady', { gameData: gameData })
+  }
 
-	function onDataReady(gameData)
-	{
-		pubsub.publish("wordScramble/gameReady", { gameData : gameData });
-	}
+  function buildGame (worker, dictionary) {
+    var letters = 	getNewLetters()
 
-	function buildGame(worker, dictionary)
-	{
-		var letters = 	getNewLetters();
-		var words = 	dictionary;
+    var message = JSON.stringify({
+      'dictionary': dictionary,
+      'configuration': configuration,
+      'letters': letters
+    })
+    worker.postMessage(message)
+  }
 
-		var message = JSON.stringify(
-		{
-			"dictionary" : dictionary,
-			"configuration" : configuration,
-			"letters" : letters
-		});
-		worker.postMessage(message);
-	}
+  function build (dictionary) {
+    var worker = new Worker('workers/gameBuilder_dictSearch.js')
+    var messageCount = 0
 
-	function build(dictionary)
-	{
-		var data = {};
-		var worker = new Worker("workers/gameBuilder_dictSearch.js");
-		var messageCount = 0;
+    worker.addEventListener('error', function (evt) {
+      console.log(evt)
+    })
+    worker.addEventListener('message', function (evt) {
+      messageCount++
+      console.log('wordFinder: iteration ' + messageCount)
 
-		worker.addEventListener('error', function(evt)
-		{
-			console.log(evt);
-		});
-		worker.addEventListener('message', function(evt)
-		{
-			messageCount++;
-			console.log("wordFinder: iteration " + messageCount);
+      var response = JSON.parse(evt.data)
 
-			var response = JSON.parse(evt.data);
+      if (messageCount >= retries) {
+        throw new Error('Too many iterations; giving up')
+      }
 
-			if (messageCount >= retries)
-			{
-				throw new Error("Too many iterations; giving up");
-			}
+      if (response.words.length < configuration.minWords) {
+        buildGame(worker, dictionary)
+      } else {
+        onDataReady(response)
+      }
+    })
 
-			if (response.words.length < configuration.minWords)
-			{
-				buildGame(worker, dictionary);
-			}
-			else
-			{
-				onDataReady(response);
-			}
-		});
+    buildGame(worker, dictionary)
+  }
 
-		buildGame(worker, dictionary);
-	}
-
-	return {
-		build : build
-	};
-
-})(wordScramble.configuration, window.pubsub);
+  return {
+    build: build
+  }
+})(wordScramble.configuration, window.pubsub)
 

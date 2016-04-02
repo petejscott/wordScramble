@@ -1,173 +1,143 @@
 /* wordAttemptService.js */
-'use strict';
+'use strict'
 
-var wordScramble = wordScramble || {};
-wordScramble.wordAttemptService = ( function(pubsub)
-{
-	var service = {};
+var wordScramble = wordScramble || {}
+wordScramble.wordAttemptService = (function (pubsub) {
+  var service = {}
 
-	var CONST_ELEMENT_ID = "#wordAttempt";
-	var wordAttempts = [];
+  var CONST_ELEMENT_ID = '#wordAttempt'
+  var wordAttempts = []
 
-	function getElement()
-	{
-		return document.querySelector(CONST_ELEMENT_ID);
-	}
+  function getElement () {
+    return document.querySelector(CONST_ELEMENT_ID)
+  }
 
-	function removeContents(evt)
-	{		
-		var el = evt.target;
-		if (el === null) return;
-		
-		el.classList.remove("fadeout");
-		el.textContent = "";
-		
-		el.removeEventListener(
-			'animationend',
-			removeContents,
-			false);
-		el.removeEventListener(
-			'webkitAnimationEnd',
-			removeContents,
-			false);
-	}
-	
-	function subscribe()
-	{
-		pubsub.subscribe("wordScramble/wordAttemptUpdated", function(topic, data)
-		{
-			var el = getElement();
-			if (el === null) return;
-			if (data.wordString.length === 0)
-			{
-				// clearing the word attempt. Fade out before clearing
-				el.addEventListener(
-					'animationend',
-					removeContents,
-					false);
-				el.addEventListener(
-					'webkitAnimationEnd',
-					removeContents,
-					false);
-					
-				el.classList.add("fadeout");
-			}
-			else
-			{
-				// updating content, just replace what's there with the new content
-				el.textContent = data.wordString;
-			}
-		});
-		pubsub.subscribe("wordScramble/submitLetter", function(topic, data)
-		{
-			var letter = data.letter;
-			var token = data.token;
-			service.add(letter, token);
-		});
-		pubsub.subscribe("wordScramble/removeLetter", function(topic, data)
-		{
-			var letter = data.letter;
-			var token = data.token;
-			service.removePrevious();
-			return;
-		});
-		pubsub.subscribe("wordScramble/clearWordAttempt", function()
-		{
-			service.clear();
-		});
-	}
+  function removeContents (evt) {
+    var el = evt.target
+    if (el === null) return
 
-	service.getByLetter = function(letter)
-	{
-		return wordAttempts.filter(function(wa)
-		{
-			return wa.letter == letter;
-		});
-	};
+    el.classList.remove('fadeout')
+    el.textContent = ''
 
-	service.getByToken = function(token)
-	{
-		return wordAttempts.filter(function(wa)
-		{
-			return wa.token == token;
-		});
-	};
+    el.removeEventListener(
+      'animationend',
+      removeContents,
+      false)
+    el.removeEventListener(
+      'webkitAnimationEnd',
+      removeContents,
+      false)
+  }
 
-	service.getWordString = function()
-	{
-		var str = wordAttempts.reduce(function(prev, wa)
-		{
-			return prev + wa.letter;
-		},"");
-		return str;
-	};
+  function subscribe () {
+    pubsub.subscribe('wordScramble/wordAttemptUpdated', function (topic, data) {
+      var el = getElement()
+      if (el === null) return
+      if (data.wordString.length === 0) {
+        // clearing the word attempt. Fade out before clearing
+        el.addEventListener(
+          'animationend',
+          removeContents,
+          false)
+        el.addEventListener(
+          'webkitAnimationEnd',
+          removeContents,
+          false)
 
-	service.getAllTokens = function()
-	{
-		var tokens = wordAttempts.map(function(wa)
-		{
-			return wa.token;
-		});
-		return tokens;
-	};
+        el.classList.add('fadeout')
+      } else {
+        // updating content, just replace what's there with the new content
+        el.textContent = data.wordString
+      }
+    })
+    pubsub.subscribe('wordScramble/submitLetter', function (topic, data) {
+      var letter = data.letter
+      var token = data.token
+      service.add(letter, token)
+    })
+    pubsub.subscribe('wordScramble/removeLetter', function (topic, data) {
+      service.removePrevious()
+      return
+    })
+    pubsub.subscribe('wordScramble/clearWordAttempt', function () {
+      service.clear()
+    })
+  }
 
-	service.getCount = function()
-	{
-		return wordAttempts.length;
-	}
+  service.getByLetter = function (letter) {
+    return wordAttempts.filter(function (wa) {
+      return wa.letter === letter
+    })
+  }
 
-	service.getPrevious = function()
-	{
-		var old = wordAttempts[wordAttempts.length-1];
-		return old;
-	}
+  service.getByToken = function (token) {
+    return wordAttempts.filter(function (wa) {
+      return wa.token === token
+    })
+  }
 
-	service.removePrevious = function()
-	{
-		var old = wordAttempts.pop();
-		pubsub.publish("wordScramble/wordAttemptUpdated",
-		{
-			"type":"remove",
-			"wordString":service.getWordString(),
-			"letter":old.letter,
-			"token":old.token,
-			"allTokens":service.getAllTokens()
-		});
-		return old;
-	}
+  service.getWordString = function () {
+    var str = wordAttempts.reduce(function (prev, wa) {
+      return prev + wa.letter
+    }, '')
+    return str
+  }
 
-	service.clear = function()
-	{
-		wordAttempts = [];
-		pubsub.publish("wordScramble/wordAttemptUpdated",
-		{
-			"type":"remove",
-			"wordString":service.getWordString(),
-			"letter":null,
-			"token":null,
-			"allTokens":service.getAllTokens()
-		});
-	}
+  service.getAllTokens = function () {
+    var tokens = wordAttempts.map(function (wa) {
+      return wa.token
+    })
+    return tokens
+  }
 
-	service.add = function(letter, token)
-	{
-		wordAttempts.push(
-		{
-			"letter": letter,
-			"token" : token
-		});
-		pubsub.publish("wordScramble/wordAttemptUpdated",
-		{
-			"type":"add",
-			"wordString":service.getWordString(),
-			"letter":letter,
-			"token":token,
-			"allTokens":service.getAllTokens()
-		});
-	};
+  service.getCount = function () {
+    return wordAttempts.length
+  }
 
-	subscribe();
+  service.getPrevious = function () {
+    var old = wordAttempts[ wordAttempts.length - 1 ]
+    return old
+  }
 
-	return service;
-}(window.pubsub));
+  service.removePrevious = function () {
+    var old = wordAttempts.pop()
+    pubsub.publish('wordScramble/wordAttemptUpdated', {
+      'type': 'remove',
+      'wordString': service.getWordString(),
+      'letter': old.letter,
+      'token': old.token,
+      'allTokens': service.getAllTokens()
+    })
+    return old
+  }
+
+  service.clear = function () {
+    wordAttempts = []
+    pubsub.publish('wordScramble/wordAttemptUpdated', {
+      'type': 'remove',
+      'wordString': service.getWordString(),
+      'letter': null,
+      'token': null,
+      'allTokens': service.getAllTokens()
+    })
+  }
+
+  service.add = function (letter, token) {
+    wordAttempts.push({
+      'letter': letter,
+      'token': token
+    })
+    pubsub.publish('wordScramble/wordAttemptUpdated', {
+      'type': 'add',
+      'wordString': service.getWordString(),
+      'letter': letter,
+      'token': token,
+      'allTokens': service.getAllTokens()
+    })
+  }
+
+  subscribe()
+
+  return service
+}(window.pubsub))
 
