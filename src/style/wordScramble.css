@@ -350,7 +350,9 @@ nav a[class*=" icon-"]:before {
 	border-radius: 0.5em;
 }
 #submitWord[disabled] {
-	background: #bbb;
+	background: #ddd;
+    color: #888;
+    cursor: not-allowed;
 }
 #submitWord:focus {
 	animation: active-button 0.25s;
