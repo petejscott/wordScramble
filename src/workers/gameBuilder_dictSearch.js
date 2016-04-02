@@ -59,14 +59,14 @@ wordScramble.WordFinder = function (wordList) {
       return w.length <= letterList.length && w.length >= mininumWordLength
     })
 
-    // get all possible permutations of the letterList    
+    // get all possible permutations of the letterList
     makeStatusUpdate('building letter permutations')
     var letterPermutations = permute(letterList)
     var wordPermutations = letterPermutations.map(function (lp) {
       return lp.join('')
     })
 
-    // find wordPermutations that match w or contain w    
+    // find wordPermutations that match w or contain w
     makeStatusUpdate('searching dictionary')
     words = words.filter(function (w) {
       var found = wordPermutations.some(function (wp) {
