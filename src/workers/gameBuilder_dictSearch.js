@@ -114,12 +114,7 @@ wordScramble.wordFinder = function(wordList)
 			if (permCnt != currentCnt)
 			{
 				// throw it all out and start over, sadly.
-				//console.log("expected "+permCnt+" occurrences of "+letter+", but only "+currentCnt+" were actually used.");
-				//console.log(letterList);
-				//console.log(letterCounts);
-				//console.log(words);
 				return [];
-				break;
 			}
 		}
 
