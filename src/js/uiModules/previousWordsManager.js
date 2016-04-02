@@ -21,6 +21,7 @@ wordScramble.previousWordsManager = (function (pubsub) {
   }
 
   function render (words) {
+    if (typeof words === 'undefined') return
     var el = getElement()
     if (el === null) return
 
