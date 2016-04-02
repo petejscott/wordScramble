@@ -16,6 +16,14 @@ wordScramble.WordFinder = function (wordList) {
     })
   }
 
+  function makeStatusUpdate (statusMessage) {
+    var message = {
+      update: 1,
+      status: statusMessage
+    }
+    postMessage(JSON.stringify(message))
+  }
+
   var permArr = []
   var usedChars = []
   function permute (input) {
@@ -46,17 +54,20 @@ wordScramble.WordFinder = function (wordList) {
 
     // filter our words to not exceed the length of letterList
     // and to at least meet the minimumWordLength
+    makeStatusUpdate('filtering word list by length')
     words = words.filter(function (w) {
       return w.length <= letterList.length && w.length >= mininumWordLength
     })
 
-    // get all possible permutations of the letterList
+    // get all possible permutations of the letterList    
+    makeStatusUpdate('building letter permutations')
     var letterPermutations = permute(letterList)
     var wordPermutations = letterPermutations.map(function (lp) {
       return lp.join('')
     })
 
-    // find wordPermutations that match w or contain w
+    // find wordPermutations that match w or contain w    
+    makeStatusUpdate('searching dictionary')
     words = words.filter(function (w) {
       var found = wordPermutations.some(function (wp) {
         return wp.indexOf(w.word) !== -1
@@ -80,13 +91,20 @@ wordScramble.WordFinder = function (wordList) {
     })
 
     // if we have no words, we can exit now.
-    if (words.length === 0) return []
+    if (words.length === 0) {
+      makeStatusUpdate('no words found for selected letters')
+      return []
+    }
 
     // if our letterCounts contains a 0, we can exit now
-    if (letterCounts.indexOf(0) !== -1) return []
+    if (letterCounts.indexOf(0) !== -1) {
+      makeStatusUpdate('oops, found words with letters you don\'t have')
+      return []
+    }
 
     // make sure our letterCounts match our letters
     // we can use ANY of our wordPermutations for this
+    makeStatusUpdate('validating results')
     var perm = wordPermutations[0]
     for (var i = 0, len = letterList.length; i < len; i++) {
       var letter = letterList[i]
@@ -94,10 +112,11 @@ wordScramble.WordFinder = function (wordList) {
       var currentCnt = letterCounts.charAt(letterCounts.indexOf(letter) + 1, 0)
       if (permCnt !== Number(currentCnt)) {
         // throw it all out and start over, sadly.
+        makeStatusUpdate('validation failed')
         return []
       }
     }
-    
+
     var wordObjects = mapWordsToWordObjects(words)
     wordObjects = sortWordObjectsByLength(wordObjects)
 
@@ -120,6 +139,7 @@ var onmessage = function (evt) {
   var wordObjects = wordFinder.queryObjects(configuration.minWordLength, letterList)
 
   var message = {
+    complete: 1,
     words: wordObjects,
     letters: letterList
   }

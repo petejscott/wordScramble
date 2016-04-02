@@ -31,7 +31,7 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
 
   function build (dictionary) {
     gameDictionary = dictionary
-    
+
     var worker = new Worker('workers/gameBuilder_dictSearch.js')
     worker.addEventListener('error', handleWorkerError)
     worker.addEventListener('message', handleWorkerMessage)
@@ -44,6 +44,15 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
   }
 
   function handleWorkerMessage (evt) {
+    var response = JSON.parse(evt.data)
+    if (response.complete === 1) {
+      handleCompletedWorker(evt)
+    } else if (response.update === 1) {
+      pubsub.publish('wordScramble/updateGameBuildStatus', { 'statusMessage': response.status })
+    }
+  }
+
+  function handleCompletedWorker (evt) {
     tryCount++
     console.log('wordFinder: iteration ' + tryCount)
 
