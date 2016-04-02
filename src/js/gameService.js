@@ -39,12 +39,16 @@ wordScramble.gameService = (function (configuration, pubsub) {
     }
   }
 
-  function clearGameUI (statusText) {
+  function setGameBuildStatus (statusText) {
     var statusUI = getElement('#statusContainer')
     if (statusUI !== null) {
       clearElement(statusUI)
     }
     statusUI.textContent = statusText
+  }
+
+  function clearGameUI (statusText) {
+    setGameBuildStatus(statusText)
 
     var gc = getElement('#gameContainer')
     if (!gc.classList.contains('hide')) gc.classList.add('hide')
@@ -62,6 +66,9 @@ wordScramble.gameService = (function (configuration, pubsub) {
   }
 
   function subscribe () {
+    pubsub.subscribe('wordScramble/updateGameBuildStatus', function (topic, data) {
+      setGameBuildStatus(data.statusMessage)
+    })
     pubsub.subscribe('wordScramble/endGame', function () {
       clearGameUI('Preparing game...')
       clearGameCache()
