@@ -189,14 +189,14 @@ nav a[class*=" icon-"]:before {
 	background: #fcfcfc;
 	outline: 1px solid #f0f0f0;
 	margin: 0.25em 0.35em 0.25em 0;
-	padding: 0 0.5em;
+	padding: 0 0.35em;
 }
 #maskedWords .word.solved,
 #maskedWords .word.missed {
 	padding: 0 0.25em;
 }
 .word {
-	line-height: 1.75em;
+	line-height: 1.6em;
 	display: inline-block;
 	white-space: nowrap;
 	padding: 0 0.25em;
