@@ -92,12 +92,12 @@ wordScramble.WordFinder = function (wordList) {
       var letter = letterList[i]
       var permCnt = perm.split(letter).length - 1
       var currentCnt = letterCounts.charAt(letterCounts.indexOf(letter) + 1, 0)
-      if (permCnt !== currentCnt) {
+      if (permCnt !== Number(currentCnt)) {
         // throw it all out and start over, sadly.
         return []
       }
     }
-
+    
     var wordObjects = mapWordsToWordObjects(words)
     wordObjects = sortWordObjectsByLength(wordObjects)
 
