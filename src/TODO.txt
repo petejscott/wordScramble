@@ -1,0 +1,7 @@
+Couple of options for dictSearch to improve performance:
+1) split up dictionary, provide portions to multiple workers
+  a) means that the validation step (ensuring all letters are represented in the found words) needs to be moved out of dictSearch (seems like a different responsibility, anyway).
+2) assume multiple iterations might be needed, and spin up several simultaneous workers. As soon as one returns with words, cancel the others
+  a) easier to accomplish, but might be more resource intensive on mobile. Might be a waste of battery life.
+  
+Regardless, dictSearch needs some more refactoring. Might as well start with that and then see where we are.
