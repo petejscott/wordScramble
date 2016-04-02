@@ -349,6 +349,9 @@ nav a[class*=" icon-"]:before {
 	font-weight: 400;
 	border-radius: 0.5em;
 }
+#submitWord[disabled] {
+	background: #bbb;
+}
 #submitWord:focus {
 	animation: active-button 0.25s;
 	-webkit-animation: active-button 0.25s;
