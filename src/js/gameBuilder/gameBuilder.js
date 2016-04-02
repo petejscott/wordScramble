@@ -4,6 +4,8 @@
 var wordScramble = wordScramble || {}
 wordScramble.gameBuilder = (function (configuration, pubsub) {
   var retries = 10
+  var tryCount = 0
+  var gameDictionary = null
 
   function getNewLetters () {
     var count = configuration.letterCount
@@ -16,11 +18,11 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
     pubsub.publish('wordScramble/gameReady', { gameData: gameData })
   }
 
-  function buildGame (worker, dictionary) {
+  function buildGame (worker) {
     var letters = 	getNewLetters()
 
     var message = JSON.stringify({
-      'dictionary': dictionary,
+      'dictionary': gameDictionary,
       'configuration': configuration,
       'letters': letters
     })
@@ -28,30 +30,35 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
   }
 
   function build (dictionary) {
+    gameDictionary = dictionary
+    
     var worker = new Worker('workers/gameBuilder_dictSearch.js')
-    var messageCount = 0
+    worker.addEventListener('error', handleWorkerError)
+    worker.addEventListener('message', handleWorkerMessage)
 
-    worker.addEventListener('error', function (evt) {
-      console.log(evt)
-    })
-    worker.addEventListener('message', function (evt) {
-      messageCount++
-      console.log('wordFinder: iteration ' + messageCount)
+    buildGame(worker)
+  }
 
-      var response = JSON.parse(evt.data)
+  function handleWorkerError (evt) {
+    console.log(evt)
+  }
 
-      if (messageCount >= retries) {
-        throw new Error('Too many iterations; giving up')
-      }
+  function handleWorkerMessage (evt) {
+    tryCount++
+    console.log('wordFinder: iteration ' + tryCount)
 
-      if (response.words.length < configuration.minWords) {
-        buildGame(worker, dictionary)
-      } else {
-        onDataReady(response)
-      }
-    })
+    var response = JSON.parse(evt.data)
 
-    buildGame(worker, dictionary)
+    if (tryCount >= retries) {
+      throw new Error('Too many iterations; giving up')
+    }
+
+    if (response.words.length < configuration.minWords) {
+      buildGame(evt.target)
+    } else {
+      onDataReady(response)
+      tryCount = 0
+    }
   }
 
   return {
