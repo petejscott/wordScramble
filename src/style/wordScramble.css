@@ -363,9 +363,6 @@ nav a[class*=" icon-"]:before {
 	padding: 0 0.75em 0 0;
 }
 
-#currentGameSummaryContents, 
-#previousGameSummaryContents {
-}
 #currentWordsTitle,
 #previousWordsTitle {
 	color:#888;
