@@ -21,6 +21,7 @@ wordScramble.WordFinder = function (wordList) {
       update: 1,
       status: statusMessage
     }
+    console.log(message)
     postMessage(JSON.stringify(message))
   }
 
@@ -60,8 +61,19 @@ wordScramble.WordFinder = function (wordList) {
       return letterPermutation.join('')
     })
   }
-  
-  function findMatchingWordsInDictionary (words, possibleWords, letterCounts) {
+
+  function findMatchingWordsInDictionary (words, letterList) {
+    var letterCounts = ''
+    letterList.forEach(function (l) {
+      if (letterCounts.indexOf(l) === -1) {
+        letterCounts += l + '0'
+      }
+    })
+
+    makeStatusUpdate('building letter permutations')
+    var possibleWords = makeLetterPermutations(letterList)
+
+    makeStatusUpdate('searching dictionary')
     var matchingWords = words.filter(function (wordCandidate) {
       var found = possibleWords.some(function (wordPermutation) {
         return wordPermutation.indexOf(wordCandidate.word) !== -1
@@ -83,31 +95,50 @@ wordScramble.WordFinder = function (wordList) {
         return wordCandidate
       }
     })
+
+    // make sure each letter in our list is found the same
+    // number of times in one of our words as it is in our list.
+    makeStatusUpdate('checking letter counts')
+    for (var i = 0, len = letterList.length; i < len; i++) {
+      var letter = letterList[i]
+      var letterCountInWord = getCountOfLetterInWord(letter, possibleWords[0])
+      var letterCountInLetterList = letterCounts.charAt(letterCounts.indexOf(letter) + 1, 0)
+      if (letterCountInWord !== Number(letterCountInLetterList)) {
+        // throw it all out and start over, sadly.
+        makeStatusUpdate('letter counts are wrong')
+        return { 'matchingWords': [], 'letterCounts': letterCounts }
+      }
+    }
+
     return { 'matchingWords': matchingWords, 'letterCounts': letterCounts }
+  }
+
+  function filterWordsWithOtherLetters (words, letterList) {
+    var allLetters = 'abcdefghijklmnopqrstuvwxyz'
+    var otherLetters = allLetters.split('').filter(function (allLettersElement) {
+      return !letterList.includes(allLettersElement)
+    })
+    for (var i = 0, len = otherLetters.length; i < len; i++) {
+      words = words.filter(function (word) {
+        return word.word.indexOf(otherLetters[i]) === -1
+      })
+    }
+    return words
   }
 
   this.queryObjects = function (mininumWordLength, letterList) {
     var words = wordList
-    var letterCounts = ''
-
-    // build our letterCount string
-    letterList.forEach(function (l) {
-      if (letterCounts.indexOf(l) === -1) {
-        letterCounts += l + '0'
-      }
-    })
 
     makeStatusUpdate('filtering word list by length')
     words = filterShortAndLongWords(words, mininumWordLength, letterList.length)
 
-    makeStatusUpdate('building letter permutations')
-    var possibleWords = makeLetterPermutations(letterList)
+    // remove words that contain letters that are NOT in our letterList
+    words = filterWordsWithOtherLetters(words, letterList)
 
     // find words in the dictionary that match or contain our possibleWords
-    makeStatusUpdate('searching dictionary')
-    var result = findMatchingWordsInDictionary(words, possibleWords, letterCounts)
+    var result = findMatchingWordsInDictionary(words, letterList)
     words = result.matchingWords
-    letterCounts = result.letterCounts
+    var letterCounts = result.letterCounts
 
     // if we have no words, we can exit now.
     if (words.length === 0) {
@@ -121,20 +152,6 @@ wordScramble.WordFinder = function (wordList) {
     if (letterCounts.indexOf(0) !== -1) {
       makeStatusUpdate('oops, extra letters')
       return []
-    }
-
-    // make sure each letter in our list is found the same
-    // number of times in one of our words as it is in our list.
-    makeStatusUpdate('checking letter counts')
-    for (var i = 0, len = letterList.length; i < len; i++) {
-      var letter = letterList[i]
-      var letterCountInWord = getCountOfLetterInWord(letter, possibleWords[0])
-      var letterCountInLetterList = letterCounts.charAt(letterCounts.indexOf(letter) + 1, 0)
-      if (letterCountInWord !== Number(letterCountInLetterList)) {
-        // throw it all out and start over, sadly.
-        makeStatusUpdate('letter counts are wrong')
-        return []
-      }
     }
 
     var wordObjects = mapWordsToWordObjects(words)
