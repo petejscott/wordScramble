@@ -125,9 +125,9 @@ wordScramble.WordFinder = function (wordList) {
 
     if (!hasAcceptableWordCount(words, wordSetConfiguration)) return []
 
-    makeStatusUpdate('Checking letter counts')
+    makeStatusUpdate('Ensuring all letters are used')
     if (!hasCorrectLetterCounts(words, letterSet)) {
-      makeStatusUpdate('Failed letter count check')
+      makeStatusUpdate('Not all letters are used')
       return []
     }
 
