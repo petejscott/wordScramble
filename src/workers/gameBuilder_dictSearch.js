@@ -33,12 +33,8 @@ wordScramble.WordFinder = function (wordList) {
 
   function removeShortAndLongWords (words, minLength, maxLength) {
     return words.filter(function (word) {
-      return checkWordLength(word, minLength, maxLength)
+      return word.length <= maxLength && word.length >= minLength
     })
-  }
-
-  function checkWordLength (word, minLength, maxLength) {
-    return word.length <= maxLength && word.length >= minLength
   }
 
   function removeWordsWithOtherLetters (words, letterSet) {
