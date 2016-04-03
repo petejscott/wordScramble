@@ -25,27 +25,6 @@ wordScramble.WordFinder = function (wordList) {
     postMessage(JSON.stringify(message))
   }
 
-  var permArr = []
-  var usedChars = []
-  function permute (input) {
-    var i, ch
-    for (i = 0; i < input.length; i++) {
-      ch = input.splice(i, 1)[0]
-      usedChars.push(ch)
-      if (input.length === 0) {
-        permArr.push(usedChars.slice())
-      }
-      permute(input)
-      input.splice(i, 0, ch)
-      usedChars.pop()
-    }
-    return permArr
-  };
-
-  function getCountOfLetterInWord (letter, word) {
-    return word.split(letter).length - 1
-  }
-
   function checkWordLength (word, minLength, maxLength) {
     return word.length <= maxLength && word.length >= minLength
   }
@@ -56,32 +35,16 @@ wordScramble.WordFinder = function (wordList) {
     })
   }
 
-  function makeLetterPermutations (letterList) {
-    return permute(letterList).map(function (letterPermutation) {
-      return letterPermutation.join('')
-    })
-  }
-
   function getUniqueLetters (letterList) {
     return letterList.filter(function (v, i) {
       return letterList.indexOf(v) === i
     })
   }
 
-  function initializeLetterCounts (letterList) {
-    var letterCounts = ''
-    letterList.forEach(function (l) {
-      if (letterCounts.indexOf(l) === -1) {
-        letterCounts += l + '0'
-      }
-    })
-    return letterCounts
-  }
-
-  function filterWordsWithOtherLetters (words, letterList) {
+  function filterWordsWithOtherLetters (words, letterSet) {
     var allLetters = 'abcdefghijklmnopqrstuvwxyz'
     var otherLetters = allLetters.split('').filter(function (allLettersElement) {
-      return !letterList.includes(allLettersElement)
+      return !letterSet.letterList.includes(allLettersElement)
     })
     for (var i = 0, len = otherLetters.length; i < len; i++) {
       words = words.filter(function (word) {
@@ -91,88 +54,84 @@ wordScramble.WordFinder = function (wordList) {
     return words
   }
 
-  function getMaxCountOfLettersInWords (letter, letterCounts) {
-    return letterCounts.charAt(letterCounts.indexOf(letter) + 1, 0)
+  function filterWordsWithExtraLetters (words, letterSet) {
+    words = words.filter(function (wordObject) {
+      return wordObject.word.split('').every(function (letterInWord) {
+        var letterObject = letterSet.letterCounts.find(function (letterObject) {
+          return letterObject.letter === letterInWord
+        })
+        var countOfLetterInWordCandidate = wordObject.word.split(letterObject.letter).length - 1
+        if (countOfLetterInWordCandidate <= letterObject.count) {
+          return true
+        }
+      })
+    })
+    return words
   }
 
-  function findMatchingWordsInDictionary (words, letterList) {
-    makeStatusUpdate('building letter permutations')
-    var possibleWords = makeLetterPermutations(letterList)
-
-    var letterCounts = initializeLetterCounts(letterList)
-
-    makeStatusUpdate('searching dictionary')
-    var matchingWords = words.filter(function (wordCandidate) {
-      var found = possibleWords.some(function (wordPermutation) {
-        return wordPermutation.indexOf(wordCandidate.word) !== -1
+  function hasCorrectLetterCounts (words, letterSet) {
+    return letterSet.letterCounts.every(function (letterObject) {
+      var countOfLetterInList = letterObject.count
+      return words.some(function (wordObject) {
+        if (wordObject.word.split(letterObject.letter).length === countOfLetterInList) {
+          return true
+        }
       })
-      if (found === true) {
-        // get a count of each distinct letter
-        var wordLetters = wordCandidate.word.split('')
-        wordLetters.forEach(function (letter) {
-          // count of the number of occurrences in this word
-          var letterListLetterCount = getCountOfLetterInWord(letter, wordCandidate.word)
-          // current count from letterCount
-          var currentLetterCountFromLetterCounts = getMaxCountOfLettersInWords(letter, letterCounts)
-          // compare and update if necessary
-          if (letterListLetterCount > currentLetterCountFromLetterCounts) {
-            letterCounts = letterCounts.replace(letter + currentLetterCountFromLetterCounts, letter + letterListLetterCount)
-          }
-        })
+    })
+  }
 
-        return wordCandidate
+  this.makeLetterSet = function (letterList) {
+    var letterCounts = []
+    var letterString = letterList.join('')
+    var uniqueLetters = getUniqueLetters(letterList)
+    uniqueLetters.forEach(function (letter) {
+      var letterObject = {
+        'letter': letter,
+        'count': 1
       }
+      letterCounts.push(letterObject)
+    })
+    letterCounts.forEach(function (letterObject) {
+      letterObject.count = letterString.split(letterObject.letter).length - 1
     })
 
-    return { 'matchingWords': matchingWords, 'letterCounts': letterCounts }
+    return {
+      'letterList': letterList,
+      'letterString': letterString,
+      'letterCounts': letterCounts,
+      'uniqueLetters': uniqueLetters
+    }
   }
 
-  this.queryObjects = function (mininumWordLength, maxWords, letterList) {
+  this.queryObjects = function (wordSetConfiguration, letterSet) {
     var words = wordList
 
-    makeStatusUpdate('filtering word list by length')
-    words = filterShortAndLongWords(words, mininumWordLength, letterList.length)
+    makeStatusUpdate('Filtering word list (1 of 3)')
+    words = filterShortAndLongWords(words, wordSetConfiguration.minimumWordLength, letterSet.letterList.length)
 
-    // remove words that contain letters that are NOT in our letterList
-    words = filterWordsWithOtherLetters(words, letterList)
+    makeStatusUpdate('Filtering word list (2 of 3)')
+    words = filterWordsWithOtherLetters(words, letterSet)
 
-    // find words in the dictionary that match or contain our possibleWords
-    var result = findMatchingWordsInDictionary(words, letterList)
-    words = result.matchingWords
-    var letterCounts = result.letterCounts
+    makeStatusUpdate('Filtering word list (3 of 3)')
+    words = filterWordsWithExtraLetters(words, letterSet)
 
-    if (words.length > maxWords) {
-      makeStatusUpdate('too many words found')
+    if (words.length > wordSetConfiguration.maximumWords) {
+      makeStatusUpdate('Too many words found (' + words.length + ')')
       return []
     }
 
-    // if we have no words, we can exit now.
-    if (words.length === 0) {
-      makeStatusUpdate('no words found for selected letters')
-      return []
-    }
-
-    // if our letterCounts contains a 0, we can exit now
-    // this means that maybe we have a Z in our letter list,
-    // but no words containing Z are in our word list.
-    if (letterCounts.indexOf(0) !== -1) {
-      makeStatusUpdate('oops, extra letters')
+    // if we have no or fewer than max words, we can exit now.
+    if (words.length < wordSetConfiguration.minimumWords) {
+      makeStatusUpdate('Not enough words found (' + words.length + ')')
       return []
     }
 
     // make sure each letter in our list is found the same
     // number of times in one of our words as it is in our list.
-    makeStatusUpdate('checking letter counts')
-    getUniqueLetters(letterList).forEach(function (letter) {
-      var letterCountFromList = getCountOfLetterInWord(letter, letterList.join(''))
-      var letterCountFromWords = getMaxCountOfLettersInWords(letter, letterCounts)
-      if (letterCountFromList !== Number(letterCountFromWords)) {
-        // throw it all out and start over, sadly.
-        console.log('letter ' + letter + ' is in our found words (' + letterCounts + ') a max of ' + letterCountFromWords + ' times; in ' + letterList.join('') + ' ' + letterCountFromList + ' times')
-        makeStatusUpdate('letter counts are wrong')
-        return []
-      }
-    })
+    makeStatusUpdate('Checking letter counts')
+    if (!hasCorrectLetterCounts(words, letterSet)) {
+      makeStatusUpdate('Failed letter count check')
+    }
 
     var wordObjects = mapWordsToWordObjects(words)
     wordObjects = sortWordObjectsByLength(wordObjects)
@@ -193,7 +152,13 @@ var onmessage = function (evt) {
   }
 
   var wordFinder = new wordScramble.WordFinder(wordList)
-  var wordObjects = wordFinder.queryObjects(configuration.minWordLength, configuration.maxWords, letterList)
+  var letterSet = wordFinder.makeLetterSet(letterList)
+  var wordSetConfiguration = {
+    'minimumWordLength': configuration.minWordLength,
+    'maximumWords': configuration.maxWords,
+    'minimumWords': configuration.minWords
+  }
+  var wordObjects = wordFinder.queryObjects(wordSetConfiguration, letterSet)
 
   var message = {
     complete: 1,
