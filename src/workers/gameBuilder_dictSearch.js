@@ -76,6 +76,18 @@ wordScramble.WordFinder = function (wordList) {
     })
   }
 
+  function hasAcceptableWordCount (words, wordSetConfiguration) {
+    if (words.length > wordSetConfiguration.maximumWords) {
+      makeStatusUpdate('Too many words found (' + words.length + ')')
+      return false
+    }
+    if (words.length < wordSetConfiguration.minimumWords) {
+      makeStatusUpdate('Not enough words found (' + words.length + ')')
+      return false
+    }
+    return true
+  }
+
   this.makeLetterSet = function (letterList) {
     var letterCounts = []
     var letterString = letterList.join('')
@@ -102,29 +114,23 @@ wordScramble.WordFinder = function (wordList) {
   this.queryObjects = function (wordSetConfiguration, letterSet) {
     var words = wordList
 
-    makeStatusUpdate('Filtering word list (1 of 3)')
+    makeStatusUpdate('Filtering ' + words.length + ' words (1 of 3)')
     words = removeShortAndLongWords(words, wordSetConfiguration.minimumWordLength, letterSet.letterList.length)
 
-    makeStatusUpdate('Filtering word list (2 of 3)')
+    makeStatusUpdate('Filtering ' + words.length + ' words (2 of 3)')
     words = removeWordsWithOtherLetters(words, letterSet)
 
-    makeStatusUpdate('Filtering word list (3 of 3)')
+    makeStatusUpdate('Filtering ' + words.length + ' words (3 of 3)')
     words = removeWordsWithExtraLetters(words, letterSet)
 
-    if (words.length > wordSetConfiguration.maximumWords) {
-      makeStatusUpdate('Too many words found (' + words.length + ')')
-      return []
-    }
-    if (words.length < wordSetConfiguration.minimumWords) {
-      makeStatusUpdate('Not enough words found (' + words.length + ')')
-      return []
-    }
+    if (!hasAcceptableWordCount(words, wordSetConfiguration)) return []
 
     // make sure each letter in our list is found the same
     // number of times in one of our words as it is in our list.
     makeStatusUpdate('Checking letter counts')
     if (!hasCorrectLetterCounts(words, letterSet)) {
       makeStatusUpdate('Failed letter count check')
+      return []
     }
 
     var wordObjects = mapWordsToWordObjects(words)
