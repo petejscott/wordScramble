@@ -25,12 +25,6 @@ wordScramble.WordFinder = function (wordList) {
     })
   }
 
-  function getUniqueLetters (letterList) {
-    return letterList.filter(function (v, i) {
-      return letterList.indexOf(v) === i
-    })
-  }
-
   function removeShortAndLongWords (words, minLength, maxLength) {
     return words.filter(function (word) {
       return word.length <= maxLength && word.length >= minLength
@@ -65,6 +59,18 @@ wordScramble.WordFinder = function (wordList) {
     return words
   }
 
+  function hasAcceptableWordCount (words, wordSetConfiguration) {
+    if (words.length > wordSetConfiguration.maximumWords) {
+      makeStatusUpdate('Too many words found (' + words.length + ')')
+      return false
+    }
+    if (words.length < wordSetConfiguration.minimumWords) {
+      makeStatusUpdate('Not enough words found (' + words.length + ')')
+      return false
+    }
+    return true
+  }
+
   function hasCorrectLetterCounts (words, letterSet) {
     return letterSet.letterCounts.every(function (letterObject) {
       var countOfLetterInList = letterObject.count
@@ -76,16 +82,10 @@ wordScramble.WordFinder = function (wordList) {
     })
   }
 
-  function hasAcceptableWordCount (words, wordSetConfiguration) {
-    if (words.length > wordSetConfiguration.maximumWords) {
-      makeStatusUpdate('Too many words found (' + words.length + ')')
-      return false
-    }
-    if (words.length < wordSetConfiguration.minimumWords) {
-      makeStatusUpdate('Not enough words found (' + words.length + ')')
-      return false
-    }
-    return true
+  function getUniqueLetters (letterList) {
+    return letterList.filter(function (v, i) {
+      return letterList.indexOf(v) === i
+    })
   }
 
   this.makeLetterSet = function (letterList) {
@@ -111,7 +111,7 @@ wordScramble.WordFinder = function (wordList) {
     }
   }
 
-  this.queryObjects = function (wordSetConfiguration, letterSet) {
+  this.findWords = function (wordSetConfiguration, letterSet) {
     var words = wordList
 
     makeStatusUpdate('Filtering ' + words.length + ' words (1 of 3)')
@@ -125,8 +125,6 @@ wordScramble.WordFinder = function (wordList) {
 
     if (!hasAcceptableWordCount(words, wordSetConfiguration)) return []
 
-    // make sure each letter in our list is found the same
-    // number of times in one of our words as it is in our list.
     makeStatusUpdate('Checking letter counts')
     if (!hasCorrectLetterCounts(words, letterSet)) {
       makeStatusUpdate('Failed letter count check')
@@ -158,7 +156,7 @@ var onmessage = function (evt) {
     'maximumWords': configuration.maxWords,
     'minimumWords': configuration.minWords
   }
-  var wordObjects = wordFinder.queryObjects(wordSetConfiguration, letterSet)
+  var wordObjects = wordFinder.findWords(wordSetConfiguration, letterSet)
 
   var message = {
     complete: 1,
