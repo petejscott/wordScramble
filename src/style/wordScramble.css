@@ -275,7 +275,7 @@ nav a[class*=" icon-"]:before {
 	color: #333;
 	text-transform: uppercase;
 	font-size: 1.5em;
-	margin-left: 0.5em;
+	margin: 0 0.25em;
 	display: inline-block;
 	transition: color 0.2s, background 0.25s, border 0.25s;
 	text-align: center;
@@ -285,9 +285,6 @@ nav a[class*=" icon-"]:before {
 	border-radius: 50%;
 	outline: 0;
 	font-weight: 300;
-}
-.letterButton:first-child {
-	margin-left: 0;
 }
 .letterButton.selected {
 	opacity: 0.5;
