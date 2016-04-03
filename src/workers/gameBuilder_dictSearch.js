@@ -3,6 +3,15 @@
 
 var wordScramble = wordScramble || {}
 wordScramble.WordFinder = function (wordList) {
+  function makeStatusUpdate (statusMessage) {
+    var message = {
+      update: 1,
+      status: statusMessage
+    }
+    console.log(message)
+    postMessage(JSON.stringify(message))
+  }
+
   function mapWordsToWordObjects (words) {
     var wordObjects = words.map(function (w) {
       return { 'word': w.word, 'solved': false, 'chars': w.length }
@@ -16,32 +25,23 @@ wordScramble.WordFinder = function (wordList) {
     })
   }
 
-  function makeStatusUpdate (statusMessage) {
-    var message = {
-      update: 1,
-      status: statusMessage
-    }
-    console.log(message)
-    postMessage(JSON.stringify(message))
-  }
-
-  function checkWordLength (word, minLength, maxLength) {
-    return word.length <= maxLength && word.length >= minLength
-  }
-
-  function filterShortAndLongWords (words, minLength, maxLength) {
-    return words.filter(function (word) {
-      return checkWordLength(word, minLength, maxLength)
-    })
-  }
-
   function getUniqueLetters (letterList) {
     return letterList.filter(function (v, i) {
       return letterList.indexOf(v) === i
     })
   }
 
-  function filterWordsWithOtherLetters (words, letterSet) {
+  function removeShortAndLongWords (words, minLength, maxLength) {
+    return words.filter(function (word) {
+      return checkWordLength(word, minLength, maxLength)
+    })
+  }
+
+  function checkWordLength (word, minLength, maxLength) {
+    return word.length <= maxLength && word.length >= minLength
+  }
+
+  function removeWordsWithOtherLetters (words, letterSet) {
     var allLetters = 'abcdefghijklmnopqrstuvwxyz'
     var otherLetters = allLetters.split('').filter(function (allLettersElement) {
       return !letterSet.letterList.includes(allLettersElement)
@@ -54,7 +54,7 @@ wordScramble.WordFinder = function (wordList) {
     return words
   }
 
-  function filterWordsWithExtraLetters (words, letterSet) {
+  function removeWordsWithExtraLetters (words, letterSet) {
     words = words.filter(function (wordObject) {
       return wordObject.word.split('').every(function (letterInWord) {
         var letterObject = letterSet.letterCounts.find(function (letterObject) {
@@ -107,20 +107,18 @@ wordScramble.WordFinder = function (wordList) {
     var words = wordList
 
     makeStatusUpdate('Filtering word list (1 of 3)')
-    words = filterShortAndLongWords(words, wordSetConfiguration.minimumWordLength, letterSet.letterList.length)
+    words = removeShortAndLongWords(words, wordSetConfiguration.minimumWordLength, letterSet.letterList.length)
 
     makeStatusUpdate('Filtering word list (2 of 3)')
-    words = filterWordsWithOtherLetters(words, letterSet)
+    words = removeWordsWithOtherLetters(words, letterSet)
 
     makeStatusUpdate('Filtering word list (3 of 3)')
-    words = filterWordsWithExtraLetters(words, letterSet)
+    words = removeWordsWithExtraLetters(words, letterSet)
 
     if (words.length > wordSetConfiguration.maximumWords) {
       makeStatusUpdate('Too many words found (' + words.length + ')')
       return []
     }
-
-    // if we have no or fewer than max words, we can exit now.
     if (words.length < wordSetConfiguration.minimumWords) {
       makeStatusUpdate('Not enough words found (' + words.length + ')')
       return []
