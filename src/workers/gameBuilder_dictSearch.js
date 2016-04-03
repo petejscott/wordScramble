@@ -62,55 +62,20 @@ wordScramble.WordFinder = function (wordList) {
     })
   }
 
-  function findMatchingWordsInDictionary (words, letterList) {
+  function getUniqueLetters (letterList) {
+    return letterList.filter(function (v, i) {
+      return letterList.indexOf(v) === i
+    })
+  }
+
+  function initializeLetterCounts (letterList) {
     var letterCounts = ''
     letterList.forEach(function (l) {
       if (letterCounts.indexOf(l) === -1) {
         letterCounts += l + '0'
       }
     })
-
-    makeStatusUpdate('building letter permutations')
-    var possibleWords = makeLetterPermutations(letterList)
-
-    makeStatusUpdate('searching dictionary')
-    var matchingWords = words.filter(function (wordCandidate) {
-      var found = possibleWords.some(function (wordPermutation) {
-        return wordPermutation.indexOf(wordCandidate.word) !== -1
-      })
-      if (found === true) {
-        // get a count of each distinct letter
-        var wordLetters = wordCandidate.word.split('')
-        wordLetters.forEach(function (l) {
-          // count of the number of occurrences in this word
-          var wordCnt = wordCandidate.word.split(l).length - 1
-          // current count from letterCount
-          var currentCnt = letterCounts.charAt(letterCounts.indexOf(l) + 1, 0)
-          // compare and update if necessary
-          if (wordCnt > currentCnt) {
-            letterCounts = letterCounts.replace(l + currentCnt, l + wordCnt)
-          }
-        })
-
-        return wordCandidate
-      }
-    })
-
-    // make sure each letter in our list is found the same
-    // number of times in one of our words as it is in our list.
-    makeStatusUpdate('checking letter counts')
-    for (var i = 0, len = letterList.length; i < len; i++) {
-      var letter = letterList[i]
-      var letterCountInWord = getCountOfLetterInWord(letter, possibleWords[0])
-      var letterCountInLetterList = letterCounts.charAt(letterCounts.indexOf(letter) + 1, 0)
-      if (letterCountInWord !== Number(letterCountInLetterList)) {
-        // throw it all out and start over, sadly.
-        makeStatusUpdate('letter counts are wrong')
-        return { 'matchingWords': [], 'letterCounts': letterCounts }
-      }
-    }
-
-    return { 'matchingWords': matchingWords, 'letterCounts': letterCounts }
+    return letterCounts
   }
 
   function filterWordsWithOtherLetters (words, letterList) {
@@ -124,6 +89,42 @@ wordScramble.WordFinder = function (wordList) {
       })
     }
     return words
+  }
+
+  function getMaxCountOfLettersInWords (letter, letterCounts) {
+    return letterCounts.charAt(letterCounts.indexOf(letter) + 1, 0)
+  }
+
+  function findMatchingWordsInDictionary (words, letterList) {
+    makeStatusUpdate('building letter permutations')
+    var possibleWords = makeLetterPermutations(letterList)
+
+    var letterCounts = initializeLetterCounts(letterList)
+
+    makeStatusUpdate('searching dictionary')
+    var matchingWords = words.filter(function (wordCandidate) {
+      var found = possibleWords.some(function (wordPermutation) {
+        return wordPermutation.indexOf(wordCandidate.word) !== -1
+      })
+      if (found === true) {
+        // get a count of each distinct letter
+        var wordLetters = wordCandidate.word.split('')
+        wordLetters.forEach(function (letter) {
+          // count of the number of occurrences in this word
+          var letterListLetterCount = getCountOfLetterInWord(letter, wordCandidate.word)
+          // current count from letterCount
+          var currentLetterCountFromLetterCounts = getMaxCountOfLettersInWords(letter, letterCounts)
+          // compare and update if necessary
+          if (letterListLetterCount > currentLetterCountFromLetterCounts) {
+            letterCounts = letterCounts.replace(letter + currentLetterCountFromLetterCounts, letter + letterListLetterCount)
+          }
+        })
+
+        return wordCandidate
+      }
+    })
+
+    return { 'matchingWords': matchingWords, 'letterCounts': letterCounts }
   }
 
   this.queryObjects = function (mininumWordLength, maxWords, letterList) {
@@ -158,6 +159,20 @@ wordScramble.WordFinder = function (wordList) {
       makeStatusUpdate('oops, extra letters')
       return []
     }
+
+    // make sure each letter in our list is found the same
+    // number of times in one of our words as it is in our list.
+    makeStatusUpdate('checking letter counts')
+    getUniqueLetters(letterList).forEach(function (letter) {
+      var letterCountFromList = getCountOfLetterInWord(letter, letterList.join(''))
+      var letterCountFromWords = getMaxCountOfLettersInWords(letter, letterCounts)
+      if (letterCountFromList !== Number(letterCountFromWords)) {
+        // throw it all out and start over, sadly.
+        console.log('letter ' + letter + ' is in our found words (' + letterCounts + ') a max of ' + letterCountFromWords + ' times; in ' + letterList.join('') + ' ' + letterCountFromList + ' times')
+        makeStatusUpdate('letter counts are wrong')
+        return []
+      }
+    })
 
     var wordObjects = mapWordsToWordObjects(words)
     wordObjects = sortWordObjectsByLength(wordObjects)
