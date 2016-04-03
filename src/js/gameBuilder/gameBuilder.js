@@ -41,6 +41,7 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
 
   function handleWorkerError (evt) {
     console.log(evt)
+    pubsub.publish('wordScramble/updateGameBuildStatus', { 'statusMessage': evt.message })
   }
 
   function handleWorkerMessage (evt) {

@@ -108,7 +108,11 @@ header h1 {
 #statusContainer {
 	display: flex;
 	flex-grow: 1;
+  flex-wrap: wrap;
 	width: 100%;
+  padding: 0 0.5em;
+  box-sizing: border-box;
+  text-align: center;
 	justify-content: center;
 	align-items: center;
 	color: #0062a5;
