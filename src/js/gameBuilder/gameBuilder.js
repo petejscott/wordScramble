@@ -66,7 +66,7 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
 
   function handleCompletedWorker (evt) {
     tryCount++
-    console.log('wordFinder: iteration ' + tryCount)
+    console.log('wordFinder: completed iteration ' + tryCount)
 
     var response = JSON.parse(evt.data)
 

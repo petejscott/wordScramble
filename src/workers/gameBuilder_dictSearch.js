@@ -4,12 +4,11 @@
 var wordScramble = wordScramble || {}
 wordScramble.WordFinder = function (wordList) {
   function makeStatusUpdate (statusMessage) {
-    var message = {
+    console.log(statusMessage)
+    send({
       update: 1,
       status: statusMessage
-    }
-    console.log(message)
-    postMessage(JSON.stringify(message))
+    })
   }
 
   function mapWordsToWordObjects (words) {
@@ -139,6 +138,7 @@ wordScramble.WordFinder = function (wordList) {
 }
 
 var onmessage = function (evt) {
+  if (evt == null) return
   var data = JSON.parse(evt.data)
 
   var configuration = data.configuration
@@ -158,12 +158,14 @@ var onmessage = function (evt) {
   }
   var wordObjects = wordFinder.findWords(wordSetConfiguration, letterSet)
 
-  var message = {
+  send({
     complete: 1,
     words: wordObjects,
     letters: letterList
-  }
-
-  postMessage(JSON.stringify(message))
+  })
 }
 
+var send = function (message) {
+  postMessage(JSON.stringify(message))
+}
+onmessage(null)
