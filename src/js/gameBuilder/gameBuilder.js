@@ -26,13 +26,20 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
       'configuration': configuration,
       'letters': letters
     })
+
     worker.postMessage(message)
   }
 
   function build (dictionary) {
     gameDictionary = dictionary
 
-    var worker = new Worker('workers/gameBuilder_dictSearch.js')
+    if (!window.Worker) {
+      pubsub.publish('wordScramble/updateGameBuildStatus', {
+        'statusMessage': 'Web Workers are not supported by your browser.'
+      })
+      return
+    }
+    var worker = new window.Worker('workers/gameBuilder_dictSearch.js')
     worker.addEventListener('error', handleWorkerError)
     worker.addEventListener('message', handleWorkerMessage)
 
@@ -41,7 +48,9 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
 
   function handleWorkerError (evt) {
     console.log(evt)
-    pubsub.publish('wordScramble/updateGameBuildStatus', { 'statusMessage': evt.message })
+    pubsub.publish('wordScramble/updateGameBuildStatus', {
+      'statusMessage': evt.message
+    })
   }
 
   function handleWorkerMessage (evt) {
@@ -49,7 +58,9 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
     if (response.complete === 1) {
       handleCompletedWorker(evt)
     } else if (response.update === 1) {
-      pubsub.publish('wordScramble/updateGameBuildStatus', { 'statusMessage': response.status })
+      pubsub.publish('wordScramble/updateGameBuildStatus', {
+        'statusMessage': response.status
+      })
     }
   }
 
@@ -60,7 +71,9 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
     var response = JSON.parse(evt.data)
 
     if (tryCount >= retries) {
-      pubsub.publish('wordScramble/updateGameBuildStatus', { 'statusMessage': 'I took too long. Try again?' })
+      pubsub.publish('wordScramble/updateGameBuildStatus', {
+        'statusMessage': 'I took too long. Try again?'
+      })
       tryCount = 0
       throw new Error('Too many iterations; giving up')
     }
