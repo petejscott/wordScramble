@@ -126,7 +126,7 @@ wordScramble.WordFinder = function (wordList) {
     return words
   }
 
-  this.queryObjects = function (mininumWordLength, letterList) {
+  this.queryObjects = function (mininumWordLength, maxWords, letterList) {
     var words = wordList
 
     makeStatusUpdate('filtering word list by length')
@@ -139,6 +139,11 @@ wordScramble.WordFinder = function (wordList) {
     var result = findMatchingWordsInDictionary(words, letterList)
     words = result.matchingWords
     var letterCounts = result.letterCounts
+
+    if (words.length > maxWords) {
+      makeStatusUpdate('too many words found')
+      return []
+    }
 
     // if we have no words, we can exit now.
     if (words.length === 0) {
@@ -173,7 +178,7 @@ var onmessage = function (evt) {
   }
 
   var wordFinder = new wordScramble.WordFinder(wordList)
-  var wordObjects = wordFinder.queryObjects(configuration.minWordLength, letterList)
+  var wordObjects = wordFinder.queryObjects(configuration.minWordLength, configuration.maxWords, letterList)
 
   var message = {
     complete: 1,

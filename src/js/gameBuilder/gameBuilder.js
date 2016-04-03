@@ -59,6 +59,8 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
     var response = JSON.parse(evt.data)
 
     if (tryCount >= retries) {
+      pubsub.publish('wordScramble/updateGameBuildStatus', { 'statusMessage': 'I took too long. Try again?' })
+      tryCount = 0
       throw new Error('Too many iterations; giving up')
     }
 
