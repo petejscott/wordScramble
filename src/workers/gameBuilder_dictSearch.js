@@ -18,6 +18,10 @@ wordScramble.WordFinder = function (wordList) {
     return wordObjects
   }
 
+  function getCountOfLetterInWord (letter, word) {
+    return word.split(letter).length - 1
+  }
+
   function sortWordObjectsByLength (wordObjects) {
     return wordObjects.sort(function (a, b) {
       return a.chars - b.chars
@@ -49,7 +53,7 @@ wordScramble.WordFinder = function (wordList) {
         var letterObject = letterSet.letterCounts.find(function (letterObject) {
           return letterObject.letter === letterInWord
         })
-        var countOfLetterInWordCandidate = wordObject.word.split(letterObject.letter).length - 1
+        var countOfLetterInWordCandidate = getCountOfLetterInWord(letterObject.letter, wordObject.word)
         if (countOfLetterInWordCandidate <= letterObject.count) {
           return true
         }
@@ -73,7 +77,7 @@ wordScramble.WordFinder = function (wordList) {
   function hasCorrectLetterCounts (words, letterSet) {
     return letterSet.letterCounts.every(function (letterObject) {
       return words.some(function (wordObject) {
-        var countOfLetterInWord = wordObject.word.split(letterObject.letter).length - 1
+        var countOfLetterInWord = getCountOfLetterInWord(letterObject.letter, wordObject.word)
         if (countOfLetterInWord === letterObject.count) {
           return true
         }
@@ -99,7 +103,7 @@ wordScramble.WordFinder = function (wordList) {
       letterCounts.push(letterObject)
     })
     letterCounts.forEach(function (letterObject) {
-      letterObject.count = letterString.split(letterObject.letter).length - 1
+      letterObject.count = getCountOfLetterInWord(letterObject.letter, letterString)
     })
 
     return {
