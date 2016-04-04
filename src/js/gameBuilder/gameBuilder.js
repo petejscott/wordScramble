@@ -10,7 +10,6 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
   function getNewLetters () {
     var count = configuration.letterCount
     var letters = wordScramble.gameBuilderLetters.getRandomLetters(count)
-
     return letters
   }
 
