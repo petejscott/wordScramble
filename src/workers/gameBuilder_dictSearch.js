@@ -71,6 +71,8 @@ wordScramble.WordFinder = function (wordList) {
       makeStatusUpdate('Not enough words found (' + words.length + ')')
       return false
     }
+
+    makeStatusUpdate('Enough words were found (' + words.length + ')')
     return true
   }
 
