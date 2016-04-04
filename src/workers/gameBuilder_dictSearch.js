@@ -72,9 +72,9 @@ wordScramble.WordFinder = function (wordList) {
 
   function hasCorrectLetterCounts (words, letterSet) {
     return letterSet.letterCounts.every(function (letterObject) {
-      var countOfLetterInList = letterObject.count
       return words.some(function (wordObject) {
-        if (wordObject.word.split(letterObject.letter).length === countOfLetterInList) {
+        var countOfLetterInWord = wordObject.word.split(letterObject.letter).length - 1
+        if (countOfLetterInWord === letterObject.count) {
           return true
         }
       })
