@@ -3,6 +3,7 @@
 JSSRCS = src/js/lib/pubsub.js \
        src/js/swipeHandler.js \
        src/js/uiModules/drawer.js \
+       src/js/uiModules/cardPartRenderer.js \
        src/js/uiModules/newGameManager.js \
        src/js/uiModules/submitWordManager.js \
        src/js/uiModules/clearWordAttemptManager.js \

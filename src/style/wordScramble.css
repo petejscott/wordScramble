@@ -363,17 +363,3 @@ nav a[class*=" icon-"]:before {
 #gameSummaryContents .word {
 	padding: 0 0.75em 0 0;
 }
-
-#currentWordsTitle,
-#previousWordsTitle {
-	color:#888;
-	font-weight: 300;
-}
-#currentWords,
-#previousWords {
-	background: #fff;
-	color:#111;
-	display: flex;
-	flex-wrap: wrap;
-	margin: 0;
-}

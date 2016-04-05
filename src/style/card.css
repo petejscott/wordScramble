@@ -17,3 +17,22 @@
 .card-contents {
 	padding:0.5em;
 }
+.card-part {
+  margin: 0.15em 0;
+  padding: 0.15em 0;
+  border-top: 1px dotted #e0e0e0;
+}
+.card-part:first-child {
+  border-top: 0;
+}
+.card-part-title {
+  color:#888;
+	font-weight: 300;
+}
+.card-part-contents {
+  background: #fff;
+	color:#111;
+	display: flex;
+	flex-wrap: wrap;
+	margin: 0;
+}

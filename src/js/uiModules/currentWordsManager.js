@@ -2,7 +2,7 @@
 'use strict'
 
 var wordScramble = wordScramble || {}
-wordScramble.currentWordsManager = (function (pubsub) {
+wordScramble.currentWordsManager = (function (pubsub, cardPartRenderer) {
   var manager = {}
 
   var CONST_ELEMENT_ID = '#currentGameSummaryContents'
@@ -30,15 +30,32 @@ wordScramble.currentWordsManager = (function (pubsub) {
   }
 
   function render (words) {
-    var el = getElement()
-    if (el === null) return
+    renderNew(words)
+  }
 
-    var currentWordsTitle = document.createElement('div')
-    currentWordsTitle.setAttribute('id', 'currentWordsTitle')
+  function renderNew (words) {
+    var cardPart = {
+      'title': makeCardTitle(words),
+      'content': makeCardContent(words)
+    }
+    cardPartRenderer.draw(cardPart, getElement())
+  }
 
+  // this is *identical* to previousWordsManager's implementation
+  function makeCardTitle (words) {
+    var solvedCount = words.filter(function (word) {
+      return word.solved
+    }).length
+    var titleText = solvedCount + ' out of ' + words.length
+    if (solvedCount === words.length) {
+      titleText = 'Nicely done! ' + titleText
+    }
+    return titleText
+  }
+
+  // this is *very similar* to previousWordsManager's implementation
+  function makeCardContent (words) {
     var currentWordsContainer = document.createElement('div')
-    currentWordsContainer.setAttribute('id', 'currentWords')
-
     var solvedCount = 0
     for (var i = 0, len = words.length; i < len; i++) {
       var wordContainer = document.createElement('span')
@@ -68,25 +85,7 @@ wordScramble.currentWordsManager = (function (pubsub) {
       }
       currentWordsContainer.appendChild(wordContainer)
     }
-
-    var titleText = solvedCount + ' out of ' + words.length
-    if (solvedCount === words.length) {
-      currentWordsContainer.classList.add('victory')
-      titleText = 'Nicely done! ' + titleText
-    }
-    currentWordsTitle.appendChild(document.createTextNode(titleText))
-
-    el.appendChild(currentWordsTitle)
-    el.appendChild(currentWordsContainer)
-  }
-
-  function showSummary () {
-    var summaryDrawer = document.querySelector('#statistics')
-    if (summaryDrawer === null) return
-
-    if (!summaryDrawer.classList.contains('visible')) {
-      summaryDrawer.classList.add('visible')
-    }
+    return currentWordsContainer.innerHTML
   }
 
   function subscribe () {
@@ -103,5 +102,5 @@ wordScramble.currentWordsManager = (function (pubsub) {
   subscribe()
 
   return manager
-})(window.pubsub)
+})(window.pubsub, wordScramble.cardPartRenderer)
 

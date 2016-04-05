@@ -2,7 +2,7 @@
 'use strict'
 
 var wordScramble = wordScramble || {}
-wordScramble.previousWordsManager = (function (pubsub) {
+wordScramble.previousWordsManager = (function (pubsub, cardPartRenderer) {
   var manager = {}
 
   var CONST_ELEMENT_ID = '#previousGameSummaryContents'
@@ -21,16 +21,26 @@ wordScramble.previousWordsManager = (function (pubsub) {
   }
 
   function render (words) {
-    if (typeof words === 'undefined') return
-    var el = getElement()
-    if (el === null) return
+    var cardPart = {
+      'title': makeCardTitle(words),
+      'content': makeCardContent(words)
+    }
+    cardPartRenderer.draw(cardPart, getElement())
+  }
 
-    var previousWordsTitle = document.createElement('div')
-    previousWordsTitle.setAttribute('id', 'previousWordsTitle')
+  function makeCardTitle (words) {
+    var solvedCount = words.filter(function (word) {
+      return word.solved
+    }).length
+    var titleText = solvedCount + ' out of ' + words.length
+    if (solvedCount === words.length) {
+      titleText = 'Nicely done! ' + titleText
+    }
+    return titleText
+  }
 
-    var previousWordsContainer = document.createElement('div')
-    previousWordsContainer.setAttribute('id', 'previousWords')
-
+  function makeCardContent (words) {
+    var contentContainer = document.createElement('div')
     var solvedCount = 0
     for (var i = 0, len = words.length; i < len; i++) {
       var wordContainer = document.createElement('span')
@@ -53,18 +63,9 @@ wordScramble.previousWordsManager = (function (pubsub) {
 
       defineElement.appendChild(wordNode)
       wordContainer.appendChild(defineElement)
-      previousWordsContainer.appendChild(wordContainer)
+      contentContainer.appendChild(wordContainer)
     }
-
-    var titleText = solvedCount + ' out of ' + words.length
-    if (solvedCount === words.length) {
-      previousWordsContainer.classList.add('victory')
-      titleText = 'Nicely done! ' + titleText
-    }
-    previousWordsTitle.appendChild(document.createTextNode(titleText))
-
-    el.appendChild(previousWordsTitle)
-    el.appendChild(previousWordsContainer)
+    return contentContainer.innerHTML
   }
 
   function showSummary () {
@@ -91,4 +92,4 @@ wordScramble.previousWordsManager = (function (pubsub) {
   subscribe()
 
   return manager
-})(window.pubsub)
+})(window.pubsub, wordScramble.cardPartRenderer)
