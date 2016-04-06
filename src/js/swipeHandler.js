@@ -54,18 +54,11 @@ wordScramble.swipeHandler = function (swipeConfiguration) {
     callback(evt, swipeConfiguration.opts)
   }
 
-  swipeConfiguration.element.addEventListener('touchend', function (evt) {
-    isSwiping = false
-  })
+  function handleTouchCancel (evt) {
 
-  swipeConfiguration.element.addEventListener('touchstart', function (evt) {
-    touchCoords.startX = evt.targetTouches[0].clientX
-    touchCoords.startY = evt.targetTouches[0].clientY
-    touchCoords.endX = touchCoords.startX
-    touchCoords.endY = touchCoords.startY
-  })
+  }
 
-  swipeConfiguration.element.addEventListener('touchmove', function (evt) {
+  function handleTouchMove (evt) {
     var newX = evt.targetTouches[0].clientX
     var newY = evt.targetTouches[0].clientY
     var absX = Math.abs(touchCoords.endX - newX)
@@ -92,6 +85,22 @@ wordScramble.swipeHandler = function (swipeConfiguration) {
     }
 
     evt.preventDefault()
-  })
+  }
+
+  function handleTouchStart (evt) {
+    touchCoords.startX = evt.targetTouches[0].clientX
+    touchCoords.startY = evt.targetTouches[0].clientY
+    touchCoords.endX = touchCoords.startX
+    touchCoords.endY = touchCoords.startY
+  }
+
+  function handleTouchEnd (evt) {
+    isSwiping = false
+  }
+
+
+  swipeConfiguration.element.addEventListener('touchend', handleTouchEnd)
+  swipeConfiguration.element.addEventListener('touchstart', handleTouchStart)
+  swipeConfiguration.element.addEventListener('touchmove', handleTouchMove)
 }
 
