@@ -55,7 +55,7 @@ wordScramble.currentWordsManager = (function (pubsub, cardPartRenderer) {
 
   // this is *very similar* to previousWordsManager's implementation
   function makeCardContent (words) {
-    var currentWordsContainer = document.createElement('div')
+    var contentContainer = document.createElement('div')
     var solvedCount = 0
     for (var i = 0, len = words.length; i < len; i++) {
       var wordContainer = document.createElement('span')
@@ -63,29 +63,33 @@ wordScramble.currentWordsManager = (function (pubsub, cardPartRenderer) {
 
       var wordObject = words[i]
 
-      var wordNode = null
-      if (!wordObject.solved) {
-        var maskedWord = getMask(wordObject.chars)
-        wordNode = document.createTextNode(maskedWord)
-        wordContainer.classList.add('missed')
-        wordContainer.appendChild(wordNode)
-      } else {
-        wordNode = document.createTextNode(wordObject.word)
+      var wordElement = null
+      if (wordObject.solved) {
+        wordElement = makeWordElement(wordObject.word, true)
         wordContainer.classList.add('solved')
         solvedCount++
-
-        var defineElement = document.createElement('a')
-        var defineUrl = 'https://www.google.com/search?q=define+' + wordObject.word
-        defineElement.setAttribute('href', defineUrl)
-        defineElement.setAttribute('title', 'definition')
-        defineElement.setAttribute('target', '_blank')
-
-        defineElement.appendChild(wordNode)
-        wordContainer.appendChild(defineElement)
+      } else {
+        wordElement = makeWordElement(getMask(wordObject.chars), false)
+        wordContainer.classList.add('missed')
       }
-      currentWordsContainer.appendChild(wordContainer)
+      wordContainer.appendChild(wordElement)
+      contentContainer.appendChild(wordContainer)
     }
-    return currentWordsContainer.innerHTML
+    return contentContainer.innerHTML
+  }
+
+  function makeWordElement (textContent, linkToDefinition) {
+    var wordNode = document.createTextNode(textContent)
+    if (linkToDefinition) {
+      var defineElement = document.createElement('a')
+      var defineUrl = 'https://www.google.com/search?q=define+' + textContent
+      defineElement.setAttribute('href', defineUrl)
+      defineElement.setAttribute('title', 'definition')
+      defineElement.setAttribute('target', '_blank')
+      defineElement.appendChild(wordNode)
+      return defineElement
+    }
+    return wordNode
   }
 
   function subscribe () {

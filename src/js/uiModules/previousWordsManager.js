@@ -41,31 +41,38 @@ wordScramble.previousWordsManager = (function (pubsub, cardPartRenderer) {
 
   function makeCardContent (words) {
     var contentContainer = document.createElement('div')
-    var solvedCount = 0
     for (var i = 0, len = words.length; i < len; i++) {
       var wordContainer = document.createElement('span')
+      wordContainer.classList.add('word')
+
       var wordObject = words[i]
 
-      var wordNode = document.createTextNode(wordObject.word)
+      var wordElement = null
       if (wordObject.solved) {
         wordContainer.classList.add('solved')
-        solvedCount++
       } else {
         wordContainer.classList.add('missed')
       }
-      wordContainer.classList.add('word')
+      wordElement = makeWordElement(wordObject.word, true)
 
-      var defineElement = document.createElement('a')
-      var defineUrl = 'https://www.google.com/search?q=define+' + wordObject.word
-      defineElement.setAttribute('href', defineUrl)
-      defineElement.setAttribute('title', 'definition')
-      defineElement.setAttribute('target', '_blank')
-
-      defineElement.appendChild(wordNode)
-      wordContainer.appendChild(defineElement)
+      wordContainer.appendChild(wordElement)
       contentContainer.appendChild(wordContainer)
     }
     return contentContainer.innerHTML
+  }
+
+  function makeWordElement (textContent, linkToDefinition) {
+    var wordNode = document.createTextNode(textContent)
+    if (linkToDefinition) {
+      var defineElement = document.createElement('a')
+      var defineUrl = 'https://www.google.com/search?q=define+' + textContent
+      defineElement.setAttribute('href', defineUrl)
+      defineElement.setAttribute('title', 'definition')
+      defineElement.setAttribute('target', '_blank')
+      defineElement.appendChild(wordNode)
+      return defineElement
+    }
+    return wordNode
   }
 
   function showSummary () {
