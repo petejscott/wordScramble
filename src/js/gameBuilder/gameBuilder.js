@@ -77,7 +77,7 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
       throw new Error('Too many iterations; giving up')
     }
 
-    if (response.words.length < configuration.minWords) {
+    if (response.words.length === 0) {
       buildGame(evt.target)
     } else {
       onDataReady(response)
