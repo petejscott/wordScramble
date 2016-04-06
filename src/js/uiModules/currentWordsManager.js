@@ -32,12 +32,11 @@ wordScramble.currentWordsManager = (function (pubsub, cardPartRenderer) {
   function render (words) {
     var cardPart = {
       'title': makeCardTitle(words),
-      'content': makeWordsContent(words)
+      'content': makeWordsContent(words, true)
     }
     cardPartRenderer.draw(cardPart, getElement())
   }
 
-  // this is *identical* to previousWordsManager's implementation
   function makeCardTitle (words) {
     var solvedCount = words.filter(function (word) {
       return word.solved
@@ -49,7 +48,7 @@ wordScramble.currentWordsManager = (function (pubsub, cardPartRenderer) {
     return titleText
   }
 
-  function makeWordsContent (words) {
+  function makeWordsContent (words, maskUnsolvedWords) {
     var contentContainer = document.createElement('div')
     for (var i = 0, len = words.length; i < len; i++) {
       var wordContainer = document.createElement('span')
@@ -57,7 +56,6 @@ wordScramble.currentWordsManager = (function (pubsub, cardPartRenderer) {
 
       var wordObject = words[i]
 
-      var maskUnsolvedWords = true
       var wordElement = makeWordElement(wordObject.word, true)
       if (maskUnsolvedWords && !wordObject.solved) {
         wordElement = makeWordElement(getMask(wordObject.chars), false)

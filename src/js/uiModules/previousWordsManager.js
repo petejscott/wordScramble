@@ -48,7 +48,7 @@ wordScramble.previousWordsManager = (function (pubsub, cardPartRenderer) {
     return titleText
   }
 
-  function makeWordsContent (words) {
+  function makeWordsContent (words, maskUnsolvedWords) {
     var contentContainer = document.createElement('div')
     for (var i = 0, len = words.length; i < len; i++) {
       var wordContainer = document.createElement('span')
@@ -56,7 +56,6 @@ wordScramble.previousWordsManager = (function (pubsub, cardPartRenderer) {
 
       var wordObject = words[i]
 
-      var maskUnsolvedWords = false
       var wordElement = makeWordElement(wordObject.word, true)
       if (maskUnsolvedWords && !wordObject.solved) {
         wordElement = makeWordElement(getMask(wordObject.chars), false)
