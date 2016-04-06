@@ -70,21 +70,23 @@ wordScramble.swipeHandler = function (swipeConfiguration) {
       if (absX > swipeConfiguration.distance) {
         handleSwipe(swipeConfiguration.callback, evt)
       }
+      evt.preventDefault()
     } else if (direction === 'right' && isRightSwipe(absX, absY, newX, newY)) {
       if (absX > swipeConfiguration.distance) {
         handleSwipe(swipeConfiguration.callback, evt)
       }
+      evt.preventDefault()
     } else if (direction === 'up' && isUpSwipe(absX, absY, newX, newY)) {
       if (absY > swipeConfiguration.distance) {
         handleSwipe(swipeConfiguration.callback, evt)
       }
+      evt.preventDefault()
     } else if (direction === 'down' && isDownSwipe(absX, absY, newX, newY)) {
       if (absY > swipeConfiguration.distance) {
         handleSwipe(swipeConfiguration.callback, evt)
       }
+      evt.preventDefault()
     }
-
-    evt.preventDefault()
   }
 
   function handleTouchStart (evt) {
@@ -98,9 +100,9 @@ wordScramble.swipeHandler = function (swipeConfiguration) {
     isSwiping = false
   }
 
-
-  swipeConfiguration.element.addEventListener('touchend', handleTouchEnd)
-  swipeConfiguration.element.addEventListener('touchstart', handleTouchStart)
-  swipeConfiguration.element.addEventListener('touchmove', handleTouchMove)
+  swipeConfiguration.element.addEventListener('touchend', handleTouchEnd, false)
+  swipeConfiguration.element.addEventListener('touchstart', handleTouchStart, false)
+  swipeConfiguration.element.addEventListener('touchmove', handleTouchMove, false)
+  swipeConfiguration.element.addEventListener('touchcancel', handleTouchCancel, false)
 }
 
