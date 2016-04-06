@@ -121,9 +121,11 @@ wordScramble.currentWordsManager = (function (pubsub, cardPartRenderer) {
       showSummary()
     })
     pubsub.subscribe('wordScramble/previousGameDataAvailable', function (topic, data) {
-      var words = data.words
+      if (typeof data.games === 'undefined') return
       clearPreviousGameSummaryElement()
-      renderPreviousGameSummary(words)
+      for (var i = 0, len = data.games.length; i < len; i++) {
+        renderPreviousGameSummary(data.games[i].words)
+      }
     })
     pubsub.subscribe('wordScramble/endGame', function (topic, data) {
       clearCurrentGameSummaryElement()

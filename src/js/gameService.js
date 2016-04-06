@@ -94,15 +94,6 @@ wordScramble.gameService = (function (configuration, pubsub) {
     })
   }
 
-  function clearGameCache () {
-    window.localStorage.removeItem(previousStorageKey)
-    window.localStorage.setItem(previousStorageKey, JSON.stringify(gameData))
-    window.localStorage.removeItem(storageKey)
-
-    var words = gameData.words
-    pubsub.publish('wordScramble/gameOver', {'words': words})
-  }
-
   function submitWordAttempt (word) {
     var words = gameData.words
     var result = words.filter(function (o) {
@@ -134,6 +125,38 @@ wordScramble.gameService = (function (configuration, pubsub) {
     saveGameData()
   }
 
+  function addGameDataToPreviousGamesCache (gameData) {
+    var previousGames = getPreviousGames()
+
+    // TODO: this is probably horribly inefficient
+    var numberOfPreviousGames = previousGames.games.unshift(gameData)
+    if (numberOfPreviousGames > 5) previousGames.games.pop()
+
+    window.localStorage.setItem(previousStorageKey, JSON.stringify(previousGames))
+    window.localStorage.removeItem(storageKey)
+  }
+
+  function clearGameCache () {
+    addGameDataToPreviousGamesCache(gameData)
+    pubsub.publish('wordScramble/gameOver', {'words': gameData.words})
+  }
+
+  function getPreviousGames () {
+    var previousGameDataStr = window.localStorage.getItem(previousStorageKey)
+    if (previousGameDataStr === null || previousGameDataStr.length === 0) {
+      return { 'games': [] }
+    }
+    var previousGameData = JSON.parse(previousGameDataStr)
+    if (previousGameData === null) {
+      return { 'games': [] }
+    }
+    if (typeof previousGameData.games === 'undefined') {
+      window.localStorage.removeItem(previousStorageKey)
+      previousGameData = { 'games': [] }
+    }
+    return previousGameData
+  }
+
   function startGame () {
     var loaded = loadGameData()
     if (loaded) {
@@ -142,13 +165,8 @@ wordScramble.gameService = (function (configuration, pubsub) {
       wordScramble.gameBuilder.build(wordScramble.dict)
     }
 
-    var previousGameDataStr = window.localStorage.getItem(previousStorageKey)
-    if (previousGameDataStr === null || previousGameDataStr.length === 0) return
-
-    var previousGameData = JSON.parse(previousGameDataStr)
-    if (previousGameData === null) return
-
-    pubsub.publish('wordScramble/previousGameDataAvailable', {'words': previousGameData.words})
+    var previousGameData = getPreviousGames()
+    pubsub.publish('wordScramble/previousGameDataAvailable', {'games': previousGameData.games})
   }
 
   subscribe()
