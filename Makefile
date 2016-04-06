@@ -9,7 +9,6 @@ JSSRCS = src/js/lib/pubsub.js \
        src/js/uiModules/clearWordAttemptManager.js \
        src/js/uiModules/letterListManager.js \
        src/js/uiModules/maskedWordsManager.js \
-       src/js/uiModules/previousWordsManager.js \
        src/js/uiModules/currentWordsManager.js \
        src/js/dict/json_dict.js \
        src/js/gameBuilder/gameBuilder_letters.js \
