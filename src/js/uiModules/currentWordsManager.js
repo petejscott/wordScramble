@@ -5,14 +5,14 @@ var wordScramble = wordScramble || {}
 wordScramble.currentWordsManager = (function (pubsub, cardPartRenderer) {
   var manager = {}
 
-  var CONST_ELEMENT_ID = '#currentGameSummaryContents'
+  var CONST_CURRENT_ELEMENT_ID = '#currentGameSummaryContents'
 
-  function getElement () {
-    return document.querySelector(CONST_ELEMENT_ID)
+  function getCurrentGameSummaryElement () {
+    return document.querySelector(CONST_CURRENT_ELEMENT_ID)
   }
 
-  function clear () {
-    var el = getElement()
+  function clearCurrentGameSummaryElement () {
+    var el = getCurrentGameSummaryElement()
     if (el === null) return
 
     while (el.firstChild) {
@@ -34,7 +34,7 @@ wordScramble.currentWordsManager = (function (pubsub, cardPartRenderer) {
       'title': makeCardTitle(words),
       'content': makeWordsContent(words, true)
     }
-    cardPartRenderer.draw(cardPart, getElement())
+    cardPartRenderer.draw(cardPart, getCurrentGameSummaryElement())
   }
 
   function makeCardTitle (words) {
@@ -89,11 +89,11 @@ wordScramble.currentWordsManager = (function (pubsub, cardPartRenderer) {
 
   function subscribe () {
     pubsub.subscribe('wordScramble/endGame', function (topic, data) {
-      clear()
+      clearCurrentGameSummaryElement()
     })
     pubsub.subscribe('wordScramble/wordsChanged', function (topic, data) {
       var words = data.words
-      clear()
+      clearCurrentGameSummaryElement()
       render(words)
     })
   }

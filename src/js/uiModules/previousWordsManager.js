@@ -5,14 +5,14 @@ var wordScramble = wordScramble || {}
 wordScramble.previousWordsManager = (function (pubsub, cardPartRenderer) {
   var manager = {}
 
-  var CONST_ELEMENT_ID = '#previousGameSummaryContents'
+  var CONST_PREVIOUS_ELEMENT_ID = '#previousGameSummaryContents'
 
-  function getElement () {
-    return document.querySelector(CONST_ELEMENT_ID)
+  function getPreviousGameSummaryElement () {
+    return document.querySelector(CONST_PREVIOUS_ELEMENT_ID)
   }
 
-  function clear () {
-    var el = getElement()
+  function clearPreviousGameSummaryElement () {
+    var el = getPreviousGameSummaryElement()
     if (el === null) return
 
     while (el.firstChild) {
@@ -29,12 +29,12 @@ wordScramble.previousWordsManager = (function (pubsub, cardPartRenderer) {
     return mask
   }
 
-  function render (words) {
+  function renderPreviousGameSummary (words) {
     var cardPart = {
       'title': makeCardTitle(words),
-      'content': makeWordsContent(words)
+      'content': makeWordsContent(words, false)
     }
-    cardPartRenderer.draw(cardPart, getElement())
+    cardPartRenderer.draw(cardPart, getPreviousGameSummaryElement())
   }
 
   function makeCardTitle (words) {
@@ -103,8 +103,8 @@ wordScramble.previousWordsManager = (function (pubsub, cardPartRenderer) {
     })
     pubsub.subscribe('wordScramble/previousGameDataAvailable', function (topic, data) {
       var words = data.words
-      clear()
-      render(words)
+      clearPreviousGameSummaryElement()
+      renderPreviousGameSummary(words)
     })
   }
 
