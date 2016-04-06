@@ -56,22 +56,24 @@ wordScramble.currentWordsManager = (function (pubsub, cardPartRenderer) {
   // this is *very similar* to previousWordsManager's implementation
   function makeCardContent (words) {
     var contentContainer = document.createElement('div')
-    var solvedCount = 0
     for (var i = 0, len = words.length; i < len; i++) {
       var wordContainer = document.createElement('span')
       wordContainer.classList.add('word')
 
       var wordObject = words[i]
 
-      var wordElement = null
-      if (wordObject.solved) {
-        wordElement = makeWordElement(wordObject.word, true)
-        wordContainer.classList.add('solved')
-        solvedCount++
-      } else {
+      var maskUnsolvedWords = true
+      var wordElement = makeWordElement(wordObject.word, true)
+      if (maskUnsolvedWords && !wordObject.solved) {
         wordElement = makeWordElement(getMask(wordObject.chars), false)
+      }
+
+      if (wordObject.solved) {
+        wordContainer.classList.add('solved')
+      } else {
         wordContainer.classList.add('missed')
       }
+
       wordContainer.appendChild(wordElement)
       contentContainer.appendChild(wordContainer)
     }

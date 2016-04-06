@@ -20,6 +20,15 @@ wordScramble.previousWordsManager = (function (pubsub, cardPartRenderer) {
     }
   }
 
+  var getMask = function (count) {
+    var maskChar = '_'
+    var mask = ''
+    for (var i = 0; i < count; i++) {
+      mask += maskChar += ' '
+    }
+    return mask
+  }
+
   function render (words) {
     var cardPart = {
       'title': makeCardTitle(words),
@@ -47,13 +56,17 @@ wordScramble.previousWordsManager = (function (pubsub, cardPartRenderer) {
 
       var wordObject = words[i]
 
-      var wordElement = null
+      var maskUnsolvedWords = false
+      var wordElement = makeWordElement(wordObject.word, true)
+      if (maskUnsolvedWords && !wordObject.solved) {
+        wordElement = makeWordElement(getMask(wordObject.chars), false)
+      }
+
       if (wordObject.solved) {
         wordContainer.classList.add('solved')
       } else {
         wordContainer.classList.add('missed')
       }
-      wordElement = makeWordElement(wordObject.word, true)
 
       wordContainer.appendChild(wordElement)
       contentContainer.appendChild(wordContainer)
