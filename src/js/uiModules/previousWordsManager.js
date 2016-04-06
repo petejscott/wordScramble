@@ -32,7 +32,7 @@ wordScramble.previousWordsManager = (function (pubsub, cardPartRenderer) {
   function render (words) {
     var cardPart = {
       'title': makeCardTitle(words),
-      'content': makeCardContent(words)
+      'content': makeWordsContent(words)
     }
     cardPartRenderer.draw(cardPart, getElement())
   }
@@ -48,7 +48,7 @@ wordScramble.previousWordsManager = (function (pubsub, cardPartRenderer) {
     return titleText
   }
 
-  function makeCardContent (words) {
+  function makeWordsContent (words) {
     var contentContainer = document.createElement('div')
     for (var i = 0, len = words.length; i < len; i++) {
       var wordContainer = document.createElement('span')
