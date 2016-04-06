@@ -5,12 +5,24 @@ var wordScramble = wordScramble || {}
 wordScramble.currentWordsManager = (function (pubsub, cardPartRenderer) {
   var manager = {}
 
+  var CONST_PREVIOUS_ELEMENT_ID = '#previousGameSummaryContents'
   var CONST_CURRENT_ELEMENT_ID = '#currentGameSummaryContents'
 
+  function getPreviousGameSummaryElement () {
+    return document.querySelector(CONST_PREVIOUS_ELEMENT_ID)
+  }
   function getCurrentGameSummaryElement () {
     return document.querySelector(CONST_CURRENT_ELEMENT_ID)
   }
 
+  function clearPreviousGameSummaryElement () {
+    var el = getPreviousGameSummaryElement()
+    if (el === null) return
+
+    while (el.firstChild) {
+      el.removeChild(el.firstChild)
+    }
+  }
   function clearCurrentGameSummaryElement () {
     var el = getCurrentGameSummaryElement()
     if (el === null) return
@@ -29,7 +41,14 @@ wordScramble.currentWordsManager = (function (pubsub, cardPartRenderer) {
     return mask
   }
 
-  function render (words) {
+  function renderPreviousGameSummary (words) {
+    var cardPart = {
+      'title': makeCardTitle(words),
+      'content': makeWordsContent(words, false)
+    }
+    cardPartRenderer.draw(cardPart, getPreviousGameSummaryElement())
+  }
+  function renderCurrentGameSummary (words) {
     var cardPart = {
       'title': makeCardTitle(words),
       'content': makeWordsContent(words, true)
@@ -87,14 +106,32 @@ wordScramble.currentWordsManager = (function (pubsub, cardPartRenderer) {
     return wordNode
   }
 
+  function showSummary () {
+    var summaryDrawer = document.querySelector('#statistics')
+    if (summaryDrawer === null) return
+
+    if (!summaryDrawer.classList.contains('visible')) {
+      summaryDrawer.classList.add('visible')
+    }
+  }
+
   function subscribe () {
+    pubsub.subscribe('wordScramble/gameOver', function (topic, data) {
+      pubsub.publish('wordScramble/previousGameDataAvailable', data)
+      showSummary()
+    })
+    pubsub.subscribe('wordScramble/previousGameDataAvailable', function (topic, data) {
+      var words = data.words
+      clearPreviousGameSummaryElement()
+      renderPreviousGameSummary(words)
+    })
     pubsub.subscribe('wordScramble/endGame', function (topic, data) {
       clearCurrentGameSummaryElement()
     })
     pubsub.subscribe('wordScramble/wordsChanged', function (topic, data) {
       var words = data.words
       clearCurrentGameSummaryElement()
-      render(words)
+      renderCurrentGameSummary(words)
     })
   }
 
