@@ -93,7 +93,7 @@ wordScramble.WordFinder = function (wordList) {
     })
   }
 
-  this.makeLetterSet = function (letterList) {
+  function makeLetterSet (letterList) {
     var letterCounts = []
     var letterString = letterList.join('')
     var uniqueLetters = getUniqueLetters(letterList)
@@ -116,7 +116,7 @@ wordScramble.WordFinder = function (wordList) {
     }
   }
 
-  this.findWords = function (wordSetConfiguration, letterSet) {
+  function findWords (wordSetConfiguration, letterSet) {
     var words = wordList
 
     makeStatusUpdate('Filtering ' + words.length + ' words (1 of 3)')
@@ -140,6 +140,13 @@ wordScramble.WordFinder = function (wordList) {
     wordObjects = sortWordObjectsByLength(wordObjects)
 
     return wordObjects
+  }
+
+  return { 
+    'getCountOfLetterInWord': getCountOfLetterInWord,
+    'makeLetterSet': makeLetterSet,
+    'findWords': findWords,
+    'removeShortAndLongWords': removeShortAndLongWords
   }
 }
 
