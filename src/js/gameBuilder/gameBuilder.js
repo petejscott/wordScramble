@@ -80,13 +80,28 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
     if (response.words.length === 0) {
       buildGame(evt.target)
     } else {
+      response.words = sortWords(response.words)
       onDataReady(response)
       tryCount = 0
     }
   }
 
+  function sortWords (words) {
+    if (configuration.sortByLength) {
+      words = sortWordObjectsByLength(words)
+    }
+    return words
+  }
+
+  function sortWordObjectsByLength (wordObjects) {
+    return wordObjects.sort(function (a, b) {
+      return a.chars - b.chars
+    })
+  }
+
   return {
-    build: build
+    build: build,
+    sortWords: sortWords
   }
 })(wordScramble.configuration, window.pubsub)
 

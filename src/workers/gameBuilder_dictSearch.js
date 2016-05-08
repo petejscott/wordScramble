@@ -22,12 +22,6 @@ wordScramble.WordFinder = function (wordList) {
     return word.split(letter).length - 1
   }
 
-  function sortWordObjectsByLength (wordObjects) {
-    return wordObjects.sort(function (a, b) {
-      return a.chars - b.chars
-    })
-  }
-
   function removeShortAndLongWords (words, minLength, maxLength) {
     return words.filter(function (word) {
       return word.length <= maxLength && word.length >= minLength
@@ -137,12 +131,11 @@ wordScramble.WordFinder = function (wordList) {
     }
 
     var wordObjects = mapWordsToWordObjects(words)
-    wordObjects = sortWordObjectsByLength(wordObjects)
 
     return wordObjects
   }
 
-  return { 
+  return {
     'getCountOfLetterInWord': getCountOfLetterInWord,
     'makeLetterSet': makeLetterSet,
     'findWords': findWords,
