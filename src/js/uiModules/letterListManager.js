@@ -143,6 +143,9 @@ wordScramble.letterListManager = (function (pubsub) {
       clear()
       render(letters)
     })
+    pubsub.subscribe('wordScramble/letterSelected', function (topic, data) {
+      letterClickEventHandler(data)
+    })
     pubsub.subscribe('wordScramble/wordAttemptUpdated', function (topic, data) {
       var tokens = data.allTokens
       var lastToken = tokens[tokens.length - 1]
@@ -167,11 +170,33 @@ wordScramble.letterListManager = (function (pubsub) {
     })
   }
 
-  function letterClickEventHandler (evt) {
-    evt.target.blur()
-    var token = evt.target.getAttribute('id')
+  function getTokenByLetter (letter) {
+    var upperLetter = letter.toUpperCase()
+    var matches = letterObjects.filter(function (lo) {
+      return lo.letter.toUpperCase() === upperLetter
+    })
+    if (matches) {
+      return letterObjects.indexOf(matches[0])
+    }
+    return -1
+  }
 
-    var loIndex = getLetterObjectIndexByToken(token)
+  function letterClickEventHandler (evt) {
+    var loIndex = -1
+    var letter = null
+
+    if (evt.letter) {
+      loIndex = getTokenByLetter(evt.letter)
+      letter = evt.letter
+    }
+
+    if (loIndex === -1 && evt.target) {
+      evt.target.blur()
+      var token = evt.target.getAttribute('id')
+      loIndex = getLetterObjectIndexByToken(token)
+      letter = evt.target.getAttribute('data-letter')
+    }
+
     if (loIndex === -1) {
       // not a valid letter selection
       return
@@ -179,18 +204,18 @@ wordScramble.letterListManager = (function (pubsub) {
       // registered as selected. needs to be unselected if allowed
       if (letterObjects[loIndex].selected === true) {
         pubsub.publish('wordScramble/removeLetter', {
-          'letter': evt.target.getAttribute('data-letter'),
+          'letter': letter,
           'token': token
         })
       } else {
         // not yet selected. submit it!
         pubsub.publish('wordScramble/submitLetter', {
-          'letter': evt.target.getAttribute('data-letter'),
+          'letter': letter,
           'token': token
         })
       }
     }
-    evt.preventDefault()
+    if (evt.preventDefault) evt.preventDefault()
   }
   function endShuffle (evt) {
     var el = getElement()
