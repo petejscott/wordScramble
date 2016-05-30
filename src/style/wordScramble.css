@@ -150,6 +150,28 @@ nav a[class*=" icon-"]:before {
 	color: #999;
  }
  
+/* settings */
+
+#settings ul {
+	margin: 0.5em 0;
+	padding: 0;
+	list-style: none;
+	font-size: 0.9em;
+	font-weight: 300;
+}
+#settings ul li {
+	border-top: 1px solid #ddd;
+	padding: 0.5em 0;
+}
+#settings label {
+	color: #666;
+	display: block;
+	padding: 0 0.5em;
+}
+#settings input[type="range"] {
+	width:90%;
+}
+
 /* layout styles */
 
 #gameContainer {
