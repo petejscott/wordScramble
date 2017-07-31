@@ -6,8 +6,8 @@
 
   var CONST_DRAWER_CLASS = '.drawer' // multiple elements allowed
 
-  function getElement (el_id) {
-    return win.document.querySelector(el_id)
+  function getElement (elementId) {
+    return win.document.querySelector(elementId)
   }
 
   function getElements (sel) {
@@ -41,11 +41,11 @@
     }
   }
   function bindMenuToggle (drawer) {
-    var toggle_selector = drawer.getAttribute('data-toggle-selector')
-    if (toggle_selector === null) {
+    var toggleSelector = drawer.getAttribute('data-toggle-selector')
+    if (toggleSelector === null) {
       return
     }
-    var toggles = getElements(toggle_selector)
+    var toggles = getElements(toggleSelector)
     if (toggles.length === 0) {
       return
     }
@@ -59,13 +59,13 @@
     }
   }
   function bindOpen (drawer) {
-    var swipe_target_selector = drawer.getAttribute('data-swipe-target')
-    if (swipe_target_selector === null) return
+    var swipeTargetSelector = drawer.getAttribute('data-swipe-target')
+    if (swipeTargetSelector === null) return
 
-    var swipe_target = getElement(swipe_target_selector)
-    if (swipe_target === null) return
+    var swipeTarget = getElement(swipeTargetSelector)
+    if (swipeTarget === null) return
 
-    var in_dir = drawer.getAttribute('data-slide-in-dir')
+    var inDirection = drawer.getAttribute('data-slide-in-dir')
 
     var callback = function (evt, opts) {
       if (opts === null || opts.target_drawer === null) {
@@ -75,16 +75,16 @@
       drawer.classList.add('visible')
     }
 
-    var swipe = new SwipeHandler({
-      element: swipe_target,
+    SwipeHandler({
+      element: swipeTarget,
       opts: { 'target_drawer': drawer },
       callback: callback,
-      direction: in_dir,
+      direction: inDirection,
       distance: 80
     })
   }
   function bindClose (drawer) {
-    var out_dir = drawer.getAttribute('data-slide-out-dir')
+    var outDirection = drawer.getAttribute('data-slide-out-dir')
 
     var callback = function (evt, opts) {
       if (opts === null || opts.target_drawer === null) {
@@ -103,11 +103,11 @@
         false)
     }
 
-    var swipe = new SwipeHandler({
+    SwipeHandler({
       element: drawer,
       opts: { 'target_drawer': drawer },
       callback: callback,
-      direction: out_dir,
+      direction: outDirection,
       distance: 80
     })
   }

@@ -7,11 +7,11 @@ wordScramble.clearWordAttemptManager = (function (pubsub) {
 
   var CONST_ELEMENT_ID = '#clearWordAttempt'
 
-  function getElement ()	{
+  function getElement () {
     return document.querySelector(CONST_ELEMENT_ID)
   }
 
-  function setVisible (el)	{
+  function setVisible (el) {
     el.classList.remove('fadeout')
     el.classList.add('fadein')
   }
