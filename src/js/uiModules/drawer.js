@@ -14,23 +14,6 @@
     return win.document.querySelectorAll(sel)
   }
 
-  manager.clear = function (evt) {
-    var drawer = evt.target
-    if (drawer === null) return
-
-    drawer.classList.remove('visible')
-    drawer.classList.remove('flyoff')
-
-    drawer.removeEventListener(
-      'animationend',
-      manager.clear,
-      false)
-    drawer.removeEventListener(
-      'webkitAnimationEnd',
-      manager.clear,
-      false)
-  }
-
   function bindListeners () {
     var drawers = getElements(CONST_DRAWER_CLASS)
     for (var i = 0, len = drawers.length; i < len; i++) {
@@ -52,6 +35,7 @@
 
     var callback = function (evt) {
       drawer.classList.toggle('visible')
+      drawer.classList.toggle('hidden')
       evt.preventDefault()
     }
     for (var i = 0, len = toggles.length; i < len; i++) {
@@ -65,13 +49,16 @@
     var swipeTarget = getElement(swipeTargetSelector)
     if (swipeTarget === null) return
 
-    var inDirection = drawer.getAttribute('data-slide-in-dir')
+    var side = drawer.getAttribute('data-drawer-side')
+    // if the drawer is on the left, it slides to the right when opening
+    var inDirection = (side === 'left' ? 'right' : 'left')
 
     var callback = function (evt, opts) {
       if (opts === null || opts.target_drawer === null) {
         return
       }
       var drawer = opts.target_drawer
+      drawer.classList.remove('hidden')
       drawer.classList.add('visible')
     }
 
@@ -84,23 +71,17 @@
     })
   }
   function bindClose (drawer) {
-    var outDirection = drawer.getAttribute('data-slide-out-dir')
+    var side = drawer.getAttribute('data-drawer-side')
+    // if the drawer is on the left, it is hidden by sliding back to the left
+    var outDirection = side
 
     var callback = function (evt, opts) {
       if (opts === null || opts.target_drawer === null) {
         return
       }
       var drawer = opts.target_drawer
-      drawer.classList.add('flyoff')
-
-      drawer.addEventListener(
-        'animationend',
-        manager.clear,
-        false)
-      drawer.addEventListener(
-        'webkitAnimationEnd',
-        manager.clear,
-        false)
+      drawer.classList.remove('visible')
+      drawer.classList.add('hidden')
     }
 
     SwipeHandler({
