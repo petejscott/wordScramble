@@ -17,6 +17,7 @@
 	<link rel="stylesheet" href="style/large-screen.css" />
 	<link rel="stylesheet" href="style/drawer.css" />
 	<link rel="stylesheet" href="style/card.css" />
+	<link rel="stylesheet" href="style/settings.css" />
 	<link rel="stylesheet" href="style/wordScramble.css" />
 	<link rel="stylesheet" href="style/animation.css" />
 	<link rel="stylesheet" href="style/fontello.css" />
@@ -34,15 +35,18 @@
 				<li><a href="index.html" class="icon-chart-pie menuItem statisticsToggle" title="view statistics" id="statisticsToggle">Statistics</a></li>
 			</ul>
 		</nav>
-		<section id="settings">
-			<ul>
-				<li>
-					<label for="minWords">Minimum Words</label> <input id="minWords" type="range" value="5" min="1" max="25" step="1" />
-				</li>
-				<li>
-					<label for="minWordLength">Minimum Word Length</label> <input id="minWords" type="range" value="3" min="2" max="5" step="1" />
-				</li>
-			</ul>
+		<section class="card" id="settings">
+			<h2 class="card-title">Settings</h2>
+			<div class="card-contents">
+				<ul>
+					<li>
+						<label for="sortAlpha"><span>Sort Alphabetically</span> <small>Will take effect on next game</small></label> <input id="sortAlpha" type="checkbox" checked="" />
+					</li>
+					<li>
+						<label for="sortByLength"><span>Sort by Length</span> <small>Will take effect on next game</small></label> <input id="sortByLength" type="checkbox" checked="" />
+					</li>
+				</ul>
+			</div>
 		</section>
 	</aside>
 	
@@ -113,6 +117,7 @@
 	<script src="js/uiModules/letterListManager.js" type="text/javascript"></script>
 	<script src="js/uiModules/maskedWordsManager.js" type="text/javascript"></script>
 	<script src="js/uiModules/gameSummaryManager.js" type="text/javascript"></script>
+	<script src="js/uiModules/settingsManager.js" type="text/javascript"></script>
 
 	<script src="js/dict/json_dict.js" type="text/javascript"></script>
 	<script src="js/gameBuilder/gameBuilder_letters.js" type="text/javascript"></script>

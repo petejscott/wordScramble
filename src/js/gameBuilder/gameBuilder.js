@@ -18,7 +18,7 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
   }
 
   function buildGame (worker) {
-    var letters = 	getNewLetters()
+    var letters = getNewLetters()
 
     var message = JSON.stringify({
       'dictionary': gameDictionary,
@@ -87,10 +87,43 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
   }
 
   function sortWords (words) {
-    if (configuration.sortByLength) {
-      words = sortWordObjectsByLength(words)
+    if (configuration.sortAlpha && configuration.sortByLength) {
+      words = sortWordObjectsByLengthAndAlphabetically(words)
+    } else if (configuration.sortAlpha) {
+      words = sortWordObjectsAlphabetically(words)
+    } else if (configuration.sortByLength) {
+      words = sortWordObjectsByLength(shuffleWords(words))
+    } else {
+      words = shuffleWords(words)
     }
+    console.log(JSON.stringify(words))
     return words
+  }
+
+  function shuffleWords (wordObjects) {
+    var currentIndex = wordObjects.length
+    var temporaryValue
+    var randomIndex
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex)
+      currentIndex -= 1
+      temporaryValue = wordObjects[currentIndex]
+      wordObjects[currentIndex] = wordObjects[randomIndex]
+      wordObjects[randomIndex] = temporaryValue
+    }
+    return wordObjects
+  }
+
+  function sortWordObjectsAlphabetically (wordObjects) {
+    return wordObjects.sort(function (a, b) {
+      return a.word.localeCompare(b.word)
+    })
+  }
+
+  function sortWordObjectsByLengthAndAlphabetically (wordObjects) {
+    return wordObjects.sort(function (a, b) {
+      return a.chars - b.chars || a.word.localeCompare(b.word)
+    })
   }
 
   function sortWordObjectsByLength (wordObjects) {

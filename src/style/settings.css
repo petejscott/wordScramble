@@ -1,0 +1,40 @@
+/* settings */
+
+#settings ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-size: 0.9em;
+	font-weight: 300;
+}
+#settings li {
+	border-top: 1px solid #ddd;
+}
+#settings li:first-child {
+  border-top-width: 0;
+}
+#settings li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#settings label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #666;
+	display: block;
+  padding: 0.25em 0 0.5em 0;
+  margin-bottom: 0.5em;
+}
+#settings li:last-child label {
+  margin-bottom: 0;
+}
+#settings label small {
+  line-height: 1em;
+}
+#settings label span, 
+#settings label small {
+  display: block;
+}

@@ -5,5 +5,5 @@ wordScramble.configuration = {
   maxWords: 25,
   minWordLength: 3,
   sortByLength: 1,
-  sortAlpha: 0
+  sortAlpha: 1
 }
