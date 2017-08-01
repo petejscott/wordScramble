@@ -110,8 +110,8 @@ wordScramble.currentWordsManager = (function (pubsub, cardPartRenderer) {
     var summaryDrawer = document.querySelector('#statistics')
     if (summaryDrawer === null) return
 
-    if (!summaryDrawer.classList.contains('visible')) {
-      summaryDrawer.classList.add('visible')
+    if (!summaryDrawer.classList.contains('show')) {
+      summaryDrawer.classList.add('show')
     }
   }
 
