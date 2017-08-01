@@ -8,14 +8,14 @@
 	background: #fff;
 	color:#333;
 	z-index: 100;
-	transition: all 0.5s;
+	transition: all .25s;
 	overflow-y: auto;
 }
-.drawer[data-slide-in-dir="right"] {
+.drawer[data-drawer-side="left"] {
 	transform: translateX(-100%);
 	left: 0;
 }
-.drawer[data-slide-in-dir="left"] {
+.drawer[data-drawer-side="right"] {
 	transform: translateX(100%);
 	right: 0;
 }
@@ -23,7 +23,7 @@
 	background:#eee;
 	color:#555;
 }
-.drawer.visible {
+.drawer.show {
 	opacity: 1;
 	box-shadow:0 0 4px rgba(0,0,0,0.5);
 	transform: translateX(0);
@@ -34,45 +34,13 @@
 	top: 0;
 	left: 0;
 	height: 100%;
+	z-index: 10;
 	width: 0%;
 	background: rgba(0,0,0,0);
-	z-index: 10;
-	transition: background .2s;
+	transition: background .25s;
 }
-.drawer.visible ~ .main::before {
-	width: 100%;
+
+.drawer.show ~ .main::before {
 	background: rgba(0,0,0,0.5);
-}
-.drawer.flyoff ~ .main::before {
-	background: rgba(0,0,0,0);
-}
-.drawer[data-slide-in-dir="right"].flyoff {
-	animation: flyoff-left 0.25s;
-	-webkit-animation: flyoff-left 0.25s;
-}
-.drawer[data-slide-in-dir="left"].flyoff {
-	animation: flyoff-right 0.25s;
-	-webkit-animation: flyoff-right 0.25s;
-}
-
-@keyframes flyoff-left {
-	100% {
-		transform: translateX(-100%);
-	}
-}
-@-webkit-keyframes flyoff-left {
-	100% {
-		transform: translateX(-100%);
-	}
-}
-
-@keyframes flyoff-right {
-	100% {
-		transform: translateX(100%);
-	}
-}
-@-webkit-keyframes flyoff-right {
-	100% {
-		transform: translateX(100%);
-	}
+	width: 100%;
 }

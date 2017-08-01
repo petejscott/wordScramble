@@ -14,23 +14,6 @@
     return win.document.querySelectorAll(sel)
   }
 
-  manager.clear = function (evt) {
-    var drawer = evt.target
-    if (drawer === null) return
-
-    drawer.classList.remove('visible')
-    drawer.classList.remove('flyoff')
-
-    drawer.removeEventListener(
-      'animationend',
-      manager.clear,
-      false)
-    drawer.removeEventListener(
-      'webkitAnimationEnd',
-      manager.clear,
-      false)
-  }
-
   function bindListeners () {
     var drawers = getElements(CONST_DRAWER_CLASS)
     for (var i = 0, len = drawers.length; i < len; i++) {
@@ -51,7 +34,7 @@
     }
 
     var callback = function (evt) {
-      drawer.classList.toggle('visible')
+      drawer.classList.toggle('show')
       evt.preventDefault()
     }
     for (var i = 0, len = toggles.length; i < len; i++) {
@@ -65,14 +48,15 @@
     var swipeTarget = getElement(swipeTargetSelector)
     if (swipeTarget === null) return
 
-    var inDirection = drawer.getAttribute('data-slide-in-dir')
+    var drawerSide = drawer.getAttribute('data-drawer-side')
+    var inDirection = (drawerSide === 'left' ? 'right' : 'left')
 
     var callback = function (evt, opts) {
       if (opts === null || opts.target_drawer === null) {
         return
       }
       var drawer = opts.target_drawer
-      drawer.classList.add('visible')
+      drawer.classList.add('show')
     }
 
     SwipeHandler({
@@ -84,23 +68,15 @@
     })
   }
   function bindClose (drawer) {
-    var outDirection = drawer.getAttribute('data-slide-out-dir')
+    var drawerSide = drawer.getAttribute('data-drawer-side')
+    var outDirection = drawerSide
 
     var callback = function (evt, opts) {
       if (opts === null || opts.target_drawer === null) {
         return
       }
       var drawer = opts.target_drawer
-      drawer.classList.add('flyoff')
-
-      drawer.addEventListener(
-        'animationend',
-        manager.clear,
-        false)
-      drawer.addEventListener(
-        'webkitAnimationEnd',
-        manager.clear,
-        false)
+      drawer.classList.remove('show')
     }
 
     SwipeHandler({
