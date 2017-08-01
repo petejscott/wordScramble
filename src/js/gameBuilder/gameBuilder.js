@@ -101,17 +101,13 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
   }
 
   function shuffleWords (wordObjects) {
-    var currentIndex = wordObjects.length
-    var temporaryValue
-    var randomIndex
-    while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex)
-      currentIndex -= 1
-      temporaryValue = wordObjects[currentIndex]
-      wordObjects[currentIndex] = wordObjects[randomIndex]
-      wordObjects[randomIndex] = temporaryValue
+    var shuffled = []
+    while (wordObjects.length) {
+      var randomIndex = Math.floor(Math.random() * wordObjects.length)
+      var element = wordObjects.splice(randomIndex, 1)
+      shuffled.push(element[0])
     }
-    return wordObjects
+    return shuffled
   }
 
   function sortWordObjectsAlphabetically (wordObjects) {
