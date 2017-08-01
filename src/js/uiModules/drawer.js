@@ -1,9 +1,8 @@
 /* drawer.js */
 'use strict'
 
+var wordScramble = wordScramble || {}
 ; (function (win, SwipeHandler) {
-  var manager = {}
-
   var CONST_DRAWER_CLASS = '.drawer' // multiple elements allowed
 
   function getElement (elementId) {
