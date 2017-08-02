@@ -90,6 +90,10 @@ wordScramble.letterListManager = (function (pubsub) {
     letterButton.setAttribute('value', letterObject.letter)
     letterButton.setAttribute('id', letterObject.token)
 
+    letterButton.addEventListener('keydown', function (evt) {
+      if (evt.target) evt.target.blur()
+      return false
+    }, false)
     letterButton.addEventListener('click', letterClickEventHandler, false)
     return letterButton
   }
@@ -184,17 +188,22 @@ wordScramble.letterListManager = (function (pubsub) {
   function letterClickEventHandler (evt) {
     var loIndex = -1
     var letter = null
+    var token = null
 
     if (evt.letter) {
       loIndex = getTokenByLetter(evt.letter)
+      token = letterObjects[loIndex].token
       letter = evt.letter
     }
 
     if (loIndex === -1 && evt.target) {
-      evt.target.blur()
-      var token = evt.target.getAttribute('id')
+      token = evt.target.getAttribute('id')
       loIndex = getLetterObjectIndexByToken(token)
       letter = evt.target.getAttribute('data-letter')
+    }
+
+    if (evt.target) {
+      evt.target.blur()
     }
 
     if (loIndex === -1) {
