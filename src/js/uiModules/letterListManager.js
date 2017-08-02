@@ -120,18 +120,13 @@ wordScramble.letterListManager = (function (pubsub) {
   }
 
   function shuffle () {
-    var currentIndex = letterObjects.length
-    var temporaryValue
-    var randomIndex
-
-    while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex)
-      currentIndex -= 1
-
-      temporaryValue = letterObjects[currentIndex]
-      letterObjects[currentIndex] = letterObjects[randomIndex]
-      letterObjects[randomIndex] = temporaryValue
+    var shuffled = []
+    while (letterObjects.length) {
+      var randomIndex = Math.floor(Math.random() * letterObjects.length)
+      var element = letterObjects.splice(randomIndex, 1)
+      shuffled.push(element[0])
     }
+    return shuffled
   }
 
   function subscribe () {
