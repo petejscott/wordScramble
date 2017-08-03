@@ -24,16 +24,6 @@ wordScramble.letterListManager = (function (pubsub) {
     return letterObjects
   }
 
-  function getLetterObjectIndexByToken (token) {
-    var matches = letterObjects.filter(function (lo) {
-      return lo.token === token
-    })
-    if (matches) {
-      return letterObjects.indexOf(matches[0])
-    }
-    return -1
-  }
-
   function clear () {
     var el = getElement()
     if (el === null) return
@@ -174,65 +164,60 @@ wordScramble.letterListManager = (function (pubsub) {
     })
   }
 
-  function getTokensByLetter (letter) {
-    var upperLetter = letter.toUpperCase()
-    var matches = letterObjects.reduce(function (accum, v, i) {
-      if (v.letter.toUpperCase() === upperLetter) {
-        accum.push(i)
-      }
-      return accum
-    }, [])
+  function getLetterObjectsByToken (token) {
+    var matches = letterObjects.filter(function (lo) {
+      return lo.token.toLowerCase() === token.toLowerCase()
+    })
+    return matches
+  }
+
+  function getLetterObjectsByLetter (letter) {
+    var matches = letterObjects.filter(function (lo) {
+      return lo.letter.toUpperCase() === letter.toUpperCase()
+    })
     return matches
   }
 
   function letterClickEventHandler (evt) {
-    var loIndex = -1
-    var letter = null
-    var token = null
-
-    if (evt.letter) {
-      var matches = getTokensByLetter(evt.letter)
-      loIndex = matches.find(function (x) {
-        return letterObjects[x].selected === false
-      })
-      if (typeof loIndex === 'undefined') {
-        loIndex = -1
-      } else {
-        token = letterObjects[loIndex].token
-      }
-      letter = evt.letter
-    }
-
-    if (loIndex === -1 && evt.target) {
-      token = evt.target.getAttribute('id')
-      loIndex = getLetterObjectIndexByToken(token)
-      letter = evt.target.getAttribute('data-letter')
-    }
+    var matches = []
 
     if (evt.target) {
       evt.target.blur()
     }
 
-    if (loIndex === -1) {
-      // not a valid letter selection
+    if (evt.letter) {
+      matches = getLetterObjectsByLetter(evt.letter)
+    }
+    if (matches.length === 0 && evt.target) {
+      var token = evt.target.getAttribute('id')
+      matches = getLetterObjectsByToken(token)
+    }
+
+    if (matches.length === 0) {
       return
+    }
+
+    var unselectedMatch = matches.find(function (x) {
+      return x.selected === false
+    })
+    var selectedMatch = matches.find(function (x) {
+      return x.selected === true
+    })
+
+    if (typeof unselectedMatch === 'undefined') {
+      pubsub.publish('wordScramble/removeLetter', {
+        'letter': selectedMatch.letter,
+        'token': selectedMatch.token
+      })
     } else {
-      // registered as selected. needs to be unselected if allowed
-      if (letterObjects[loIndex].selected === true) {
-        pubsub.publish('wordScramble/removeLetter', {
-          'letter': letter,
-          'token': token
-        })
-      } else {
-        // not yet selected. submit it!
-        pubsub.publish('wordScramble/submitLetter', {
-          'letter': letter,
-          'token': token
-        })
-      }
+      pubsub.publish('wordScramble/submitLetter', {
+        'letter': unselectedMatch.letter,
+        'token': unselectedMatch.token
+      })
     }
     if (evt.preventDefault) evt.preventDefault()
   }
+
   function endShuffle (evt) {
     var el = getElement()
     if (el === null) return
