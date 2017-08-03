@@ -97,7 +97,7 @@ wordScramble.gameService = (function (configuration, pubsub) {
   function submitWordAttempt (word) {
     var words = gameData.words
     var result = words.filter(function (o) {
-      return o.word === word
+      return o.word === word.toLowerCase()
     })
     if (result && result[0] != null) {
       if (result[0].solved === true) {

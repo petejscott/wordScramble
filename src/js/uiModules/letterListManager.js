@@ -24,16 +24,6 @@ wordScramble.letterListManager = (function (pubsub) {
     return letterObjects
   }
 
-  function getLetterObjectIndexByToken (token) {
-    var matches = letterObjects.filter(function (lo) {
-      return lo.token === token
-    })
-    if (matches) {
-      return letterObjects.indexOf(matches[0])
-    }
-    return -1
-  }
-
   function clear () {
     var el = getElement()
     if (el === null) return
@@ -90,6 +80,10 @@ wordScramble.letterListManager = (function (pubsub) {
     letterButton.setAttribute('value', letterObject.letter)
     letterButton.setAttribute('id', letterObject.token)
 
+    letterButton.addEventListener('keydown', function (evt) {
+      if (evt.target) evt.target.blur()
+      return false
+    }, false)
     letterButton.addEventListener('click', letterClickEventHandler, false)
     return letterButton
   }
@@ -165,53 +159,60 @@ wordScramble.letterListManager = (function (pubsub) {
     })
   }
 
-  function getTokenByLetter (letter) {
-    var upperLetter = letter.toUpperCase()
+  function getLetterObjectsByToken (token) {
     var matches = letterObjects.filter(function (lo) {
-      return lo.letter.toUpperCase() === upperLetter
+      return lo.token.toLowerCase() === token.toLowerCase()
     })
-    if (matches) {
-      return letterObjects.indexOf(matches[0])
-    }
-    return -1
+    return matches
+  }
+
+  function getLetterObjectsByLetter (letter) {
+    var matches = letterObjects.filter(function (lo) {
+      return lo.letter.toUpperCase() === letter.toUpperCase()
+    })
+    return matches
   }
 
   function letterClickEventHandler (evt) {
-    var loIndex = -1
-    var letter = null
+    var matches = []
+
+    if (evt.target) {
+      evt.target.blur()
+    }
 
     if (evt.letter) {
-      loIndex = getTokenByLetter(evt.letter)
-      letter = evt.letter
+      matches = getLetterObjectsByLetter(evt.letter)
     }
-
-    if (loIndex === -1 && evt.target) {
-      evt.target.blur()
+    if (matches.length === 0 && evt.target) {
       var token = evt.target.getAttribute('id')
-      loIndex = getLetterObjectIndexByToken(token)
-      letter = evt.target.getAttribute('data-letter')
+      matches = getLetterObjectsByToken(token)
     }
 
-    if (loIndex === -1) {
-      // not a valid letter selection
+    if (matches.length === 0) {
       return
+    }
+
+    var unselectedMatch = matches.find(function (x) {
+      return x.selected === false
+    })
+    var selectedMatch = matches.find(function (x) {
+      return x.selected === true
+    })
+
+    if (typeof unselectedMatch === 'undefined') {
+      pubsub.publish('wordScramble/removeLetter', {
+        'letter': selectedMatch.letter,
+        'token': selectedMatch.token
+      })
     } else {
-      // registered as selected. needs to be unselected if allowed
-      if (letterObjects[loIndex].selected === true) {
-        pubsub.publish('wordScramble/removeLetter', {
-          'letter': letter,
-          'token': token
-        })
-      } else {
-        // not yet selected. submit it!
-        pubsub.publish('wordScramble/submitLetter', {
-          'letter': letter,
-          'token': token
-        })
-      }
+      pubsub.publish('wordScramble/submitLetter', {
+        'letter': unselectedMatch.letter,
+        'token': unselectedMatch.token
+      })
     }
     if (evt.preventDefault) evt.preventDefault()
   }
+
   function endShuffle (evt) {
     var el = getElement()
     if (el === null) return
