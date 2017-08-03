@@ -174,15 +174,15 @@ wordScramble.letterListManager = (function (pubsub) {
     })
   }
 
-  function getTokenByLetter (letter) {
+  function getTokensByLetter (letter) {
     var upperLetter = letter.toUpperCase()
-    var matches = letterObjects.filter(function (lo) {
-      return lo.letter.toUpperCase() === upperLetter
-    })
-    if (matches) {
-      return letterObjects.indexOf(matches[0])
-    }
-    return -1
+    var matches = letterObjects.reduce(function (accum, v, i) {
+      if (v.letter.toUpperCase() === upperLetter) {
+        accum.push(i)
+      }
+      return accum
+    }, [])
+    return matches
   }
 
   function letterClickEventHandler (evt) {
@@ -191,8 +191,15 @@ wordScramble.letterListManager = (function (pubsub) {
     var token = null
 
     if (evt.letter) {
-      loIndex = getTokenByLetter(evt.letter)
-      token = letterObjects[loIndex].token
+      var matches = getTokensByLetter(evt.letter)
+      loIndex = matches.find(function (x) {
+        return letterObjects[x].selected === false
+      })
+      if (typeof loIndex === 'undefined') {
+        loIndex = -1
+      } else {
+        token = letterObjects[loIndex].token
+      }
       letter = evt.letter
     }
 
