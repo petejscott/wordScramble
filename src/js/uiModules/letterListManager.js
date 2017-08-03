@@ -242,7 +242,7 @@ wordScramble.letterListManager = (function (pubsub) {
         endShuffle,
         false)
     }
-    shuffle()
+    letterObjects = shuffle()
     pubsub.publish('wordScramble/lettersChanged', {})
     if (evt !== null) evt.preventDefault()
   }
