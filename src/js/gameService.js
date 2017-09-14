@@ -162,16 +162,7 @@ wordScramble.gameService = (function (configuration, pubsub) {
     if (loaded) {
       pubsub.publish('wordScramble/gameReady', { gameData: gameData })
     } else {
-      var letters = []
-      if (typeof URLSearchParams === 'undefined') {
-        pubsub.publish('wordScramble/updateGameBuildStatus', {
-          'statusMessage': 'URLSearchParams is not supported by your browser.'
-        })
-      }
-      var searchParams = new URLSearchParams(window.location.search)
-      var inputLetters = searchParams.get('letters')
-      if (inputLetters.length > 0) letters = Array.from(inputLetters)
-      wordScramble.gameBuilder.build(wordScramble.dict, letters)
+      wordScramble.gameBuilder.build(wordScramble.dict)
     }
 
     var previousGameData = getPreviousGames()
