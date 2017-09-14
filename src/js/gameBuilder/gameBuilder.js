@@ -17,9 +17,7 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
     pubsub.publish('wordScramble/gameReady', { gameData: gameData })
   }
 
-  function buildGame (worker) {
-    var letters = getNewLetters()
-
+  function buildGame (worker, letters) {
     var message = JSON.stringify({
       'dictionary': gameDictionary,
       'configuration': configuration,
@@ -29,7 +27,7 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
     worker.postMessage(message)
   }
 
-  function build (dictionary) {
+  function build (dictionary, letters) {
     gameDictionary = dictionary
 
     if (!window.Worker) {
@@ -42,7 +40,10 @@ wordScramble.gameBuilder = (function (configuration, pubsub) {
     worker.addEventListener('error', handleWorkerError)
     worker.addEventListener('message', handleWorkerMessage)
 
-    buildGame(worker)
+    if (typeof letters === undefined || letters.length === 0) {
+      letters = getNewLetters()
+    }
+    buildGame(worker, letters)
   }
 
   function handleWorkerError (evt) {
