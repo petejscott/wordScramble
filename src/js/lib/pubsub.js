@@ -2,6 +2,9 @@
 'use strict'
 
 var pubsub = (function () {
+  var CONST_LOG_PUBLISH_TO_CONSOLE = true
+  var CONST_SUBSCRIBER_DETAILS_TO_CONSOLE = false
+
   var _subscriptions = []
   var _topics = {}
   var _key = 0
@@ -68,6 +71,9 @@ var pubsub = (function () {
   }
 
   function publish (topic, data) {
+    if (CONST_LOG_PUBLISH_TO_CONSOLE) {
+      console.log('publishing ' + topic + ': ' + JSON.stringify(data))
+    }
     var keys = _topics[topic]
     if (keys) {
       // lock to prevent unsubs
@@ -76,6 +82,9 @@ var pubsub = (function () {
       // publish
       for (var i = 0, len = keys.length; i < len; i++) {
         var key = keys[i]
+        if (CONST_SUBSCRIBER_DETAILS_TO_CONSOLE) {
+          console.log('notifying subcriber about ' + topic + ': ' + _subscriptions[key + 1])
+        }
         _subscriptions[key + 1](topic, data)
       }
 
